@@ -1,0 +1,63 @@
+extends layout
+
+block content
+  style.
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Espaço entre os elementos */
+    }
+    .login-title {
+      background-color: #1fd761; /* Cor de fundo da caixa */
+      width: 350px;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .login-container .form-group {
+      width: 300px;
+    }
+    .login-container .form-group label {
+      color: white;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 320px; /* Ajustar conforme necessário */
+    }
+    .btn-login {
+      background-color: #1fd761; /* Cor personalizada para o botão de Login */
+      border-color: #1fd761;
+      border-radius: 3%;
+      color: white;
+      margin-top: 20px;
+      border-width: 2px;
+      flex: 1;
+      margin-right: 10px;
+    }
+    .btn-back {
+      background-color: #6c757d; /* Cor personalizada para o botão de Voltar */
+      border-color: #6c757d;
+      border-radius: 3%;
+      color: white;
+      margin-top: 20px;
+      border-width: 2px;
+      flex: 1;
+      margin-left: 10px;
+    }
+  .login-container
+    .login-title
+      h1 Login
+    form(action='/auth/login', method='post')
+      .form-group
+        label(for='username') Username
+        input#username.form-control(name='username', type='text')
+      .form-group
+        label(for='password') Password
+        input#password.form-control(name='password', type='password')
+      .btn-container
+        button.btn.btn-login(type='submit') Login
+        a.btn.btn-back(href='javascript:history.back()') Return

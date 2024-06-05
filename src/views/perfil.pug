@@ -1,0 +1,150 @@
+extends layout-main
+
+block content
+  .profile-container
+    .profile-content
+      .left-panel
+        .header-card
+            h2 Hugo Dias
+        hr
+        .detail-wrapper
+          .detail-card
+            span Média de avaliações de Recursos Disponibilizados
+            p 4.5
+          .detail-card
+            span Recursos Disponibilizados
+            p 10
+        .detail-wrapper
+          .detail-card
+            span Posts Feitos
+            p 5
+          .detail-card
+            span Especialista em
+            p Relatório, Tese, Artigo, Aplicação
+        hr
+        .bigger-container
+            h4 Recurso mais avaliado:
+            h5 Teste PI 2024
+      .account-details
+        .header-card
+            h3 Account Details
+        hr
+        .detail-wrapper
+          .detail-card-clickable
+            span First Name
+            p Hugo
+          .detail-card-clickable
+            span Last Name
+            p Dias
+        .detail-wrapper
+          .detail-card
+            span Filiação
+            p Estudante, Curso: Informática, Departamento: Tecnologia
+          .detail-card
+            span Nível
+            p Administrador
+        .detail-wrapper
+          .detail-card
+            span Data de Registo
+            p 2023-01-01
+          .detail-card
+            span Data do Último Acesso
+            p 2023-06-01
+        .detail-wrapper
+          .detail-card-clickable
+            span Email
+            p hugoarantesdias@gmail.com
+          .detail-card-clickable
+            span Password
+            p ********
+
+    style.
+      .profile-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #212020;
+        color: #fff;
+      }
+      .profile-content {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .header-card {
+        width: 100%;
+        background-color: #444;
+        border-radius: 5px;
+        margin-bottom: 2.5%;
+        margin-top: 2.5%;
+        height: 10%;
+        padding: 2%;
+        cursor: default;
+      }
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+        width: 75%; /* Ajuste da largura da caixa principal */
+        background-color: #333;
+        border-radius: 5px;
+        padding: 25px;
+        margin-right: 2.5%;
+        margin-left: -15%;
+        margin-top: 2.5%;
+      }
+      .account-details {
+        display: flex;
+        flex-direction: column;
+        width: 75%; /* Ajuste da largura da caixa principal */
+        background-color: #333;
+        border-radius: 5px;
+        padding: 25px;
+        margin-left: 2.5%;
+        margin-right: -15%;
+        margin-top: 2.5%;
+      }
+      .detail-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2.5%;
+      }
+      .detail-card {
+        background-color: #444;
+        border-radius: 5px;
+        padding: 20px; /* Aumenta o padding para maior altura */
+        margin-bottom: 10px;
+        width: 48%; /* Reduz a largura das caixas secundárias */
+        cursor: default;
+      }
+      .detail-card-clickable {
+        background-color: #444;
+        border-radius: 5px;
+        padding: 20px; /* Aumenta o padding para maior altura */
+        margin-bottom: 10px;
+        width: 48%; /* Reduz a largura das caixas secundárias */
+        cursor: pointer;
+      }
+      .detail-card-clickable:hover {
+        color: #1fd761;
+      }
+      .bigger-container {
+        width: 100%;
+        background-color: #444;
+        border-radius: 5px;
+        margin-bottom: 2.5%;
+        margin-top: 2.5%;
+        padding: 5%;
+        cursor: pointer;
+      }
+      .bigger-container:hover {
+        color: #1fd761;
+      }
+      hr {
+        border: 1px solid #444; /* Cor branca para a linha horizontal */
+        width: 100%; /* Garante que a linha ocupe toda a largura */
+      }
+      span {
+        display: block;
+        font-weight: bold;
+      }

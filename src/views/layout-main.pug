@@ -1,0 +1,217 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css')
+    style.
+      body {
+        margin: 0;
+        background-color: #212020;
+      }
+      header {
+        width: 100%;
+        background-color: #161716;
+        color: white;
+        padding: 20px 0; /* Ajuste de padding */
+        position: fixed;
+        top: 0;
+        display: flex;
+        justify-content: center; /* Centraliza o texto */
+        align-items: center; /* Alinha os itens verticalmente */
+        z-index: 2; /* Garante que o cabeçalho esteja acima do menu */
+      }
+      .menu-btn-container, .user-icon-container {
+        background-color: #212020; /* Cor da caixa do botão */
+        padding: 10px; /* Adiciona espaçamento interno */
+        border-radius: 5px; /* Borda arredondada */
+        width: 80px; /* Largura da caixa */
+        height: 40px; /* Altura da caixa */
+        display: flex; /* Para centralizar o botão */
+        justify-content: center; /* Para centralizar o botão */
+        align-items: center; /* Para centralizar o botão */
+        position: absolute; /* Posição absoluta para não afetar o layout */
+      }
+      .menu-btn-container {
+        left: 20px; /* Distância da borda esquerda */
+      }
+      .user-icon-container {
+        right: 20px; /* Distância da borda direita */
+        cursor: pointer;
+        transition: transform 0.5s ease;
+      }
+      .menu-btn {
+        font-size: 24px;
+        cursor: pointer;
+        color: white; /* Cor do ícone */
+        transition: transform 0.5s ease; /* Transição de rotação mais lenta */
+      }
+      .menu-btn:hover {
+        color: #1fd761; /* Cor verde quando passa o mouse por cima */
+      }
+      .menu-btn.rotate {
+        transform: rotate(180deg); /* Rotação completa */
+      }
+      .user-icon {
+        font-size: 25px;
+        color: white;
+      }
+      .user-icon:hover {
+        color: #1fd761;
+      }
+      .dropdown-arrow {
+        font-size: 16px;
+        color: white;
+        margin-left: 5px;
+        transition: transform 0.5s ease; /* Transição para rotação */
+      }
+      .dropdown-arrow.rotate {
+        transform: rotate(180deg); /* Rotação completa */
+      }
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        width: 10%;
+        left: 90%;
+        top: 60px;
+        background-color: #111;
+        border-radius: 5px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 3; /* Garante que o menu suspenso esteja acima de outros elementos */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease; /* Transição de altura */
+      }
+      .dropdown-menu.show {
+        max-height: 200px; /* Ajuste conforme necessário */
+      }
+      .dropdown-menu a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+      }
+      .dropdown-menu a:hover {
+        background-color: #575757;
+      }
+      h1 {
+        margin: 0; /* Remove margens padrão */
+      }
+      .container {
+        text-align: center;
+        margin-top: 80px; /* Ajuste conforme necessário para a distância do header */
+      }
+      .menu {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0px;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 120px; /* Adiciona espaço acima do primeiro item */
+        border-radius: 10px;
+      }
+      .menu a {
+        padding: 15px 20px; /* Ajuste de padding para menos altura */
+        text-decoration: none;
+        font-size: 20px;
+        color: white;
+        display: block;
+        transition: 0.3s;
+        background-color: #1fd761; /* Cor personalizada para os botões do menu */
+        border: 2px solid #1fd761;
+        border-radius: 3%;
+        margin-bottom: 10px;
+        width: 220px; /* Mais largura para caber a frase */
+        text-align: center; /* Centraliza o texto */
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .menu a:hover {
+        background-color: #1a9f50;
+      }
+      .header-link {
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .header-link:hover {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .header-link h1 {
+        margin: 0; /* Remove margens padrão */
+      }
+  body
+    header
+      div.menu-btn-container
+        span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776; <!-- Alterado para chamar toggleNav() -->
+      a.header-link(href='/main')
+        h1 Sistema de Recursos Educativos
+      div.user-icon-container(onclick='toggleDropdown()')
+        i.bi.bi-person-fill.user-icon <!-- Ícone de usuário do Bootstrap Icons -->
+        i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow') <!-- Seta para baixo do Bootstrap Icons -->
+      div.dropdown-menu(id='dropdownMenu')
+        a(href='/perfil') Perfil
+        a(href='#') Exemplo1
+        a(href='#') Exemplo2
+        a(href='#') Exemplo3
+    .menu(id='mySidenav')
+      a(href='#') Consultar Rankings
+      a(href='#') Consultar Recursos
+      a(href='#') Adicionar Recurso
+    .container
+      block content
+    script.
+      function toggleNav() {
+        var menu = document.getElementById("mySidenav");
+        var menuBtn = document.getElementById("menuBtn");
+        if (menu.style.width === "300px") {
+          menu.style.width = "0";
+          menuBtn.classList.remove("rotate"); // Remove a classe de rotação
+        } else {
+          menu.style.width = "300px";
+          menuBtn.classList.add("rotate"); // Adiciona a classe de rotação
+        }
+      }
+
+      function toggleDropdown() {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        var dropdownArrow = document.getElementById('dropdownArrow');
+        if (dropdownMenu.classList.contains('show')) {
+          dropdownMenu.classList.remove('show');
+          setTimeout(() => {
+            dropdownMenu.style.display = 'none';
+          }, 500); // Aguarda a transição antes de ocultar
+          dropdownArrow.classList.remove('rotate');
+        } else {
+          dropdownMenu.style.display = 'block';
+          setTimeout(() => {
+            dropdownMenu.classList.add('show');
+          }, 10); // Pequeno atraso para a transição
+          dropdownArrow.classList.add('rotate');
+        }
+      }
+
+      window.onclick = function(event) {
+        if (!event.target.matches('.user-icon') && !event.target.matches('.dropdown-arrow') && !event.target.matches('.user-icon-container')) {
+          var dropdownMenu = document.getElementById('dropdownMenu');
+          var dropdownArrow = document.getElementById('dropdownArrow');
+          if (dropdownMenu.classList.contains('show')) {
+            dropdownMenu.classList.remove('show');
+            setTimeout(() => {
+              dropdownMenu.style.display = 'none';
+            }, 500); // Aguarda a transição antes de ocultar
+            dropdownArrow.classList.remove('rotate');
+          }
+        }
+      }
