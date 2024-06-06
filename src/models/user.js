@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
-const fileSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  path: { type: String, required: true },
+const userSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, required: true },
+  course: { type: String, required: true },
+  department: { type: String, required: true },
+  level: { type: String, required: true },
+  registrationDate: { type: Date, required: true },
+  lastAccessDate: { type: Date, required: true }
 });
 
-const resourceSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  author: { type: String, required: true },
-  files: [fileSchema],
-});
-
-const Resource = mongoose.model('Resource', resourceSchema);
-
-module.exports = Resource;
+module.exports = mongoose.model('User', userSchema);

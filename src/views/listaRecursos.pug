@@ -15,66 +15,19 @@ block content
             a.dropdown-item(href="#") Categoria 2
             a.dropdown-item(href="#") Categoria 3
     .resource-list
-      .resource-item
-        h3 Título: Introdução ao Machine Learning
-        p Descrição: Um guia básico para iniciantes em Machine Learning.
-        p
-          span Categoria:
-          | 
-          span Artigo
-        p
-          span Autor:
-          | 
-          span Ana Silva
-        hr
-      .resource-item
-        h3 Título: Estruturas de Dados em Java
-        p Descrição: Material didático sobre estruturas de dados usando Java.
-        p
-          span Categoria:
-          | 
-          span Slides
-        p
-          span Autor:
-          | 
-          span João Pedro
-        hr
-      .resource-item
-        h3 Título: Desenvolvimento Web com Node.js
-        p Descrição: Curso completo de desenvolvimento web usando Node.js.
-        p
-          span Categoria:
-          | 
-          span Curso
-        p
-          span Autor:
-          | 
-          span Carlos Mendes
-        hr
-      .resource-item
-        h3 Título: Desenvolvimento Web com Node.js
-        p Descrição: Curso completo de desenvolvimento web usando Node.js.
-        p
-          span Categoria:
-          | 
-          span Curso
-        p
-          span Autor:
-          | 
-          span Carlos Mendes
-        hr
-      .resource-item
-        h3 Título: Desenvolvimento Web com Node.js
-        p Descrição: Curso completo de desenvolvimento web usando Node.js.
-        p
-          span Categoria:
-          | 
-          span Curso
-        p
-          span Autor:
-          | 
-          span Carlos Mendes
-        hr
+      each resource in resources
+        .resource-item
+          h3 Título: #{resource.title}
+          p Descrição: #{resource.description}
+          p
+            span Categoria:
+            | 
+            span #{resource.category}
+          p
+            span Autor:
+            | 
+            span #{resource.author}
+          hr
 
     style.
       .title-container {
