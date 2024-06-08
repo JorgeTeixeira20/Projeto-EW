@@ -1,0 +1,162 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 #{resource.title}
+    .resource-details
+      p
+        span Tipo:
+        | 
+        span #{resource.type}
+      if resource.subtitle
+        p
+          span Subtítulo:
+          | 
+          span #{resource.subtitle}
+      p
+        span Descrição:
+        | 
+        span #{resource.description}
+      p
+        span Autor:
+        | 
+        span #{resource.author}
+      p
+        span Ano:
+        | 
+        span #{resource.year}
+      p
+        span Temas:
+        | 
+        span #{resource.themes.join(', ')}
+      p
+        span Arquivos:
+        ul
+          each file in resource.files
+            li
+              a(href=`/${file.filePath}`) #{file.fileName}
+      .bottom-right-container
+        .download-box
+          if resource.visibilidade == 'publico'
+            a(href=`/${resource.files[0].filePath}`, download=true)
+              button
+                i.bi.bi-download
+                | Download
+          else
+            button
+              i.bi.bi-lock-fill
+              | Private
+        .reviews-box
+          - 
+            var totalReviews = resource.reviews.length;
+            var averageRating = totalReviews > 0 
+              ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
+              : 'Nenhuma avaliação';
+          p
+            span Rating:
+            | 
+            span #{averageRating}
+            | 
+            i.bi.bi-star-fill
+            | 
+            span (#{totalReviews})
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+      }
+      .resource-details {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+        position: relative;
+      }
+      .resource-details p {
+        margin: 10px 0;
+      }
+      .resource-details span {
+        font-weight: bold;
+      }
+      .resource-details ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .resource-details li {
+        margin: 5px 0;
+      }
+      .resource-details a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .resource-details a:hover {
+        text-decoration: underline;
+      }
+      .bottom-right-container {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        height: 12%;
+        display: flex;
+        gap: 10px;
+      }
+      .download-box, .reviews-box {
+        background-color: #555;
+        padding: 10px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+      .download-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #555;
+        border-radius: 5px;
+        padding: 10px;
+        color: #fff;
+        cursor: pointer;
+        height: 100%;
+      }
+      .reviews-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #555;
+        border-radius: 5px;
+        padding: 10px;
+        color: #fff;
+        cursor: default;
+        height: 100%;
+      }
+      .download-box button, .download-box a button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        display: flex;
+        font-weight: bold;
+        align-items: center;
+        gap: 5px;
+      }
+      .download-box button:hover, .download-box a button:hover {
+        background-color: #1a9f50;
+      }
+      .bi-star-fill {
+        color: #ffd700; /* Cor dourada para a estrela */
+      }
+      .bi-download {
+        font-weight: bold;
+        font-size: 100%;
+      }
