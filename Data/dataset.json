@@ -1,98 +1,107 @@
 {
-    "users": [
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6f7",
-        "firstName": "Hugo",
-        "lastName": "Dias",
-        "email": "hugoarantestdias@gmail.com",
-        "password": "password123",
-        "role": "Estudante",
-        "course": "Informática",
-        "department": "Tecnologia",
-        "level": "Administrador",
-        "registrationDate": "2023-01-01T00:00:00Z",
-        "lastAccessDate": "2023-06-01T00:00:00Z"
-      },
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6f8",
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "email": "jane.smith@example.com",
-        "password": "password456",
-        "role": "Estudante",
-        "course": "Informática",
-        "department": "Tecnologia",
-        "level": "Usuário",
-        "registrationDate": "2023-01-01T00:00:00Z",
-        "lastAccessDate": "2023-06-01T00:00:00Z"
-      }
-    ],
-    "resources": [
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
-        "title": "Introduction to Algorithms",
-        "author": "Thomas H. Cormen",
-        "year": 2009,
-        "type": "book",
-        "themes": ["algorithms", "computer science"],
-        "files": [
-          {
-            "fileName": "Chapter1.pdf",
-            "filePath": "uploads/Chapter1.pdf"
-          }
-        ],
-        "rankings": [
-          {
-            "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
-            "stars": 5
-          }
-        ]
-      },
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
-        "title": "Deep Learning",
-        "author": "Ian Goodfellow",
-        "year": 2016,
-        "type": "book",
-        "themes": ["machine learning", "deep learning"],
-        "files": [
-          {
-            "fileName": "Chapter1.pdf",
-            "filePath": "uploads/Chapter1.pdf"
-          }
-        ],
-        "rankings": [
-          {
-            "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
-            "stars": 4
-          }
-        ]
-      }
-    ],
-    "posts": [
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
-        "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
-        "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
-        "content": "This is an excellent book on algorithms.",
-        "comments": [
-          {
-            "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
-            "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
-            "content": "I agree, it's very informative.",
-            "date": "2024-06-06T00:00:00Z"
-          }
-        ],
-        "date": "2024-06-05T00:00:00Z"
-      },
-      {
-        "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
-        "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
-        "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
-        "content": "Great insights on deep learning.",
-        "comments": [],
-        "date": "2024-06-07T00:00:00Z"
-      }
-    ]
-  }
-  
+  "users": [
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f7",
+      "firstName": "Hugo",
+      "lastName": "Dias",
+      "email": "hugoarantestdias@gmail.com",
+      "password": "password123",
+      "role": "Estudante",
+      "course": "Informática",
+      "department": "Tecnologia",
+      "level": "Administrador",
+      "registrationDate": "2023-01-01T00:00:00Z",
+      "lastAccessDate": "2023-06-01T00:00:00Z"
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f8",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "password": "password456",
+      "role": "Estudante",
+      "course": "Informática",
+      "department": "Tecnologia",
+      "level": "Usuário",
+      "registrationDate": "2023-01-01T00:00:00Z",
+      "lastAccessDate": "2023-06-01T00:00:00Z"
+    }
+  ],
+  "resources": [
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
+      "type": "book",
+      "title": "Introduction to Algorithms",
+      "subtitle": "",
+      "description": "A comprehensive book on algorithms.",
+      "dataCriacao": "2023-01-01T00:00:00Z",
+      "dataRegisto": "2023-01-01T00:00:00Z",
+      "visibilidade": "publico",
+      "author": "Thomas H. Cormen",
+      "year": 2009,
+      "themes": ["algorithms", "computer science"],
+      "files": [
+        {
+          "fileName": "Chapter1.pdf",
+          "filePath": "uploads/Chapter1.pdf"
+        }
+      ],
+      "reviews": [
+        {
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+          "stars": 5
+        }
+      ]
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
+      "type": "book",
+      "title": "Deep Learning",
+      "subtitle": "",
+      "description": "A comprehensive book on deep learning.",
+      "dataCriacao": "2023-01-01T00:00:00Z",
+      "dataRegisto": "2023-01-01T00:00:00Z",
+      "visibilidade": "publico",
+      "author": "Ian Goodfellow",
+      "year": 2016,
+      "themes": ["machine learning", "deep learning"],
+      "files": [
+        {
+          "fileName": "Chapter1.pdf",
+          "filePath": "uploads/Chapter1.pdf"
+        }
+      ],
+      "reviews": [
+        {
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+          "stars": 4
+        }
+      ]
+    }
+  ],
+  "posts": [
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
+      "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+      "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+      "content": "This is an excellent book on algorithms.",
+      "comments": [
+        {
+          "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+          "content": "I agree, it's very informative.",
+          "date": "2024-06-06T00:00:00Z"
+        }
+      ],
+      "date": "2024-06-05T00:00:00Z"
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
+      "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+      "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+      "content": "Great insights on deep learning.",
+      "comments": [],
+      "date": "2024-06-07T00:00:00Z"
+    }
+  ]
+}
