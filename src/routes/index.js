@@ -29,6 +29,19 @@ router.get('/listaRecursos', async (req, res) => {
   }
 });
 
+router.get('/recurso/:id', async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id);
+    if (!resource) {
+      return res.status(404).send('Recurso não encontrado');
+    }
+    res.render('recurso', { resource });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
 router.get('/listaPosts', (req, res) => {
   res.render('listaPosts');
 });
