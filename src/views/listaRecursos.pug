@@ -16,18 +16,19 @@ block content
             a.dropdown-item(href="#") Categoria 3
     .resource-list
       each resource in resources
-        .resource-item
-          h3 Título: #{resource.title}
-          p Descrição: #{resource.description}
-          p
-            span Categoria:
-            | 
-            span #{resource.category}
-          p
-            span Autor:
-            | 
-            span #{resource.author}
-          hr
+        a.resource-link(href=`/recurso/${resource._id}`)
+          .resource-item
+            h3 Título: #{resource.title}
+            p Descrição: #{resource.description}
+            p
+              span Categoria:
+              | 
+              span #{resource.category}
+            p
+              span Autor:
+              | 
+              span #{resource.author}
+            hr
 
     style.
       .title-container {
@@ -110,6 +111,15 @@ block content
         padding: 20px;
         border-radius: 5px;
         color: #fff;
+      }
+      .resource-link {
+        text-decoration: none; /* Remove a decoração do link */
+        color: inherit; /* Mantém a cor do texto herdada */
+        display: block; /* Garante que o link ocupe todo o espaço do item */
+      }
+      .resource-link:visited, .resource-link:active, .resource-link:hover {
+        color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
+        text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
       }
       .resource-item:hover {
         color: #1fd761;
