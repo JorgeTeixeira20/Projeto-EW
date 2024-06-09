@@ -53,8 +53,26 @@ block content
       h1 Register
     form(action='/auth/register', method='post')
       .form-group
-        label(for='username') Username
-        input#username.form-control(name='username', type='text')
+        label(for='firstName') First Name
+        input#firstName.form-control(name='firstName', type='text')
+      .form-group
+        label(for='lastName') Last Name
+        input#lastName.form-control(name='lastName', type='text')
+      .form-group
+        label(for='email') Email
+        input#email.form-control(name='email', type='email')
+      .form-group
+        label(for='role') Role
+        input#role.form-control(name='role', type='text')
+      .form-group
+        label(for='course') Course
+        input#course.form-control(name='course', type='text')
+      .form-group
+        label(for='department') Department
+        input#department.form-control(name='department', type='text')
+      .form-group
+        label(for='level') Level
+        input#level.form-control(name='level', type='text')
       .form-group
         label(for='password') Password
         input#password.form-control(name='password', type='password')

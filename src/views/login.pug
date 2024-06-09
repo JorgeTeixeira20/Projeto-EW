@@ -53,11 +53,11 @@ block content
       h1 Login
     form(action='/auth/login', method='post')
       .form-group
-        label(for='username') Username
-        input#username.form-control(name='username', type='text')
+        label(for='email') Email
+        input#email.form-control(name='email', type='email', required)
       .form-group
         label(for='password') Password
-        input#password.form-control(name='password', type='password')
+        input#password.form-control(name='password', type='password', required)
       .btn-container
         button.btn.btn-login(type='submit') Login
         a.btn.btn-back(href='javascript:history.back()') Return
