@@ -35,7 +35,7 @@ block content
         ul
           each file in resource.files
             li
-              a(href=`/${file.filePath}`) #{file.fileName}
+              a(href=`/download/${file.fileName}`) #{file.fileName}
       .bottom-right-container
         .download-box
           if resource.visibilidade == 'Público'
