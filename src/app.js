@@ -1,39 +1,50 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const mongoose = require('mongoose'); // Adicionando mongoose
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var mongoose = require('mongoose');
 
-const app = express();
+var indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
 
-// Conexão ao MongoDB
-mongoose.connect('mongodb://localhost:27017/database', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conectado ao MongoDB'))
-  .catch(err => console.error('Erro ao conectar ao MongoDB', err));
+var app = express();
 
-// Configuração do Body-Parser
-app.use(bodyParser.urlencoded({ extended: true }));
+var mongoDB = "mongodb://mongodb/recursosEducativos";
+mongoose.connect(mongoDB);
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "Erro de conexão ao MongoDB"));
+db.once("open", () => {
+  console.log("Conexão ao MongoDB realizada com sucesso");
+});
 
-// Configuração do Pug
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Servir arquivos estáticos (para CSS e outros recursos)
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Servir arquivos estáticos da pasta Recursos
-app.use('/static', express.static(path.join(__dirname, '../Recursos')));
-
-// Importar rotas
-const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
-
-// Usar rotas
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor a correr na porta ${PORT}`);
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 module.exports = app;
