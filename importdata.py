@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 # Conexão ao MongoDB
 client = MongoClient('mongodb://localhost:27017/')
-db = client['database']
+db = client['recursosEducativos']
 
 def import_data():
     # Carregar o arquivo JSON
