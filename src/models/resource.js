@@ -26,4 +26,4 @@ const resourceSchema = new mongoose.Schema({
   reviews: [reviewSchema]
 });
 
-module.exports = mongoose.model('Resource', resourceSchema);
+module.exports = mongoose.model('resources', resourceSchema);

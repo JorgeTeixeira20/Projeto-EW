@@ -21,6 +21,11 @@ services:
       - ./data/posts.json:/datasets/posts.json
       - ./data/users.json:/datasets/users.json
       - ./data/resources.json:/datasets/resources.json
-    command: mongoimport --host mongodb --db recursosEducativos --collection users --file /datasets/users.json --jsonArray &&
-              mongoimport --host mongodb --db recursosEducativos --collection resources --file /datasets/resources.json --jsonArray &&
-              mongoimport --host mongodb --db recursosEducativos --collection posts --file /datasets/posts.json --jsonArray
+    entrypoint: sh -c "
+          for i in {1..30}; do
+            mongo --host mongodb --eval 'print(\"waiting for mongodb to be ready\")' && break || sleep 1;
+          done &&
+          mongoimport --host mongodb --db recursosEducativos --collection users --file /datasets/users.json --jsonArray &&
+          mongoimport --host mongodb --db recursosEducativos --collection resources --file /datasets/resources.json --jsonArray &&
+          mongoimport --host mongodb --db recursosEducativos --collection posts --file /datasets/posts.json --jsonArray
+        "

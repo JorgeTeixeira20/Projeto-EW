@@ -13,4 +13,4 @@ const userSchema = new mongoose.Schema({
   lastAccessDate: { type: Date, required: true }
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('users', userSchema);
