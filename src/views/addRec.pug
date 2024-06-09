@@ -2,11 +2,10 @@ extends layout-main
 
 block content
   .container
-
     .title-container
       h2 Adicionar Recurso  
     .add-rec-container
-      form(action="/addRec" method="post" enctype="multipart/form-data" id="uploadForm")
+      form(action="/adicionarRecurso" method="post" enctype="multipart/form-data" id="uploadForm")
         .form-row
           .form-group-left
             label(for="ficheiros") Inserir um ou mais ficheiros:
@@ -109,7 +108,7 @@ block content
         justify-content: space-between;
         margin-bottom: 20px;
       }
-      .form-group-left{
+      .form-group-left {
         width: 48%;
       }
       .form-group-right {
@@ -123,11 +122,11 @@ block content
         text-align: center;
         color: #fff;
         cursor: pointer;
-        height: 90%; /* Define a altura da área de arrastar e soltar */
-        display: flex; /* Adicionado para centralizar o texto */
-        flex-direction: column; /* Adicionado para alinhar em coluna */
-        justify-content: center; /* Adicionado para centralizar o texto */
-        align-items: center; /* Adicionado para centralizar o texto */
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
       .file-drop-zone input[type="file"] {
         display: none;
@@ -136,8 +135,8 @@ block content
         margin: 0;
       }
       .file-drop-zone i {
-        font-size: 40px; /* Tamanho do ícone de upload */
-        margin-top: 20px; /* Espaço entre o texto e o ícone */
+        font-size: 40px;
+        margin-top: 20px;
       }
       .form-group {
         margin-bottom: 2.5%;

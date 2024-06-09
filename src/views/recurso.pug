@@ -38,11 +38,11 @@ block content
               a(href=`/${file.filePath}`) #{file.fileName}
       .bottom-right-container
         .download-box
-          if resource.visibilidade == 'publico'
-            a(href=`/${resource.files[0].filePath}`, download=true)
+          if resource.visibilidade == 'Público'
+            a(href=`/download-all/${resource._id}`)
               button
                 i.bi.bi-download
-                | Download
+                | Download All
           else
             button
               i.bi.bi-lock-fill
