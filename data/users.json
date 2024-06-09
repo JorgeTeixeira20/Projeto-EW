@@ -1,0 +1,28 @@
+[
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f7",
+      "firstName": "Hugo",
+      "lastName": "Dias",
+      "email": "hugoarantestdias@gmail.com",
+      "password": "password123",
+      "role": "Estudante",
+      "course": "Informática",
+      "department": "Tecnologia",
+      "level": "Administrador",
+      "registrationDate": "2023-01-01T00:00:00Z",
+      "lastAccessDate": "2023-06-01T00:00:00Z"
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f8",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "password": "password456",
+      "role": "Estudante",
+      "course": "Informática",
+      "department": "Tecnologia",
+      "level": "Usuário",
+      "registrationDate": "2023-01-01T00:00:00Z",
+      "lastAccessDate": "2023-06-01T00:00:00Z"
+    }
+  ]

@@ -1,0 +1,25 @@
+[
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
+      "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+      "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+      "content": "This is an excellent book on algorithms.",
+      "comments": [
+        {
+          "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+          "content": "I agree, it's very informative.",
+          "date": "2024-06-06T00:00:00Z"
+        }
+      ],
+      "date": "2024-06-05T00:00:00Z"
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
+      "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+      "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+      "content": "Great insights on deep learning.",
+      "comments": [],
+      "date": "2024-06-07T00:00:00Z"
+    }
+  ]

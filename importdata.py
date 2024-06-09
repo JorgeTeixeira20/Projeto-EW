@@ -8,7 +8,7 @@ db = client['database']
 
 def import_data():
     # Carregar o arquivo JSON
-    with open('../Data/dataset.json', 'r', encoding='utf-8') as file:
+    with open('./data/dataset.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
     
     # Remover coleções existentes

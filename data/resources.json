@@ -1,0 +1,52 @@
+[
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
+      "type": "book",
+      "title": "Introduction to Algorithms",
+      "subtitle": "",
+      "description": "A comprehensive book on algorithms.",
+      "dataCriacao": "2023-01-01T00:00:00Z",
+      "dataRegisto": "2023-01-01T00:00:00Z",
+      "visibilidade": "publico",
+      "author": "Thomas H. Cormen",
+      "year": 2009,
+      "themes": ["algorithms", "computer science"],
+      "files": [
+        {
+          "fileName": "Chapter1.pdf",
+          "filePath": "uploads/Chapter1.pdf"
+        }
+      ],
+      "reviews": [
+        {
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+          "stars": 5
+        }
+      ]
+    },
+    {
+      "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
+      "type": "book",
+      "title": "Deep Learning",
+      "subtitle": "",
+      "description": "A comprehensive book on deep learning.",
+      "dataCriacao": "2023-01-01T00:00:00Z",
+      "dataRegisto": "2023-01-01T00:00:00Z",
+      "visibilidade": "publico",
+      "author": "Ian Goodfellow",
+      "year": 2016,
+      "themes": ["machine learning", "deep learning"],
+      "files": [
+        {
+          "fileName": "Chapter1.pdf",
+          "filePath": "uploads/Chapter1.pdf"
+        }
+      ],
+      "reviews": [
+        {
+          "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+          "stars": 4
+        }
+      ]
+    }
+  ]
