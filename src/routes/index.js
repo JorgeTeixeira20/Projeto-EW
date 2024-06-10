@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const User = require('../models/user');
+const UserController = require('../controllers/user');
 const Resource = require('../models/resource');
 
 // Configure Multer for file uploads
@@ -35,6 +36,54 @@ router.get('/recurso/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
+router.get('/perfil/:id', async (req, res) => {
+  try {
+    console.log("Requested User ID:", req.params.id);  // Log do ID do usuário solicitado
+    
+    // Buscar o usuário pelo ID
+    const user = await User.findById(req.params.id).exec();
+    console.log("User:", user);  // Log do usuário encontrado
+
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    // Buscar os recursos do usuário
+    const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
+
+    // Calcular a média das avaliações
+    let totalStars = 0;
+    let totalReviews = 0;
+    let highestRatedResource = null;
+    let highestRating = 0;
+
+    resources.forEach(resource => {
+      let resourceTotalStars = 0;
+      resource.reviews.forEach(review => {
+        totalStars += review.stars;
+        resourceTotalStars += review.stars;
+        totalReviews++;
+      });
+
+      const resourceAverageRating = resource.reviews.length > 0 ? (resourceTotalStars / resource.reviews.length) : 0;
+      if (resourceAverageRating > highestRating) {
+        highestRating = resourceAverageRating;
+        highestRatedResource = resource;
+      }
+    });
+    const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
+
+    // Contar os recursos disponibilizados
+    const resourceCount = user.myResources.length;
+    const postCount = user.myPosts.length;
+
+    res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
+  } catch (err) {
+    console.error('Erro ao buscar perfil do usuário:', err);
+    res.status(500).send('Erro ao buscar perfil do usuário');
   }
 });
 
@@ -115,10 +164,6 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
     console.error('Erro ao salvar o recurso:', err);
     res.status(500).send('Erro ao salvar o recurso.');
   }
-});
-
-router.get('/perfil', (req, res) => {
-  res.render('perfil');
 });
 
 router.get('/users', async (req, res) => {

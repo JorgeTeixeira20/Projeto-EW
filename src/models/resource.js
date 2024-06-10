@@ -12,6 +12,7 @@ const reviewSchema = new mongoose.Schema({
 
 const resourceSchema = new mongoose.Schema({
   _id: { type: String, required: true },
+  user: { type: String, required: true },
   type: { type: String, required: true },
   title: { type: String, required: true },
   subtitle: { type: String, default: '' },

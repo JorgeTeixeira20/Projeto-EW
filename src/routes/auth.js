@@ -16,6 +16,19 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
+router.get('/perfil', (req, res) => {
+    try {
+        const token = req.cookies.token;
+        console.log("Token:", token);  // Log do token JWT
+        const decoded = jwt.verify(token, jwtSecret);
+        console.log("Decoded ID:", decoded.id);  // Log do ID decodificado
+        res.redirect(`/perfil/${decoded.id}`);
+    } catch (err) {
+        console.error('Erro ao buscar perfil do usuário:', err);
+        res.status(500).send('Erro ao buscar perfil do usuário');
+    }
+});
+
 // Registration route
 router.post('/register', (req, res) => {
     const { firstName, lastName, email, role, course, department, level, password } = req.body;

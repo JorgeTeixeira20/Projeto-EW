@@ -10,21 +10,26 @@ block content
         .detail-wrapper
           .detail-card
             span Média de avaliações de Recursos Disponibilizados
-            p 4.5
+             p #{averageRating.toFixed(1)}
           .detail-card
             span Recursos Disponibilizados
-            p 10
+            p #{resourceCount}
         .detail-wrapper
           .detail-card
             span Posts Feitos
-            p 5
+            p #{postCount}
           .detail-card
             span Especialista em
-            p Relatório, Tese, Artigo, Aplicação
+            p ISTO AINDA ESTÁ ESTÁTICO
         hr
-        .bigger-container
+        if highestRatedResource
+          a.bigger-container(href=`/recurso/${highestRatedResource._id}`)
             h4 Recurso mais avaliado:
-            h5 Teste PI 2024
+            h5 #{highestRatedResource.title}
+        else
+          .bigger-container
+            h4 Recurso mais avaliado:
+            h5 Nenhum recurso avaliado encontrado
       .account-details
         .header-card
             h3 Account Details
@@ -32,31 +37,31 @@ block content
         .detail-wrapper
           .detail-card-clickable
             span First Name
-            p Hugo
+            p #{user.firstName}
           .detail-card-clickable
             span Last Name
-            p Dias
+            p #{user.lastName}
         .detail-wrapper
           .detail-card
             span Filiação
-            p Estudante, Curso: Informática, Departamento: Tecnologia
+            p Curso: #{user.course}, Departamento: #{user.department}
           .detail-card
             span Nível
-            p Administrador
+            p #{user.level}
         .detail-wrapper
           .detail-card
             span Data de Registo
-            p 2023-01-01
+            p #{new Date(user.registrationDate).toLocaleDateString()}
           .detail-card
             span Data do Último Acesso
-            p 2023-06-01
+            p #{new Date(user.lastAccessDate).toLocaleDateString()}
         .detail-wrapper
           .detail-card-clickable
             span Email
-            p hugoarantesdias@gmail.com
+            p #{user.email}
           .detail-card-clickable
-            span Password
-            p ********
+            span Role
+            p #{user.role}
 
     style.
       .profile-container {
@@ -129,6 +134,7 @@ block content
         color: #1fd761;
       }
       .bigger-container {
+        display: block; /* Necessário para que a tag <a> envolva corretamente a div */
         width: 100%;
         background-color: #444;
         border-radius: 5px;
@@ -136,9 +142,13 @@ block content
         margin-top: 2.5%;
         padding: 5%;
         cursor: pointer;
+        text-decoration: none; /* Remove o sublinhado dos links */
+        color: inherit; /* Garante que a cor do texto herda a cor do pai */
       }
+
       .bigger-container:hover {
-        color: #1fd761;
+        color: #1fd761; /* Altera a cor do texto para verde */
+        text-decoration: none; /* Garante que o texto não fique sublinhado */
       }
       hr {
         border: 1px solid #444; /* Cor branca para a linha horizontal */
