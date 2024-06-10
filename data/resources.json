@@ -1,6 +1,7 @@
 [
     {
       "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
+      "user": "666641bd72957a4729b20247",
       "type": "book",
       "title": "Introduction to Algorithms",
       "subtitle": "",
@@ -26,6 +27,7 @@
     },
     {
       "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
+      "user": "666641bd72957a4729b20247",
       "type": "book",
       "title": "Deep Learning",
       "subtitle": "",

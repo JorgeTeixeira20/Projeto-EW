@@ -161,7 +161,7 @@ html
         i.bi.bi-person-fill.user-icon <!-- Ícone de usuário do Bootstrap Icons -->
         i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow') <!-- Seta para baixo do Bootstrap Icons -->
       div.dropdown-menu(id='dropdownMenu')
-        a(href='/perfil') Perfil
+        a(id="profile-link", href='#') Perfil
         a(href='#') Exemplo1
         a(href='#') Exemplo2
         a(href='#') Exemplo3
@@ -203,6 +203,23 @@ html
         }
       }
 
+      document.addEventListener('DOMContentLoaded', function() {
+        var profileLink = document.getElementById('profile-link');
+        profileLink.addEventListener('click', function(event) {
+          event.preventDefault();
+          fetch('/auth/perfil', {
+            method: 'GET',
+            credentials: 'same-origin' // Inclui cookies na requisição
+          }).then(function(response) {
+            if (response.redirected) {
+              window.location.href = response.url;
+            }
+          }).catch(function(error) {
+            console.error('Error fetching profile:', error);
+          });
+        });
+      });
+      
       window.onclick = function(event) {
         if (!event.target.matches('.user-icon') && !event.target.matches('.dropdown-arrow') && !event.target.matches('.user-icon-container')) {
           var dropdownMenu = document.getElementById('dropdownMenu');

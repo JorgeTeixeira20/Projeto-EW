@@ -24,6 +24,21 @@ exports.findById = async (req, res) => {
   }
 };
 
+// Get user Email by ID
+exports.findEmailById = async (id) => {
+  try {
+    const user = await User.findById(id).exec();
+    if (user) {
+      return user.email;
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+
 // Create new user
 exports.create = async (req, res) => {
   try {
