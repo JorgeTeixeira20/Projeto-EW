@@ -1,14 +1,14 @@
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const router = express.Router();
 
+const jwtSecret = 'jwt_secret';  
+
 // Passport configuration
-passport.use(new LocalStrategy(
-    { usernameField: 'email', passwordField: 'password' },
-    User.authenticate()
-));
+passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -18,7 +18,6 @@ router.get('/', (req, res) => {
 
 // Registration route
 router.post('/register', (req, res) => {
-
     const { firstName, lastName, email, role, course, department, level, password } = req.body;
 
     if (!firstName || !lastName || !email || !role || !course || !department || !level || !password) {
@@ -27,10 +26,10 @@ router.post('/register', (req, res) => {
     }
 
     const newUser = new User({
-        email,
-        username: email,
         firstName,
         lastName,
+        email,
+        username: email,
         role,
         course,
         department,
@@ -39,7 +38,7 @@ router.post('/register', (req, res) => {
         lastAccessDate: new Date()
     });
 
-    User.register(newUser, password, (err, user) => {
+    User.register(newUser, password, (err) => {
         if (err) {
             console.error("Registration error:", err);
             if (err.name === 'UserExistsError') {
@@ -53,23 +52,18 @@ router.post('/register', (req, res) => {
 
 // Login route
 router.post('/login', (req, res, next) => {
-
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             console.error("Login error:", err);
             return next(err);
         }
         if (!user) {
-            console.log("Login failed:", info); 
+            console.log("Login failed:", info);
             return res.redirect('/auth/login');
         }
-        req.logIn(user, (err) => {
-            if (err) {
-                console.error("Login error after authentication:", err); 
-                return next(err);
-            }
-            return res.redirect('/main');
-        });
+        const token = jwt.sign({ id: user._id, email: user.email }, jwtSecret, { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true });  
+        return res.redirect('/main'); 
     })(req, res, next);
 });
 
