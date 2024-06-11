@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const router = express.Router();
 
-const jwtSecret = 'jwt_secret';  
+const jwtSecret = 'projeto-ew-2024'; // Ensure this is a secure secret key
 
 // Passport configuration
 passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
@@ -14,19 +14,6 @@ passport.deserializeUser(User.deserializeUser());
 
 router.get('/', (req, res) => {
     res.render('index');
-});
-
-router.get('/perfil', (req, res) => {
-    try {
-        const token = req.cookies.token;
-        console.log("Token:", token);  // Log do token JWT
-        const decoded = jwt.verify(token, jwtSecret);
-        console.log("Decoded ID:", decoded.id);  // Log do ID decodificado
-        res.redirect(`/perfil/${decoded.id}`);
-    } catch (err) {
-        console.error('Erro ao buscar perfil do usuário:', err);
-        res.status(500).send('Erro ao buscar perfil do usuário');
-    }
 });
 
 // Registration route
@@ -59,7 +46,7 @@ router.post('/register', (req, res) => {
             }
             return res.status(500).send(err.message);
         }
-        res.redirect('/auth');
+        res.redirect('/auth/login');
     });
 });
 
@@ -76,7 +63,7 @@ router.post('/login', (req, res, next) => {
         }
         const token = jwt.sign({ id: user._id, email: user.email }, jwtSecret, { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true });  
-        return res.redirect('/main'); 
+        return res.redirect('/'); 
     })(req, res, next);
 });
 

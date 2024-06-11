@@ -6,20 +6,21 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const User = require('../models/user');
-const UserController = require('../controllers/user');
 const Resource = require('../models/resource');
+const verifyJWT = require('../middleware/auth');
 
-// Configure Multer for file uploads
 const upload = multer({ dest: 'uploads/' });
 
-router.get('/main', (req, res) => {
+router.get('/', (req, res) => {
   res.render('main');
 });
+
+router.use(verifyJWT);
 
 router.get('/listaRecursos', async (req, res) => {
   try {
     const resources = await Resource.find({});
-    res.render('listaRecursos', { userId: res.locals.userId, resources });
+    res.render('listaRecursos', { userId: req.user._id, resources });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recursos.');
@@ -36,6 +37,71 @@ router.get('/recurso/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
+router.get('/recurso/:id', async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id);
+    if (!resource) {
+      return res.status(404).send('Recurso não encontrado');
+    }
+    res.render('recurso', { resource });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
+router.get('/perfil', async (req, res) => {
+  try {
+    const email = req.user.email;
+
+    const user = await User.findOne({ email }).exec();
+    console.log("User:", user);  // Log the user found
+
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    // Fetch user resources
+    const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
+
+    // Calculate average ratings
+    let totalStars = 0;
+    let totalReviews = 0;
+    let highestRatedResource = null;
+    let highestRating = 0;
+
+    resources.forEach(resource => {
+      let resourceTotalStars = 0;
+      resource.reviews.forEach(review => {
+        totalStars += review.stars;
+        resourceTotalStars += review.stars;
+        totalReviews++;
+      });
+
+      const resourceAverageRating = resource.reviews.length > 0 ? (resourceTotalStars / resource.reviews.length) : 0;
+      if (resourceAverageRating > highestRating) {
+        highestRating = resourceAverageRating;
+        highestRatedResource = resource;
+      }
+    });
+
+    const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
+
+    // Count resources and posts
+    const resourceCount = user.myResources.length;
+    const postCount = user.myPosts.length;
+
+    console.log('Rendering perfil with data:', {
+      user, resourceCount, averageRating, postCount, highestRatedResource
+    });
+
+    res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
+  } catch (err) {
+    console.error('Erro ao buscar perfil do usuário:', err);
+    res.status(500).send('Erro ao buscar perfil do usuário');
   }
 });
 
@@ -91,16 +157,27 @@ router.get('/listaPosts', (req, res) => {
   res.render('listaPosts');
 });
 
+router.get('/recurso/:id', async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id);
+    if (!resource) {
+      return res.status(404).send('Recurso não encontrado');
+    }
+    res.render('recurso', { resource });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
 router.get('/rankings', (req, res) => {
   res.render('rankings');
 });
 
-// Render the form for 'adicionarRecurso'
 router.get('/adicionarRecurso', (req, res) => {
   res.render('addRec');
 });
 
-// Handle file upload for 'adicionarRecurso'
 router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res) => {
   let form = req.body;
   let files = req.files;
@@ -142,6 +219,9 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
 
   // Create a new resource in the database
   try {
+    const userId = req.user.id; // Use the authenticated user's ID
+    const userName = req.user.email; // Use the authenticated user's name
+
     const resource = new Resource({
       _id: new mongoose.Types.ObjectId().toString(),
       type: form.categoria,
@@ -151,7 +231,8 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
       dataCriacao: new Date(),
       dataRegisto: new Date(),
       visibilidade: form.visibilidade,
-      author: "author-placeholder", // Replace with actual author logic
+      author: req.user.email, // Use authenticated user's name
+      user: userId, // Use authenticated user's ID
       year: new Date().getFullYear(),
       themes: [], // Add actual themes if available
       files: uploadedFiles,
