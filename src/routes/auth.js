@@ -3,6 +3,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 const router = express.Router();
 
 const jwtSecret = 'projeto-ew-2024'; // Ensure this is a secure secret key
@@ -25,7 +27,10 @@ router.post('/register', (req, res) => {
         return res.status(400).send("All fields are required");
     }
 
+    const newUserId = new ObjectId().toString();
+
     const newUser = new User({
+        _id: newUserId, 
         firstName,
         lastName,
         email,
