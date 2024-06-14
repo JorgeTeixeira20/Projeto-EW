@@ -21,7 +21,7 @@ html
         align-items: center;
         z-index: 2;
       }
-      .menu-btn-container, .user-icon-container {
+      .menu-btn-container, .user-icon-container, .logout-btn-container {
         background-color: #212020;
         padding: 10px;
         border-radius: 5px;
@@ -36,6 +36,11 @@ html
         left: 20px;
       }
       .user-icon-container {
+        right: 110px; 
+        cursor: pointer;
+        transition: transform 0.5s ease;
+      }
+      .logout-btn-container {
         right: 20px;
         cursor: pointer;
         transition: transform 0.5s ease;
@@ -52,11 +57,11 @@ html
       .menu-btn.rotate {
         transform: rotate(180deg);
       }
-      .user-icon {
+      .user-icon, .logout-icon {
         font-size: 25px;
         color: white;
       }
-      .user-icon:hover {
+      .user-icon:hover, .logout-icon:hover {
         color: #1fd761;
       }
       .dropdown-arrow {
@@ -165,6 +170,9 @@ html
         a(href='#') Exemplo1
         a(href='#') Exemplo2
         a(href='#') Exemplo3
+      div.logout-btn-container
+        a.logout-icon(href='/auth/logout')
+          i.bi.bi-box-arrow-right
     .menu(id='mySidenav')
       a(href='/rankings') Consultar Rankings
       a(href='/listaRecursos') Consultar Recursos

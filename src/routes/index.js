@@ -11,6 +11,7 @@ const Post = require('../models/post');
 const verifyJWT = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
+router.use(verifyJWT);
 
 router.get('/', async (req, res) => {
   try {
@@ -35,8 +36,6 @@ router.get('/', async (req, res) => {
     res.status(500).send('Erro ao buscar posts e recursos.');
   }
 });
-
-router.use(verifyJWT);
 
 router.get('/listaRecursos', async (req, res) => {
   try {
@@ -353,6 +352,20 @@ router.get('/download-all/:resourceId', async (req, res) => {
     console.error('Erro ao criar o arquivo zip:', err);
     res.status(500).send('Erro ao criar o arquivo zip.');
   }
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/auth'); 
+    });
+  });
 });
 
 module.exports = router;
