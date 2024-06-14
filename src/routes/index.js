@@ -137,11 +137,19 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
 
 router.get('/resource/:id', async (req, res) => {
   try {
+    const email = req.user.email;
+
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
     const resource = await Resource.findById(req.params.id);
     if (!resource) {
       return res.status(404).send('Recurso não encontrado');
     }
-    res.render('recurso', { resource });
+    res.render('recurso', { resource, user });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recurso');

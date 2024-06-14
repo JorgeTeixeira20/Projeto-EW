@@ -29,3 +29,18 @@ services:
           mongoimport --host mongodb --db recursosEducativos --collection resources --file /datasets/resources.json --jsonArray &&
           mongoimport --host mongodb --db recursosEducativos --collection posts --file /datasets/posts.json --jsonArray
         "
+
+  mongo-export:
+    image: mongo:latest
+    volumes:
+      - ./data/export:/export
+    depends_on:
+      - mongodb
+    entrypoint: sh -c "
+          for i in {1..30}; do
+            mongo --host mongodb --eval 'print(\"waiting for mongodb to be ready\")' && break || sleep 1;
+          done &&
+          mongoexport --host mongodb --db recursosEducativos --collection users --out /export/users.json --jsonArray &&
+          mongoexport --host mongodb --db recursosEducativos --collection resources --out /export/resources.json --jsonArray &&
+          mongoexport --host mongodb --db recursosEducativos --collection posts --out /export/posts.json --jsonArray
+        "

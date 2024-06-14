@@ -39,13 +39,13 @@ block content
         ul
           each file in resource.files
             li
-              if resource.visibilidade == 'Público'
+              if resource.visibilidade == 'Público' || resource.user == user._id
                 a(href=`/download/${file.fileName}`) #{file.fileName}
               else 
                 | #{file.fileName}
       .bottom-right-container
         .download-box
-          if resource.visibilidade == 'Público'
+          if resource.visibilidade == 'Público' || resource.user == user._id
             a(href=`/download-all/${resource._id}`)
               button
                 i.bi.bi-download
