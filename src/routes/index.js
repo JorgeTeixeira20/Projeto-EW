@@ -154,7 +154,6 @@ router.get('/perfil', async (req, res) => {
     const email = req.user.email;
 
     const user = await User.findOne({ email }).exec();
-    console.log("User:", user);  // Log the user found
 
     if (!user) {
       return res.status(404).send('Usuário não encontrado');
@@ -190,10 +189,6 @@ router.get('/perfil', async (req, res) => {
     const resourceCount = user.myResources.length;
     const postCount = user.myPosts.length;
 
-    console.log('Rendering perfil with data:', {
-      user, resourceCount, averageRating, postCount, highestRatedResource
-    });
-
     res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
   } catch (err) {
     console.error('Erro ao buscar perfil do usuário:', err);
@@ -203,20 +198,14 @@ router.get('/perfil', async (req, res) => {
 
 router.get('/perfil/:id', async (req, res) => {
   try {
-    console.log("Requested User ID:", req.params.id);  // Log do ID do usuário solicitado
-    
-    // Buscar o usuário pelo ID
     const user = await User.findById(req.params.id).exec();
-    console.log("User:", user);  // Log do usuário encontrado
 
     if (!user) {
       return res.status(404).send('Usuário não encontrado');
     }
 
-    // Buscar os recursos do usuário
     const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
 
-    // Calcular a média das avaliações
     let totalStars = 0;
     let totalReviews = 0;
     let highestRatedResource = null;
@@ -238,7 +227,6 @@ router.get('/perfil/:id', async (req, res) => {
     });
     const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
 
-    // Contar os recursos disponibilizados
     const resourceCount = user.myResources.length;
     const postCount = user.myPosts.length;
 
@@ -265,20 +253,18 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
     return res.status(400).send('Nenhum arquivo enviado.');
   }
 
-  // Ensure the directory exists
   const storageDir = path.join(__dirname, '../public/filestore/');
   if (!fs.existsSync(storageDir)) {
     fs.mkdirSync(storageDir, { recursive: true });
   }
 
-  // Move the files to the desired directory and collect file information
   let uploadedFiles = [];
   try {
     for (let file of files) {
       let oldPath = path.join(__dirname, '../', file.path);
       let newPath = path.join(storageDir, file.originalname);
 
-      console.log(`Moving file from ${oldPath} to ${newPath}`); // Log the file move operation
+      console.log(`Moving file from ${oldPath} to ${newPath}`); 
       
       fs.renameSync(oldPath, newPath);
 
@@ -298,8 +284,8 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
 
   // Create a new resource in the database
   try {
-    const userId = req.user.id; // Use the authenticated user's ID
-    const userName = req.user.email; // Use the authenticated user's name
+    const userId = req.user.id;
+    const userName = req.user.email;
 
     const resource = new Resource({
       _id: new mongoose.Types.ObjectId().toString(),
@@ -310,10 +296,10 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
       dataCriacao: new Date(),
       dataRegisto: new Date(),
       visibilidade: form.visibilidade,
-      author: req.user.email, // Use authenticated user's name
-      user: userId, // Use authenticated user's ID
+      author: req.user.email,
+      user: userId,
       year: new Date().getFullYear(),
-      themes: [], // Add actual themes if available
+      themes: [], 
       files: uploadedFiles,
       reviews: []
     });
@@ -351,7 +337,7 @@ router.get('/download-all/:resourceId', async (req, res) => {
     }
 
     const zip = archiver('zip', {
-      zlib: { level: 9 } // Compression level
+      zlib: { level: 9 } 
     });
 
     res.attachment(`${resource.title}.zip`);
