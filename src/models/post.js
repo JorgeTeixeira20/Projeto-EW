@@ -1,17 +1,27 @@
 const mongoose = require('mongoose');
 
-const commentSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const replySchema = new mongoose.Schema({
+  _id: { type: String, required: true },
+  commentUserId: { type: String, required: true },
   content: { type: String, required: true },
   date: { type: Date, required: true }
 });
 
+const commentSchema = new mongoose.Schema({
+  _id: { type: String, required: true },
+  commentUserId: { type: String, required: true },
+  content: { type: String, required: true },
+  date: { type: Date, required: true },
+  replies: [replySchema]
+});
+
 const postSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  resourceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Resource', required: true },
+  _id: { type: String, required: true },
+  userId: { type: String, required: true },
+  resourceId: { type: String, required: true },
   content: { type: String, required: true },
   comments: [commentSchema],
   date: { type: Date, required: true }
 });
 
-module.exports = mongoose.model('posts', postSchema);
+module.exports = mongoose.model('Post', postSchema);

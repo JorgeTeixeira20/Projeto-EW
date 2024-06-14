@@ -7,6 +7,7 @@ const path = require('path');
 const archiver = require('archiver');
 const User = require('../models/user');
 const Resource = require('../models/resource');
+const Post = require('../models/post');
 const verifyJWT = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
@@ -27,16 +28,91 @@ router.get('/listaRecursos', async (req, res) => {
   }
 });
 
-router.get('/recurso/:id', async (req, res) => {
+router.get('/listaPosts', async (req, res) => {
   try {
-    const resource = await Resource.findById(req.params.id);
-    if (!resource) {
-      return res.status(404).send('Recurso não encontrado');
-    }
-    res.render('recurso', { resource });
+    const posts = await Post.find({});
+    res.render('listaPosts', { userId: req.user._id, posts });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Erro ao buscar recurso');
+    res.status(500).send('Erro ao buscar posts.');
+  }
+});
+
+router.get('/post/:id', verifyJWT, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const resource = await Resource.findById(post.resourceId);
+    if (!resource) {
+      return res.status(404).send('Resource não encontrado');
+    }
+
+    console.log('Post encontrado:', post);
+    console.log('Resource encontrado:', resource);
+
+    res.render('post', { post, resource });
+  } catch (err) {
+    console.error('Erro ao buscar post:', err);
+    res.status(500).send('Erro ao buscar post');
+  }
+});
+
+router.post('/post/:id/comment', verifyJWT, async (req, res) => {
+  const { content } = req.body;
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const newComment = {
+      _id: new mongoose.Types.ObjectId().toString(),
+      commentUserId: req.user.id,
+      content,
+      date: new Date(),
+      replies: []
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    res.redirect(`/post/${req.params.id}`);
+  } catch (err) {
+    console.error('Erro ao adicionar comentário:', err);
+    res.status(500).send('Erro ao adicionar comentário');
+  }
+});
+
+router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) => {
+  const { content } = req.body;
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const newReply = {
+      _id: new mongoose.Types.ObjectId().toString(),
+      commentUserId: req.user.id,
+      content,
+      date: new Date()
+    };
+
+    comment.replies.push(newReply);
+    await post.save();
+
+    res.redirect(`/post/${req.params.id}`);
+  } catch (err) {
+    console.error('Erro ao adicionar resposta:', err);
+    res.status(500).send('Erro ao adicionar resposta');
   }
 });
 
@@ -150,23 +226,6 @@ router.get('/perfil/:id', async (req, res) => {
   } catch (err) {
     console.error('Erro ao buscar perfil do usuário:', err);
     res.status(500).send('Erro ao buscar perfil do usuário');
-  }
-});
-
-router.get('/listaPosts', (req, res) => {
-  res.render('listaPosts');
-});
-
-router.get('/recurso/:id', async (req, res) => {
-  try {
-    const resource = await Resource.findById(req.params.id);
-    if (!resource) {
-      return res.status(404).send('Recurso não encontrado');
-    }
-    res.render('recurso', { resource });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao buscar recurso');
   }
 });
 

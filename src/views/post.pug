@@ -1,0 +1,268 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 #{post.content}
+    .post-details
+      p
+        span Quem deu commit disto:
+        | 
+        a(href=`/perfil/${post.userId}`) #{post.userId}
+      p
+        span Data:
+        | 
+        span #{new Date(post.date).toLocaleDateString()}
+      p
+        span Conteúdo:
+        | 
+        span #{post.content}
+      p
+        span Recurso:
+        ul
+          li
+            span Título:
+            | 
+            span #{resource.title}
+          li
+            span Autor:
+            | 
+            span #{resource.author}
+          li
+            span Ano:
+            | 
+            span #{resource.year}
+          li
+            span Temas:
+            | 
+            span #{resource.themes.join(', ')}
+    .comments-container
+      h3 Comentários:
+      - const sortedComments = post.comments.sort((a, b) => new Date(a.date) - new Date(b.date));
+      each comment in sortedComments
+        .comment-wrapper
+          .comment-box
+            a(href=`/perfil/${comment.commentUserId}`) #{comment.commentUserId} :
+            | #{comment.content}
+            | (#{new Date(comment.date).toLocaleDateString()})
+            button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
+          .replies
+            each reply in comment.replies.sort((a, b) => new Date(a.date) - new Date(b.date))
+              .reply-wrapper
+                .reply-line
+                .reply-box
+                  a(href=`/perfil/${reply.commentUserId}`) #{reply.commentUserId} :
+                  | #{reply.content}
+                  | (#{new Date(reply.date).toLocaleDateString()})
+          .reply-form(id=`reply-form-${comment._id}`)
+            form(action=`/post/${post._id}/comment/${comment._id}/reply` method="post")
+              .form-group
+                label(for="reply-content") Responder:
+                textarea#reply-content(name="content" required placeholder="Escreva sua resposta aqui...")
+              button(type="submit") Adicionar Resposta
+      .add-comment-box
+        form(action=`/post/${post._id}/comment` method="post")
+          .form-group
+            label(for="content") Adicionar Comentário:
+            textarea#content(name="content" required placeholder="Escreva seu comentário aqui...")
+          button(type="submit") Adicionar Comentário
+
+    script.
+      function toggleReplyForm(commentId) {
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        if (replyForm.classList.contains('show')) {
+          replyForm.classList.remove('show');
+        } else {
+          replyForm.classList.add('show');
+        }
+      }
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+      }
+      .post-details {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+        position: relative;
+      }
+      .post-details p {
+        margin: 10px 0;
+      }
+      .post-details span {
+        font-weight: bold;
+      }
+      .post-details ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .post-details li {
+        margin: 5px 0;
+      }
+      .post-details a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .post-details a:hover {
+        text-decoration: underline;
+      }
+      .comments-container {
+        margin-top: 20px;
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+      }
+      .comment-wrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .comment-box {
+        background-color: #555;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        position: relative;
+        text-align: left;
+      }
+      .comment-box a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .comment-box a:hover {
+        text-decoration: underline;
+      }
+      .reply-button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        align-self: flex-end; /* Alinha o botão à direita */
+      }
+      .reply-button:hover {
+        background-color: #1a9f50;
+      }
+      .replies {
+        position: relative;
+        text-align: left;
+      }
+      .reply-wrapper {
+        margin-left: 50px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
+      .reply-line {
+        position: absolute;
+        top: 0;
+        left: -30px;
+        width: 20px;
+        border-left: 2px solid #1fd761;
+        height: 100%;
+      }
+      .reply-box {
+        background-color: #696869;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+      }
+      .reply-box a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .reply-box a:hover {
+        text-decoration: underline;
+      }
+      .reply-form {
+        background-color: #555; /* Fundo opaco para o formulário de resposta */
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 10px;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+      }
+      .reply-form.show {
+        max-height: 500px; /* Define um valor suficiente para o conteúdo */
+        opacity: 1;
+      }
+      .reply-form .form-group {
+        margin-bottom: 15px;
+      }
+      .reply-form label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .reply-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+        min-height: 50px; /* Altura mínima para a caixa de texto */
+      }
+      .reply-form button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .reply-form button:hover {
+        background-color: #1a9f50;
+      }
+      .add-comment-box {
+        background-color: #555;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+      }
+      .add-comment-box .form-group {
+        margin-bottom: 15px;
+      }
+      .add-comment-box label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .add-comment-box textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+        min-height: 100px;
+      }
+      .add-comment-box button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .add-comment-box button:hover {
+        background-color: #1a9f50;
+      }
