@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, required: true },
   course: { type: String, required: true },
   department: { type: String, required: true },
-  level: { type: String, required: true },
+  admin: { type: Boolean, required: true, default: false },
   registrationDate: { type: Date, default: Date.now },
   lastAccessDate: { type: Date, default: Date.now },
   myResources: { type: [mongoose.Schema.Types.ObjectId], ref: 'Resource', default: [] },

@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const router = express.Router();
 
-const jwtSecret = 'projeto-ew-2024'; // Ensure this is a secure secret key
-
 // Passport configuration
 passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -20,9 +18,9 @@ router.get('/', (req, res) => {
 
 // Registration route
 router.post('/register', (req, res) => {
-    const { firstName, lastName, email, role, course, department, level, password } = req.body;
+    const { firstName, lastName, email, role, course, department, password } = req.body;
 
-    if (!firstName || !lastName || !email || !role || !course || !department || !level || !password) {
+    if (!firstName || !lastName || !email || !role || !course || !department || !password) {
         console.log("Validation Error: Missing fields");
         return res.status(400).send("All fields are required");
     }
@@ -38,7 +36,7 @@ router.post('/register', (req, res) => {
         role,
         course,
         department,
-        level,
+        admin: false, 
         registrationDate: new Date(),
         lastAccessDate: new Date()
     });
@@ -66,7 +64,7 @@ router.post('/login', (req, res, next) => {
             console.log("Login failed:", info);
             return res.redirect('/auth/login');
         }
-        const token = jwt.sign({ id: user._id, email: user.email }, jwtSecret, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id, email: user.email }, 'projeto-ew-2024', { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true });  
         return res.redirect('/'); 
     })(req, res, next);
