@@ -39,14 +39,17 @@ block content
         ul
           each file in resource.files
             li
-              a(href=`/download/${file.fileName}`) #{file.fileName}
+              if resource.visibilidade == 'Público'
+                a(href=`/download/${file.fileName}`) #{file.fileName}
+              else 
+                | #{file.fileName}
       .bottom-right-container
         .download-box
           if resource.visibilidade == 'Público'
             a(href=`/download-all/${resource._id}`)
               button
                 i.bi.bi-download
-                | Download All
+                | Download
           else
             button
               i.bi.bi-lock-fill
