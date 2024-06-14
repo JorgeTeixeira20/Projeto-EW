@@ -16,7 +16,7 @@ block content
             a.dropdown-item(href="#") Categoria 3
     .resource-list
       each resource in resources
-        a.resource-link(href=`/recurso/${resource._id}`)
+        a.resource-link(href=`/resource/${resource._id}`)
           .resource-item
             h3 Título: #{resource.title}
             p Descrição: #{resource.description}
@@ -111,6 +111,7 @@ block content
         padding: 20px;
         border-radius: 5px;
         color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
       .resource-link {
         text-decoration: none; /* Remove a decoração do link */
@@ -122,6 +123,7 @@ block content
         text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
       }
       .resource-item:hover {
+        background-color: #555;
         color: #1fd761;
         cursor: pointer;
       }

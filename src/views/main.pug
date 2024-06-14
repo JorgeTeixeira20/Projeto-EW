@@ -6,11 +6,11 @@ block content
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px; /* Espaço entre os elementos */
-      margin-top: 100px; /* Ajustar conforme necessário para a distância do header */
+      gap: 20px;
+      margin-top: 100px;
     }
     .main-title {
-      background-color: #1fd761; /* Cor de fundo da caixa */
+      background-color: #1fd761;
       width: 350px;
       color: white;
       padding: 10px 20px;
@@ -18,6 +18,72 @@ block content
       margin-bottom: 20px;
       text-align: center;
     }
+    .item-box {
+      background-color: #444;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      width: 90%;
+      max-width: 800px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative; /* Add this for positioning the author box */
+    }
+    .item-box:hover {
+      background-color: #555;
+      color: #1fd761;
+    }
+    .item-box h3 {
+      margin: 0;
+    }
+    .item-box p {
+      margin: 5px 0 0;
+    }
+    .item-box a {
+      color: #1fd761;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .item-box:hover a {
+      color: #1fd761;
+    }
+    .item-box a:hover {
+      color: #1fd761;
+    }
+    .author-box {
+      position: absolute;
+      top: 15px; /* Align with the padding */
+      right: 15px;
+      display: flex;
+      align-items: center;
+      background-color: #212121;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .author-box i {
+      font-size: 24px;
+      background-color: #212121;
+      color: white;
+    }
+    .author-box:hover i {
+      color: #1fd761;
+    }
+
   .main-container
     .main-title
-      h1 Página Principal
+      h1 Notícias
+    each item in items
+      .item-box(onclick=`location.href='/${item.type}/${item._id}'`)
+        if item.type === 'resource'
+          h3 Recurso: #{item.title}
+          p Descrição: #{item.description}
+          .author-box
+            a(href=`/perfil/${item.author}`)
+              i.bi.bi-person-fill
+        else if item.type === 'post'
+          h3 Post: #{item.title}
+          p Descrição: #{item.content}
+          .author-box
+            a(href=`/perfil/${item.userId}`)
+              i.bi.bi-person-fill

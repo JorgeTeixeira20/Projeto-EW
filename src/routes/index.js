@@ -12,8 +12,28 @@ const verifyJWT = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
 
-router.get('/', (req, res) => {
-  res.render('main');
+router.get('/', async (req, res) => {
+  try {
+    const posts = await Post.find({});
+    const resources = await Resource.find({});
+    
+    console.log('Posts:', posts);
+    console.log('Resources:', resources);
+    
+    const items = [
+      ...posts.map(post => ({ ...post.toObject(), type: 'post', title: post.content })), 
+      ...resources.map(resource => ({ ...resource.toObject(), type: 'resource', title: resource.title }))
+    ];
+
+    items.sort((a, b) => new Date(b.date) - new Date(a.date)); // Ordenar por data, mais recente primeiro
+    
+    console.log('Items:', items);
+
+    res.render('main', { items });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar posts e recursos.');
+  }
 });
 
 router.use(verifyJWT);
@@ -116,7 +136,7 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
   }
 });
 
-router.get('/recurso/:id', async (req, res) => {
+router.get('/resource/:id', async (req, res) => {
   try {
     const resource = await Resource.findById(req.params.id);
     if (!resource) {
