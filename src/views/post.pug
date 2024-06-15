@@ -2,47 +2,33 @@ extends layout-main
 
 block content
   .container
-    .title-container
-      h2 #{post.content}
-    .post-details
-      p
-        span Quem deu commit disto:
-        | 
-        a(href=`/perfil/${post.userId}`) #{post.userId}
-      p
-        span Data:
-        | 
-        span #{new Date(post.date).toLocaleDateString()}
-      p
-        span Conteúdo:
-        | 
-        span #{post.content}
-      p
-        span Recurso:
-        ul
-          li
-            span Título:
-            | 
-            span #{resource.title}
-          li
-            span Autor:
-            | 
-            span #{resource.author}
-          li
-            span Ano:
-            | 
-            span #{resource.year}
-          li
-            span Temas:
-            | 
-            span #{resource.themes.join(', ')}
+    
+    .post-container
+      // Nome do utilizador que fez o post, como link
+      .post-author 
+        a(href=`/perfil/${user._id}`) #{user.firstName} #{user.lastName}
+      
+      // Caixa grande com o conteúdo do post
+      .post-titles
+        h3 #{post.title}
+
+      // Caixa grande com o conteúdo do post
+      .post-content
+        | #{post.content}
+      
+      a.resource-link(href=`/resource/${resource._id}`) Acessar recurso (#{resource.title})
+      
+      // Data de quando o post foi feito no canto inferior direito
+      .post-date
+        | #{new Date(post.date).toLocaleDateString()}
+
     .comments-container
       h3 Comentários:
       - const sortedComments = post.comments.sort((a, b) => new Date(a.date) - new Date(b.date));
       each comment in sortedComments
         .comment-wrapper
           .comment-box
-            a(href=`/perfil/${comment.commentUserId}`) #{comment.commentUserId} :
+            a(href=`/perfil/${comment.user._id}`) #{comment.user.firstName} #{comment.user.lastName} (#{comment.user.email}):
             | #{comment.content}
             | (#{new Date(comment.date).toLocaleDateString()})
             button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
@@ -51,7 +37,7 @@ block content
               .reply-wrapper
                 .reply-line
                 .reply-box
-                  a(href=`/perfil/${reply.commentUserId}`) #{reply.commentUserId} :
+                  a(href=`/perfil/${reply.user._id}`) #{reply.user.firstName} #{reply.user.lastName} (#{reply.user.email}):
                   | #{reply.content}
                   | (#{new Date(reply.date).toLocaleDateString()})
           .reply-form(id=`reply-form-${comment._id}`)
@@ -78,6 +64,67 @@ block content
       }
 
     style.
+      .resource-link {
+        font-size: 0.8em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .resource-link:hover {
+        text-decoration: underline;
+        color: #1fd761;
+      }
+      .post-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        margin-top: 10%;
+        position: relative; /* Para permitir posicionamento relativo dos elementos internos */
+        text-align: left;
+      }
+      .post-author {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+      .post-author a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .post-author a:hover {
+        text-decoration: underline;
+      }
+      .post-content {
+          background-color: #444;
+          padding: 20px;
+          border-radius: 5px;
+          color: #fff;
+          margin-bottom: 10px;
+          text-align: left;
+          min-height: 100px; /* Altura mínima */
+          height: auto; /* Ajusta a altura automaticamente */
+          word-break: break-word; /* Quebra palavras longas */
+          white-space: pre-wrap; /* Preserva espaços e quebras de linha */
+      }
+      .post-titles {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-align: left;
+        font-weight: bold;
+      }
+      .post-date {
+        text-align: right;
+        font-size: 0.8em;
+        color: #999;
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+      }
       .title-container {
         background-color: #333;
         padding: 20px;

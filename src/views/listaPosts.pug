@@ -18,17 +18,15 @@ block content
       each post in posts
         a.post-link(href=`/post/${post._id}`)
           .post-item
-            h3 Título: #{post._id}
-            p Descrição: #{post.description}
-            p
-              span Categoria:
-              | 
-              span #{post.content}
+            h3 #{post.title}
+            h5 #{post.subtitle}
             p
               span Autor:
               | 
-              span #{post.author}
+              span #{post.user.firstName} #{post.user.lastName}
             hr
+            .post-date
+              | #{new Date(post.date).toLocaleDateString()}
 
     style.
       .title-container {
@@ -112,11 +110,22 @@ block content
         border-radius: 5px;
         color: #fff;
         transition: background-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+        position: relative;
+      }
+      .post-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #999;
       }
       .post-link {
         text-decoration: none; /* Remove a decoração do link */
         color: inherit; /* Mantém a cor do texto herdada */
         display: block; /* Garante que o link ocupe todo o espaço do item */
+        position: relative;
+        margin-bottom: 20px;
       }
       .post-link:visited, .post-link:active, .post-link:hover {
         color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */

@@ -17,6 +17,8 @@ const commentSchema = new mongoose.Schema({
 
 const postSchema = new mongoose.Schema({
   _id: { type: String, required: true },
+  title: { type: String, required: true },
+  subtitle: { type: String, default: '' },
   userId: { type: String, required: true },
   resourceId: { type: String, required: true },
   content: { type: String, required: true },

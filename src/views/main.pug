@@ -8,6 +8,7 @@ block content
       align-items: center;
       gap: 20px;
       margin-top: 100px;
+      margin-bottom: 50px;
     }
     .main-title {
       background-color: #1fd761;
@@ -22,13 +23,14 @@ block content
       background-color: #444;
       color: white;
       padding: 15px;
+      padding-right: 60px; /* Adiciona espaço suficiente à direita para o ícone do autor */
       border-radius: 5px;
       width: 90%;
       max-width: 800px;
       text-align: left;
       cursor: pointer;
       transition: background-color 0.3s ease, color 0.3s ease;
-      position: relative; /* Add this for positioning the author box */
+      position: relative; /* Permite posicionamento relativo dos elementos internos */
     }
     .item-box:hover {
       background-color: #555;
@@ -69,6 +71,16 @@ block content
     .author-box:hover i {
       color: #1fd761;
     }
+    .item-date {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.8em;
+      color: #999;
+    }
+    hr {
+      border: 1px solid #555;
+    }
 
   .main-container
     .main-title
@@ -77,13 +89,20 @@ block content
       .item-box(onclick=`location.href='/${item.type}/${item._id}'`)
         if item.type === 'resource'
           h3 Recurso: #{item.title}
-          p Descrição: #{item.description}
+          h5 #{item.subtitle}
+          p #{item.themes}
+          hr
+          .item-date
+            | #{new Date(item.dataCriacao).toLocaleDateString()}
           .author-box
-            a(href=`/perfil/${item.author}`)
+            a(href=`/perfil/${item.user}`)
               i.bi.bi-person-fill
         else if item.type === 'post'
           h3 Post: #{item.title}
-          p Descrição: #{item.content}
+          p #{item.subtitle}
+          hr
+          .item-date
+            | #{new Date(item.date).toLocaleDateString()}
           .author-box
             a(href=`/perfil/${item.userId}`)
               i.bi.bi-person-fill

@@ -1,0 +1,63 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Criação de Post acerca do Recurso: #{resource.title}
+    .post-form
+      form(action=`/create-post/${resource._id}` method="post")
+        .form-group
+          label(for="title") Título:
+          input#title(name="title" rows="1" required type="text" placeholder="Título do Post")
+        .form-group
+          label(for="subtitle") Subtítulo:
+          input#subtitle(name="subtitle" rows="2" type="text" placeholder="Subtítulo do Post")
+        .form-group
+          label(for="content") Conteúdo:
+          textarea#content(name="content" rows="4" required placeholder="Escreva o conteúdo do post aqui...")
+        button(type="submit") Criar Post
+
+    style.
+      label{
+        text-align: left;
+      }
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+      }
+      .post-form {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+      }
+      .post-form .form-group {
+        margin-bottom: 15px;
+      }
+      .post-form label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .post-form input, .post-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+      }
+      .post-form button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .post-form button:hover {
+        background-color: #1a9f50;
+      }
