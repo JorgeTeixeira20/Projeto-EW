@@ -6,55 +6,303 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const User = require('../models/user');
-const UserController = require('../controllers/user');
 const Resource = require('../models/resource');
+const Post = require('../models/post');
+const verifyJWT = require('../middleware/auth');
 
-// Configure Multer for file uploads
 const upload = multer({ dest: 'uploads/' });
+router.use(verifyJWT);
 
-router.get('/main', (req, res) => {
-  res.render('main');
+router.get('/', async (req, res) => {
+  try {
+    const posts = await Post.find({}).lean();
+    const resources = await Resource.find({}).lean();
+
+    // Combine posts e resources em uma única lista
+    const items = [
+      ...posts.map(post => ({ ...post, type: 'post' })),
+      ...resources.map(resource => ({ ...resource, type: 'resource' }))
+    ];
+
+    // Ordenar por data, mais recente primeiro
+    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    res.render('main', { items });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar posts e recursos.');
+  }
 });
 
 router.get('/listaRecursos', async (req, res) => {
   try {
     const resources = await Resource.find({});
-    res.render('listaRecursos', { userId: res.locals.userId, resources });
+    res.render('listaRecursos', { userId: req.user._id, resources });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recursos.');
   }
 });
 
-router.get('/recurso/:id', async (req, res) => {
+router.get('/listaPosts', async (req, res) => {
   try {
+    const posts = await Post.find({}).lean();
+
+    // Buscar detalhes do usuário para cada post
+    const userIds = posts.map(post => post.userId);
+    const users = await User.find({ _id: { $in: userIds } }).lean();
+
+    // Criar um mapa de userId para usuário
+    const userMap = users.reduce((acc, user) => {
+      acc[user._id] = user;
+      return acc;
+    }, {});
+
+    // Adicionar as informações do usuário a cada post
+    const postsWithUserDetails = posts.map(post => {
+      return {
+        ...post,
+        user: userMap[post.userId] || null
+      };
+    });
+
+    res.render('listaPosts', { userId: req.user._id, posts: postsWithUserDetails });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar posts.');
+  }
+});
+router.get('/post/:id', verifyJWT, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).lean();
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const resource = await Resource.findById(post.resourceId).lean();
+    if (!resource) {
+      return res.status(404).send('Resource não encontrado');
+    }
+
+    const user = await User.findById(post.userId).lean();
+    if (!user) {
+      return res.status(404).send('User não encontrado');
+    }
+
+    // Coletar todos os IDs de usuários de comentários e replies
+    const commentUserIds = new Set();
+    post.comments.forEach(comment => {
+      commentUserIds.add(comment.commentUserId);
+      if (comment.replies && comment.replies.length > 0) {
+        comment.replies.forEach(reply => {
+          commentUserIds.add(reply.commentUserId);
+        });
+      }
+    });
+
+    // Buscar usuários a partir dos IDs coletados
+    const users = await User.find({ _id: { $in: Array.from(commentUserIds) } }).lean();
+
+    // Criar um mapa de IDs de usuário para objetos de usuário
+    const userMap = users.reduce((map, user) => {
+      map[user._id] = user;
+      return map;
+    }, {});
+
+    // Incluir dados do usuário em cada comentário e reply
+    post.comments = post.comments.map(comment => {
+      return {
+        ...comment,
+        user: userMap[comment.commentUserId],
+        replies: comment.replies.map(reply => {
+          return {
+            ...reply,
+            user: userMap[reply.commentUserId]
+          };
+        })
+      };
+    });
+
+    console.log('Post encontrado:', post);
+    console.log('Resource encontrado:', resource);
+    console.log('User encontrado:', user);
+
+    res.render('post', { post, resource, user });
+  } catch (err) {
+    console.error('Erro ao buscar post:', err);
+    res.status(500).send('Erro ao buscar post');
+  }
+});
+
+router.post('/post/:id/comment', verifyJWT, async (req, res) => {
+  const { content } = req.body;
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const newComment = {
+      _id: new mongoose.Types.ObjectId().toString(),
+      commentUserId: req.user.id,
+      content,
+      date: new Date(),
+      replies: []
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    res.redirect(`/post/${req.params.id}`);
+  } catch (err) {
+    console.error('Erro ao adicionar comentário:', err);
+    res.status(500).send('Erro ao adicionar comentário');
+  }
+});
+
+router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) => {
+  const { content } = req.body;
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const newReply = {
+      _id: new mongoose.Types.ObjectId().toString(),
+      commentUserId: req.user.id,
+      content,
+      date: new Date()
+    };
+
+    comment.replies.push(newReply);
+    await post.save();
+
+    res.redirect(`/post/${req.params.id}`);
+  } catch (err) {
+    console.error('Erro ao adicionar resposta:', err);
+    res.status(500).send('Erro ao adicionar resposta');
+  }
+});
+
+router.get('/resource/:id', async (req, res) => {
+  try {
+    const email = req.user.email;
+
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
     const resource = await Resource.findById(req.params.id);
     if (!resource) {
       return res.status(404).send('Recurso não encontrado');
     }
-    res.render('recurso', { resource });
+    res.render('recurso', { resource, user });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recurso');
   }
 });
 
-router.get('/perfil/:id', async (req, res) => {
+router.get('/create-post/:resourceId', verifyJWT, async (req, res) => {
   try {
-    console.log("Requested User ID:", req.params.id);  // Log do ID do usuário solicitado
-    
-    // Buscar o usuário pelo ID
-    const user = await User.findById(req.params.id).exec();
-    console.log("User:", user);  // Log do usuário encontrado
+    const resource = await Resource.findById(req.params.resourceId);
+    if (!resource) {
+      return res.status(404).send('Recurso não encontrado');
+    }
+    res.render('criarPost', { resource, user: req.user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
+// Rota para criar um novo post
+router.post('/create-post/:resourceId', verifyJWT, async (req, res) => {
+  try {
+    const { title, subtitle, content } = req.body;
+    const newPost = new Post({
+      _id: new mongoose.Types.ObjectId().toString(),
+      title,
+      subtitle,
+      userId: req.user.id,
+      resourceId: req.params.resourceId,
+      content,
+      comments: [],
+      date: new Date()
+    });
+    await newPost.save();
+    res.redirect(`/post/${newPost._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao criar post');
+  }
+});
+
+router.get('/perfil', async (req, res) => {
+  try {
+    const email = req.user.email;
+
+    const user = await User.findOne({ email }).exec();
 
     if (!user) {
       return res.status(404).send('Usuário não encontrado');
     }
 
-    // Buscar os recursos do usuário
+    // Fetch user resources
     const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
 
-    // Calcular a média das avaliações
+    // Calculate average ratings
+    let totalStars = 0;
+    let totalReviews = 0;
+    let highestRatedResource = null;
+    let highestRating = 0;
+
+    resources.forEach(resource => {
+      let resourceTotalStars = 0;
+      resource.reviews.forEach(review => {
+        totalStars += review.stars;
+        resourceTotalStars += review.stars;
+        totalReviews++;
+      });
+
+      const resourceAverageRating = resource.reviews.length > 0 ? (resourceTotalStars / resource.reviews.length) : 0;
+      if (resourceAverageRating > highestRating) {
+        highestRating = resourceAverageRating;
+        highestRatedResource = resource;
+      }
+    });
+
+    const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
+
+    // Count resources and posts
+    const resourceCount = user.myResources.length;
+    const postCount = user.myPosts.length;
+
+    res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
+  } catch (err) {
+    console.error('Erro ao buscar perfil do usuário:', err);
+    res.status(500).send('Erro ao buscar perfil do usuário');
+  }
+});
+
+router.get('/perfil/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).exec();
+
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
+
     let totalStars = 0;
     let totalReviews = 0;
     let highestRatedResource = null;
@@ -76,7 +324,6 @@ router.get('/perfil/:id', async (req, res) => {
     });
     const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
 
-    // Contar os recursos disponibilizados
     const resourceCount = user.myResources.length;
     const postCount = user.myPosts.length;
 
@@ -87,20 +334,14 @@ router.get('/perfil/:id', async (req, res) => {
   }
 });
 
-router.get('/listaPosts', (req, res) => {
-  res.render('listaPosts');
-});
-
 router.get('/rankings', (req, res) => {
   res.render('rankings');
 });
 
-// Render the form for 'adicionarRecurso'
 router.get('/adicionarRecurso', (req, res) => {
   res.render('addRec');
 });
 
-// Handle file upload for 'adicionarRecurso'
 router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res) => {
   let form = req.body;
   let files = req.files;
@@ -109,20 +350,18 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
     return res.status(400).send('Nenhum arquivo enviado.');
   }
 
-  // Ensure the directory exists
   const storageDir = path.join(__dirname, '../public/filestore/');
   if (!fs.existsSync(storageDir)) {
     fs.mkdirSync(storageDir, { recursive: true });
   }
 
-  // Move the files to the desired directory and collect file information
   let uploadedFiles = [];
   try {
     for (let file of files) {
       let oldPath = path.join(__dirname, '../', file.path);
       let newPath = path.join(storageDir, file.originalname);
 
-      console.log(`Moving file from ${oldPath} to ${newPath}`); // Log the file move operation
+      console.log(`Moving file from ${oldPath} to ${newPath}`); 
       
       fs.renameSync(oldPath, newPath);
 
@@ -142,6 +381,9 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
 
   // Create a new resource in the database
   try {
+    const userId = req.user.id;
+    const userName = req.user.email;
+
     const resource = new Resource({
       _id: new mongoose.Types.ObjectId().toString(),
       type: form.categoria,
@@ -151,9 +393,10 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
       dataCriacao: new Date(),
       dataRegisto: new Date(),
       visibilidade: form.visibilidade,
-      author: "author-placeholder", // Replace with actual author logic
+      author: req.user.email,
+      user: userId,
       year: new Date().getFullYear(),
-      themes: [], // Add actual themes if available
+      themes: [], 
       files: uploadedFiles,
       reviews: []
     });
@@ -191,7 +434,7 @@ router.get('/download-all/:resourceId', async (req, res) => {
     }
 
     const zip = archiver('zip', {
-      zlib: { level: 9 } // Compression level
+      zlib: { level: 9 } 
     });
 
     res.attachment(`${resource.title}.zip`);
@@ -207,6 +450,20 @@ router.get('/download-all/:resourceId', async (req, res) => {
     console.error('Erro ao criar o arquivo zip:', err);
     res.status(500).send('Erro ao criar o arquivo zip.');
   }
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/auth'); 
+    });
+  });
 });
 
 module.exports = router;

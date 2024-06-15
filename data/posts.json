@@ -1,25 +1,50 @@
 [
-    {
+  {
       "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
-      "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+      "title": "Introduction to Algorithms it's really a nice Help!",
+      "subtitle": "Introduction to Algorithms it's really a nice Help! It provides comprehensive insights and practical solutions for algorithmic challenges.",
+      "userId": "666885089f7eb030e78ad806",
       "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
-      "content": "This is an excellent book on algorithms.",
+      "content": "This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms.",
       "comments": [
-        {
-          "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
-          "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
-          "content": "I agree, it's very informative.",
-          "date": "2024-06-06T00:00:00Z"
-        }
+          {
+              "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
+              "commentUserId": "666885199f7eb030e78ad809",
+              "content": "I agree, it's very informative.",
+              "date": "2024-06-06T00:00:00Z",
+              "replies": [
+                  {
+                      "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
+                      "commentUserId": "6668852d9f7eb030e78ad80c",
+                      "content": "Thanks for the feedback!",
+                      "date": "2024-06-08T00:00:00Z"
+                  },
+                  {
+                    "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
+                    "commentUserId": "6668852d9f7eb030e78ad80c",
+                    "content": "It was really helpful!",
+                    "date": "2024-06-07T00:00:00Z"
+                  }
+              ]
+          },
+          {
+              "_id": "60f7c1e2b3a1a2b3c4d5e6fe",
+              "commentUserId": "6668852d9f7eb030e78ad80c",
+              "content": "Very helpful book.",
+              "date": "2024-06-06T00:00:00Z",
+              "replies": []
+          }
       ],
       "date": "2024-06-05T00:00:00Z"
-    },
-    {
+  },
+  {
       "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
-      "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+      "title": "Deep Learning: Revolutionizing Artificial Intelligence",
+      "subtitle": "Deep Learning: Revolutionizing AI with powerful neural networks and groundbreaking applications.",
+      "userId": "666885089f7eb030e78ad806",
       "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
       "content": "Great insights on deep learning.",
       "comments": [],
       "date": "2024-06-07T00:00:00Z"
-    }
-  ]
+  }
+]

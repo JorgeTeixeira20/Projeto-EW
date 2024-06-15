@@ -4,6 +4,20 @@ block content
   .container
     .title-container
       h2 #{resource.title}
+      .reviews-box
+        - 
+          var totalReviews = resource.reviews.length;
+          var averageRating = totalReviews > 0 
+            ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
+            : 'Nenhuma avaliação';
+        p
+          span Rating:
+          | 
+          span #{averageRating}
+          | 
+          i.bi.bi-star-fill
+          | 
+          span (#{totalReviews})
     .resource-details
       p
         span Tipo:
@@ -39,32 +53,24 @@ block content
         ul
           each file in resource.files
             li
-              a(href=`/download/${file.fileName}`) #{file.fileName}
+              if resource.visibilidade == 'Público' || resource.user == user._id
+                a(href=`/download/${file.fileName}`) #{file.fileName}
+              else 
+                | #{file.fileName}
       .bottom-right-container
-        .download-box
-          if resource.visibilidade == 'Público'
-            a(href=`/download-all/${resource._id}`)
-              button
-                i.bi.bi-download
-                | Download All
-          else
+        if resource.visibilidade == 'Público' || resource.user == user._id
+          a(href=`/download-all/${resource._id}`)
             button
-              i.bi.bi-lock-fill
-              | Private
-        .reviews-box
-          - 
-            var totalReviews = resource.reviews.length;
-            var averageRating = totalReviews > 0 
-              ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
-              : 'Nenhuma avaliação';
-          p
-            span Rating:
-            | 
-            span #{averageRating}
-            | 
-            i.bi.bi-star-fill
-            | 
-            span (#{totalReviews})
+              i.bi.bi-download
+              | Download
+        else
+          button
+            i.bi.bi-lock-fill
+            | Private
+        a(href=`/create-post/${resource._id}`)
+          button
+            i.bi.bi-pencil
+            | Criar Post
 
     style.
       .title-container {
@@ -74,6 +80,9 @@ block content
         color: #fff;
         width: 100%;
         margin-top: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
       .resource-details {
         background-color: #444;
@@ -111,38 +120,21 @@ block content
         display: flex;
         gap: 10px;
       }
-      .download-box, .reviews-box {
-        background-color: #555;
-        padding: 10px;
-        border-radius: 5px;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        height: 100%;
-      }
-      .download-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #555;
-        border-radius: 5px;
-        padding: 10px;
-        color: #fff;
-        cursor: pointer;
-        height: 100%;
-      }
       .reviews-box {
+        background-color: #555;
+        padding: 10px;
+        border-radius: 5px;
+        color: #fff;
         display: flex;
         align-items: center;
-        justify-content: center;
-        background-color: #555;
-        border-radius: 5px;
-        padding: 10px;
-        color: #fff;
-        cursor: default;
-        height: 100%;
       }
-      .download-box button, .download-box a button {
+      .reviews-box p {
+        margin: 0;
+      }
+      .reviews-box span {
+        font-weight: bold;
+      }
+      button, .reviews-box button {
         background-color: #1fd761;
         border: none;
         border-radius: 5px;
@@ -154,13 +146,13 @@ block content
         align-items: center;
         gap: 5px;
       }
-      .download-box button:hover, .download-box a button:hover {
+      button:hover, .reviews-box button:hover {
         background-color: #1a9f50;
       }
       .bi-star-fill {
-        color: #ffd700; /* Cor dourada para a estrela */
+        color: #ffd700;
       }
-      .bi-download {
+      .bi-download, .bi-pencil {
         font-weight: bold;
         font-size: 100%;
       }

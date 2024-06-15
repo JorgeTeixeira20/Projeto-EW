@@ -6,10 +6,10 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const verifyJWT = require('./middleware/auth');
 
 const app = express();
 
@@ -33,25 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
 
-const jwtSecret = 'jwt_secret'; 
-
-const verifyJWT = (req, res, next) => {
-    const token = req.cookies.token;  
-    if (!token) {
-        return res.redirect('/auth');;
-    }
-    try {
-        const decoded = jwt.verify(token, jwtSecret);
-        req.user = decoded;
-    } catch (err) {
-        return res.status(401).send("Invalid Token");
-    }
-    return next();
-};
-
 // Routes
 app.use('/auth', authRouter);
-app.use('/', verifyJWT, indexRouter);
+app.use(verifyJWT);
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -65,8 +50,11 @@ app.use(function (err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+    if (err.status === 404) {
+        res.status(404).send("Page not found");
+    } else {
+        res.status(err.status || 500).send("Internal server error");
+    }
 });
 
 module.exports = app;

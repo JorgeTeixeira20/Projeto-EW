@@ -16,19 +16,25 @@ block content
             a.dropdown-item(href="#") Categoria 3
     .resource-list
       each resource in resources
-        a.resource-link(href=`/recurso/${resource._id}`)
+        a.resource-link(href=`/resource/${resource._id}`)
           .resource-item
-            h3 Título: #{resource.title}
-            p Descrição: #{resource.description}
+            h3 #{resource.title}
+            h5 #{resource.subtitle}
             p
-              span Categoria:
+              span Tipo:
               | 
-              span #{resource.category}
+              span #{resource.type}
+            p
+              span Temas:
+              | 
+              span #{resource.themes}
             p
               span Autor:
               | 
               span #{resource.author}
             hr
+            .resource-date
+              | #{new Date(resource.dataCriacao).toLocaleDateString()}
 
     style.
       .title-container {
@@ -111,17 +117,30 @@ block content
         padding: 20px;
         border-radius: 5px;
         color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+        position: relative;
+      }
+      .resource-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #999;
       }
       .resource-link {
         text-decoration: none; /* Remove a decoração do link */
         color: inherit; /* Mantém a cor do texto herdada */
         display: block; /* Garante que o link ocupe todo o espaço do item */
+        position: relative;
+        margin-bottom: 20px;
       }
       .resource-link:visited, .resource-link:active, .resource-link:hover {
         color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
         text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
       }
       .resource-item:hover {
+        background-color: #555;
         color: #1fd761;
         cursor: pointer;
       }

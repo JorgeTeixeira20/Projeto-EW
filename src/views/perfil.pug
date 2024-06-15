@@ -5,19 +5,19 @@ block content
     .profile-content
       .left-panel
         .header-card
-            h2 Hugo Dias
+            h2 #{user.firstName} #{user.lastName}
         hr
         .detail-wrapper
           .detail-card
             span Média de avaliações de Recursos Disponibilizados
-             p #{averageRating.toFixed(1)}
+             p= averageRating.toFixed(1)
           .detail-card
             span Recursos Disponibilizados
-            p #{resourceCount}
+            p= resourceCount
         .detail-wrapper
           .detail-card
             span Posts Feitos
-            p #{postCount}
+            p= postCount
           .detail-card
             span Especialista em
             p ISTO AINDA ESTÁ ESTÁTICO
@@ -25,7 +25,7 @@ block content
         if highestRatedResource
           a.bigger-container(href=`/recurso/${highestRatedResource._id}`)
             h4 Recurso mais avaliado:
-            h5 #{highestRatedResource.title}
+            h5= highestRatedResource.title
         else
           .bigger-container
             h4 Recurso mais avaliado:
@@ -37,32 +37,31 @@ block content
         .detail-wrapper
           .detail-card-clickable
             span First Name
-            p #{user.firstName}
+            p= user.firstName
           .detail-card-clickable
             span Last Name
-            p #{user.lastName}
+            p= user.lastName
         .detail-wrapper
           .detail-card
             span Filiação
             p Curso: #{user.course}, Departamento: #{user.department}
           .detail-card
             span Nível
-            p #{user.level}
+            p= user.level
         .detail-wrapper
           .detail-card
             span Data de Registo
-            p #{new Date(user.registrationDate).toLocaleDateString()}
+            p= new Date(user.registrationDate).toLocaleDateString()
           .detail-card
             span Data do Último Acesso
-            p #{new Date(user.lastAccessDate).toLocaleDateString()}
+            p= new Date(user.lastAccessDate).toLocaleDateString()
         .detail-wrapper
           .detail-card-clickable
             span Email
-            p #{user.email}
+            p= user.email
           .detail-card-clickable
             span Role
-            p #{user.role}
-
+            p= user.role
     style.
       .profile-container {
         display: flex;
@@ -145,7 +144,6 @@ block content
         text-decoration: none; /* Remove o sublinhado dos links */
         color: inherit; /* Garante que a cor do texto herda a cor do pai */
       }
-
       .bigger-container:hover {
         color: #1fd761; /* Altera a cor do texto para verde */
         text-decoration: none; /* Garante que o texto não fique sublinhado */

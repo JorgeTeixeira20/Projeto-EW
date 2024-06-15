@@ -3,9 +3,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 const router = express.Router();
-
-const jwtSecret = 'jwt_secret';  
 
 // Passport configuration
 passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
@@ -16,29 +16,19 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
-router.get('/perfil', (req, res) => {
-    try {
-        const token = req.cookies.token;
-        console.log("Token:", token);  // Log do token JWT
-        const decoded = jwt.verify(token, jwtSecret);
-        console.log("Decoded ID:", decoded.id);  // Log do ID decodificado
-        res.redirect(`/perfil/${decoded.id}`);
-    } catch (err) {
-        console.error('Erro ao buscar perfil do usuário:', err);
-        res.status(500).send('Erro ao buscar perfil do usuário');
-    }
-});
-
 // Registration route
 router.post('/register', (req, res) => {
-    const { firstName, lastName, email, role, course, department, level, password } = req.body;
+    const { firstName, lastName, email, role, course, department, password } = req.body;
 
-    if (!firstName || !lastName || !email || !role || !course || !department || !level || !password) {
+    if (!firstName || !lastName || !email || !role || !course || !department || !password) {
         console.log("Validation Error: Missing fields");
         return res.status(400).send("All fields are required");
     }
 
+    const newUserId = new ObjectId().toString();
+
     const newUser = new User({
+        _id: newUserId, 
         firstName,
         lastName,
         email,
@@ -46,7 +36,7 @@ router.post('/register', (req, res) => {
         role,
         course,
         department,
-        level,
+        admin: false, 
         registrationDate: new Date(),
         lastAccessDate: new Date()
     });
@@ -59,7 +49,7 @@ router.post('/register', (req, res) => {
             }
             return res.status(500).send(err.message);
         }
-        res.redirect('/auth');
+        res.redirect('/auth/login');
     });
 });
 
@@ -68,15 +58,21 @@ router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             console.error("Login error:", err);
-            return next(err);
+            return res.redirect('/auth/login?error_msg=' + encodeURIComponent('An error occurred during login'));
         }
         if (!user) {
             console.log("Login failed:", info);
-            return res.redirect('/auth/login');
+            let errorMsg = 'Invalid email or password';
+            if (info && info.name === 'IncorrectUsernameError') {
+                errorMsg = 'Email not found';
+            } else if (info && info.name === 'IncorrectPasswordError') {
+                errorMsg = 'Incorrect password';
+            }
+            return res.redirect('/auth/login?error_msg=' + encodeURIComponent(errorMsg));
         }
-        const token = jwt.sign({ id: user._id, email: user.email }, jwtSecret, { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });  
-        return res.redirect('/main'); 
+        const token = jwt.sign({ id: user._id, email: user.email }, 'projeto-ew-2024', { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true });
+        return res.redirect('/?success_msg=' + encodeURIComponent('You are logged in successfully'));
     })(req, res, next);
 });
 
@@ -88,6 +84,12 @@ router.get('/login', (req, res) => {
 // Register page
 router.get('/register', (req, res) => {
     res.render('register');
+});
+
+// Logout route
+router.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/auth'); 
 });
 
 module.exports = router;

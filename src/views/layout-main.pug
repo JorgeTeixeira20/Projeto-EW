@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= title
+    title Sistema de Recursos Educativos
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css')
     style.
@@ -13,60 +13,65 @@ html
         width: 100%;
         background-color: #161716;
         color: white;
-        padding: 20px 0; /* Ajuste de padding */
+        padding: 20px 0;
         position: fixed;
         top: 0;
         display: flex;
-        justify-content: center; /* Centraliza o texto */
-        align-items: center; /* Alinha os itens verticalmente */
-        z-index: 2; /* Garante que o cabeçalho esteja acima do menu */
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
       }
-      .menu-btn-container, .user-icon-container {
-        background-color: #212020; /* Cor da caixa do botão */
-        padding: 10px; /* Adiciona espaçamento interno */
-        border-radius: 5px; /* Borda arredondada */
-        width: 80px; /* Largura da caixa */
-        height: 40px; /* Altura da caixa */
-        display: flex; /* Para centralizar o botão */
-        justify-content: center; /* Para centralizar o botão */
-        align-items: center; /* Para centralizar o botão */
-        position: absolute; /* Posição absoluta para não afetar o layout */
+      .menu-btn-container, .user-icon-container, .logout-btn-container {
+        background-color: #212020;
+        padding: 10px;
+        border-radius: 5px;
+        width: 80px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
       }
       .menu-btn-container {
-        left: 20px; /* Distância da borda esquerda */
+        left: 20px;
       }
       .user-icon-container {
-        right: 20px; /* Distância da borda direita */
+        right: 110px; 
+        cursor: pointer;
+        transition: transform 0.5s ease;
+      }
+      .logout-btn-container {
+        right: 20px;
         cursor: pointer;
         transition: transform 0.5s ease;
       }
       .menu-btn {
         font-size: 24px;
         cursor: pointer;
-        color: white; /* Cor do ícone */
-        transition: transform 0.5s ease; /* Transição de rotação mais lenta */
+        color: white;
+        transition: transform 0.5s ease;
       }
       .menu-btn:hover {
-        color: #1fd761; /* Cor verde quando passa o mouse por cima */
+        color: #1fd761;
       }
       .menu-btn.rotate {
-        transform: rotate(180deg); /* Rotação completa */
+        transform: rotate(180deg);
       }
-      .user-icon {
+      .user-icon, .logout-icon {
         font-size: 25px;
         color: white;
       }
-      .user-icon:hover {
+      .user-icon:hover, .logout-icon:hover {
         color: #1fd761;
       }
       .dropdown-arrow {
         font-size: 16px;
         color: white;
         margin-left: 5px;
-        transition: transform 0.5s ease; /* Transição para rotação */
+        transition: transform 0.5s ease;
       }
       .dropdown-arrow.rotate {
-        transform: rotate(180deg); /* Rotação completa */
+        transform: rotate(180deg);
       }
       .dropdown-menu {
         display: none;
@@ -77,13 +82,13 @@ html
         background-color: #111;
         border-radius: 5px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 3; /* Garante que o menu suspenso esteja acima de outros elementos */
+        z-index: 3;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.5s ease; /* Transição de altura */
+        transition: max-height 0.5s ease;
       }
       .dropdown-menu.show {
-        max-height: 200px; /* Ajuste conforme necessário */
+        max-height: 200px;
       }
       .dropdown-menu a {
         color: white;
@@ -96,11 +101,11 @@ html
         background-color: #575757;
       }
       h1 {
-        margin: 0; /* Remove margens padrão */
+        margin: 0;
       }
       .container {
         text-align: center;
-        margin-top: 80px; /* Ajuste conforme necessário para a distância do header */
+        margin-top: 80px;
       }
       .menu {
         height: 100%;
@@ -116,22 +121,22 @@ html
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 120px; /* Adiciona espaço acima do primeiro item */
+        padding-top: 120px;
         border-radius: 10px;
       }
       .menu a {
-        padding: 15px 20px; /* Ajuste de padding para menos altura */
+        padding: 15px 20px;
         text-decoration: none;
         font-size: 20px;
         color: white;
         display: block;
         transition: 0.3s;
-        background-color: #1fd761; /* Cor personalizada para os botões do menu */
+        background-color: #1fd761;
         border: 2px solid #1fd761;
         border-radius: 3%;
         margin-bottom: 10px;
-        width: 220px; /* Mais largura para caber a frase */
-        text-align: center; /* Centraliza o texto */
+        width: 220px;
+        text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -149,19 +154,22 @@ html
         text-decoration: none;
       }
       .header-link h1 {
-        margin: 0; /* Remove margens padrão */
+        margin: 0;
       }
   body
     header
       div.menu-btn-container
-        span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776; <!-- Alterado para chamar toggleNav() -->
-      a.header-link(href='/main')
+        span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776;
+      a.header-link(href='/')
         h1 Sistema de Recursos Educativos
+      div.logout-btn-container
+        a.logout-icon(href='/auth/logout')
+          i.bi.bi-box-arrow-right
       div.user-icon-container(onclick='toggleDropdown()')
-        i.bi.bi-person-fill.user-icon <!-- Ícone de usuário do Bootstrap Icons -->
-        i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow') <!-- Seta para baixo do Bootstrap Icons -->
+        i.bi.bi-person-fill.user-icon
+        i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow')
       div.dropdown-menu(id='dropdownMenu')
-        a(id="profile-link", href='#') Perfil
+        a(id="profile-link", href='/perfil') Perfil
         a(href='#') Exemplo1
         a(href='#') Exemplo2
         a(href='#') Exemplo3
@@ -178,10 +186,10 @@ html
         var menuBtn = document.getElementById("menuBtn");
         if (menu.style.width === "300px") {
           menu.style.width = "0";
-          menuBtn.classList.remove("rotate"); // Remove a classe de rotação
+          menuBtn.classList.remove("rotate");
         } else {
           menu.style.width = "300px";
-          menuBtn.classList.add("rotate"); // Adiciona a classe de rotação
+          menuBtn.classList.add("rotate");
         }
       }
 
@@ -192,34 +200,17 @@ html
           dropdownMenu.classList.remove('show');
           setTimeout(() => {
             dropdownMenu.style.display = 'none';
-          }, 500); // Aguarda a transição antes de ocultar
+          }, 500);
           dropdownArrow.classList.remove('rotate');
         } else {
           dropdownMenu.style.display = 'block';
           setTimeout(() => {
             dropdownMenu.classList.add('show');
-          }, 10); // Pequeno atraso para a transição
+          }, 10);
           dropdownArrow.classList.add('rotate');
         }
       }
 
-      document.addEventListener('DOMContentLoaded', function() {
-        var profileLink = document.getElementById('profile-link');
-        profileLink.addEventListener('click', function(event) {
-          event.preventDefault();
-          fetch('/auth/perfil', {
-            method: 'GET',
-            credentials: 'same-origin' // Inclui cookies na requisição
-          }).then(function(response) {
-            if (response.redirected) {
-              window.location.href = response.url;
-            }
-          }).catch(function(error) {
-            console.error('Error fetching profile:', error);
-          });
-        });
-      });
-      
       window.onclick = function(event) {
         if (!event.target.matches('.user-icon') && !event.target.matches('.dropdown-arrow') && !event.target.matches('.user-icon-container')) {
           var dropdownMenu = document.getElementById('dropdownMenu');
@@ -228,7 +219,7 @@ html
             dropdownMenu.classList.remove('show');
             setTimeout(() => {
               dropdownMenu.style.display = 'none';
-            }, 500); // Aguarda a transição antes de ocultar
+            }, 500);
             dropdownArrow.classList.remove('rotate');
           }
         }
