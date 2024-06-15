@@ -8,10 +8,11 @@ const archiver = require('archiver');
 const User = require('../models/user');
 const Resource = require('../models/resource');
 const Post = require('../models/post');
-const verifyJWT = require('../middleware/auth');
+const { verifyJWT, setUser } = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
 router.use(verifyJWT);
+router.use(setUser);
 
 router.get('/', async (req, res) => {
   try {

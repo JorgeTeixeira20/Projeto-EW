@@ -162,9 +162,6 @@ html
         span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776;
       a.header-link(href='/')
         h1 Sistema de Recursos Educativos
-      div.logout-btn-container
-        a.logout-icon(href='/auth/logout')
-          i.bi.bi-box-arrow-right
       div.user-icon-container(onclick='toggleDropdown()')
         i.bi.bi-person-fill.user-icon
         i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow')
@@ -173,11 +170,16 @@ html
         a(href='#') Exemplo1
         a(href='#') Exemplo2
         a(href='#') Exemplo3
+      div.logout-btn-container
+        a.logout-icon(href='/auth/logout')
+          i.bi.bi-box-arrow-right
     .menu(id='mySidenav')
       a(href='/rankings') Consultar Rankings
       a(href='/listaRecursos') Consultar Recursos
       a(href='/listaPosts') Consultar Posts
       a(href='/adicionarRecurso') Adicionar Recurso
+      if user.admin
+        a(href=`/users`) Utilizadores
     .container
       block content
     script.
