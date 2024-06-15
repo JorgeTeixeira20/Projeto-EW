@@ -18,45 +18,39 @@ router.get('/', (req, res) => {
 
 // Registration route
 router.post('/register', (req, res) => {
-  const { firstName, lastName, email, role, course, department, password } = req.body;
+    const { firstName, lastName, email, role, course, department, password } = req.body;
 
-  if (!firstName || !lastName || !email || !role || !course || !department || !password) {
-      console.log("Validation Error: Missing fields");
-      req.session.error_msg = 'All fields are required';
-      return res.redirect('/auth/register');
-  }
+    if (!firstName || !lastName || !email || !role || !course || !department || !password) {
+        console.log("Validation Error: Missing fields");
+        return res.status(400).send("All fields are required");
+    }
 
-  const newUserId = new ObjectId().toString();
-  const level = 'User'; // Definido automaticamente o level como "User" ao registar depois retirar
+    const newUserId = new ObjectId().toString();
 
-  const newUser = new User({
-      _id: newUserId, 
-      firstName,
-      lastName,
-      email,
-      username: email,
-      role,
-      course,
-      department,
-      level, // Adicionado aqui depois possivelmente retirar
-      admin: false, 
-      registrationDate: new Date(),
-      lastAccessDate: new Date()
-  });
+    const newUser = new User({
+        _id: newUserId, 
+        firstName,
+        lastName,
+        email,
+        username: email,
+        role,
+        course,
+        department,
+        admin: false, 
+        registrationDate: new Date(),
+        lastAccessDate: new Date()
+    });
 
-  User.register(newUser, password, (err) => {
-      if (err) {
-          console.error("Registration error:", err);
-          if (err.name === 'UserExistsError') {
-              req.session.error_msg = 'Email already registered';
-              return res.redirect('/auth/register');
-          }
-          req.session.error_msg = err.message;
-          return res.redirect('/auth/register');
-      }
-      req.session.success_msg = 'Sucesso no registo';
-      res.redirect('/auth/login');
-  });
+    User.register(newUser, password, (err) => {
+        if (err) {
+            console.error("Registration error:", err);
+            if (err.name === 'UserExistsError') {
+                return res.status(400).send('A user with the given email is already registered');
+            }
+            return res.status(500).send(err.message);
+        }
+        res.redirect('/auth/login');
+    });
 });
 
 // Login route
@@ -64,24 +58,21 @@ router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             console.error("Login error:", err);
-            req.session.error_msg = 'An error occurred during login';
-            return next(err);
+            return res.redirect('/auth/login?error_msg=' + encodeURIComponent('An error occurred during login'));
         }
         if (!user) {
-          console.log("Login failed:", info);
-          if (info && info.name === 'IncorrectUsernameError') {
-              req.session.error_msg = 'Email not found';
-          } else if (info && info.name === 'IncorrectPasswordError') {
-              req.session.error_msg = 'Incorrect password';
-          } else {
-              req.session.error_msg = 'Invalid email or password';
-          }
-          return res.redirect('/auth/login');
-      }
+            console.log("Login failed:", info);
+            let errorMsg = 'Invalid email or password';
+            if (info && info.name === 'IncorrectUsernameError') {
+                errorMsg = 'Email not found';
+            } else if (info && info.name === 'IncorrectPasswordError') {
+                errorMsg = 'Incorrect password';
+            }
+            return res.redirect('/auth/login?error_msg=' + encodeURIComponent(errorMsg));
+        }
         const token = jwt.sign({ id: user._id, email: user.email }, 'projeto-ew-2024', { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });  
-        req.session.success_msg = 'You are logged in successfully';
-        return res.redirect('/'); 
+        res.cookie('token', token, { httpOnly: true });
+        return res.redirect('/?success_msg=' + encodeURIComponent('You are logged in successfully'));
     })(req, res, next);
 });
 
