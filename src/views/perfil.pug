@@ -23,7 +23,7 @@ block content
             p ISTO AINDA ESTÁ ESTÁTICO
         hr
         if highestRatedResource
-          a.bigger-container(href=`/recurso/${highestRatedResource._id}`)
+          a.bigger-container(href=`/resource/${highestRatedResource._id}`)
             h4 Recurso mais avaliado:
             h5= highestRatedResource.title
         else
@@ -47,7 +47,10 @@ block content
             p Curso: #{user.course}, Departamento: #{user.department}
           .detail-card
             span Nível
-            p= user.level
+            if user.admin
+              p Admin
+            else
+              p Utilizador
         .detail-wrapper
           .detail-card
             span Data de Registo

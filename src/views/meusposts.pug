@@ -1,0 +1,147 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Meus Posts
+      .filter-container
+        .search-bar-container
+          input(type="text" placeholder="Pesquisar..." class="search-bar")
+          i.bi.bi-search.search-icon
+        .dropdown
+          button.dropdown-toggle Filtros
+          .dropdown-menu
+            a.dropdown-item(href="#") Categoria 1
+            a.dropdown-item(href="#") Categoria 2
+            a.dropdown-item(href="#") Categoria 3
+    .post-list
+      each post in posts
+        a.post-link(href=`/post/${post._id}`)
+          .post-item
+            h3 #{post.title}
+            h5 #{post.subtitle}
+            p
+              span Autor:
+              | 
+              span #{user.firstName} #{user.lastName}
+            hr
+            .post-date
+              | #{new Date(post.date).toLocaleDateString()}
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .filter-container {
+        display: flex;
+        gap: 10px;
+      }
+      .search-bar-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .search-bar {
+        padding: 10px 30px 10px 10px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        color: #aaa; /* Cor do texto mais escura */
+      }
+      .search-icon {
+        position: absolute;
+        right: 10px;
+        font-size: 20px;
+        color: #aaa; /* Cor da lupa */
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-toggle {
+        background-color: #1fd761;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .dropdown-toggle:hover {
+        background-color: #1a9f50;
+      }
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #111;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        border-radius: 5px;
+      }
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+      .dropdown-item {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      .dropdown-item:hover {
+        background-color: #575757;
+      }
+      .post-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .post-item {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+        position: relative;
+      }
+      .post-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #999;
+      }
+      .post-link {
+        text-decoration: none; /* Remove a decoração do link */
+        color: inherit; /* Mantém a cor do texto herdada */
+        display: block; /* Garante que o link ocupe todo o espaço do item */
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .post-link:visited, .post-link:active, .post-link:hover {
+        color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
+        text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
+      }
+      .post-item:hover {
+        background-color: #555;
+        color: #1fd761;
+        cursor: pointer;
+      }
+      .post-item h3 {
+        margin: 0 0 10px;
+      }
+      .post-item p {
+        margin: 5px 0;
+      }
+      hr {
+        border: 1px solid #555;
+      }

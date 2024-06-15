@@ -7,7 +7,7 @@ html
     style.
       body {
         margin: 0;
-        background-color: #212020;
+        background: linear-gradient(135deg, #212020, #272727);
       }
       header {
         width: 100%;
@@ -167,8 +167,8 @@ html
         i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow')
       div.dropdown-menu(id='dropdownMenu')
         a(id="profile-link", href='/perfil') Perfil
-        a(href='#') Exemplo1
-        a(href='#') Exemplo2
+        a(href='/meusrecursos') Meus Recursos
+        a(href='/meusposts') Meus Posts
         a(href='#') Exemplo3
       div.logout-btn-container
         a.logout-icon(href='/auth/logout')
@@ -177,9 +177,11 @@ html
       a(href='/rankings') Consultar Rankings
       a(href='/listaRecursos') Consultar Recursos
       a(href='/listaPosts') Consultar Posts
+      if user.admin
+        a(href=`/users`) Consultar Utilizadores
       a(href='/adicionarRecurso') Adicionar Recurso
       if user.admin
-        a(href=`/users`) Utilizadores
+        a(href='/comunicados/criar') Emitir Comunicado
     .container
       block content
     script.

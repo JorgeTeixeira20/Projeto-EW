@@ -1,0 +1,53 @@
+extends layout-main
+
+block content
+  .container
+    .comunicado-container
+      .comunicado-titles
+        h3 #{comunicado.title}
+        h5 #{comunicado.subtitle}
+      .comunicado-content
+        | #{comunicado.content}
+    .comunicado-date
+      | #{new Date(comunicado.date).toLocaleDateString()}
+
+    style.
+      .comunicado-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        margin-top: 10%;
+        position: relative; /* Para permitir posicionamento relativo dos elementos internos */
+        text-align: left;
+      }
+      .comunicado-titles {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-align: left;
+        font-weight: bold;
+      }
+      .comunicado-content {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-align: left;
+        min-height: 100px; /* Altura mínima */
+        overflow: hidden;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+      }
+      .comunicado-date {
+        text-align: right;
+        font-size: 0.8em;
+        color: #999;
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+      }

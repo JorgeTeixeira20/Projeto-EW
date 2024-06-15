@@ -8,6 +8,7 @@ const archiver = require('archiver');
 const User = require('../models/user');
 const Resource = require('../models/resource');
 const Post = require('../models/post');
+const Comunicado = require('../models/comunicado');
 const { verifyJWT, setUser } = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
@@ -18,11 +19,13 @@ router.get('/', async (req, res) => {
   try {
     const posts = await Post.find({}).lean();
     const resources = await Resource.find({}).lean();
+    const comunicados = await Comunicado.find({}).lean();
 
     // Combine posts e resources em uma única lista
     const items = [
       ...posts.map(post => ({ ...post, type: 'post' })),
-      ...resources.map(resource => ({ ...resource, type: 'resource' }))
+      ...resources.map(resource => ({ ...resource, type: 'resource' })),
+      ...comunicados.map(comunicado => ({ ...comunicado, type: 'comunicado' }))
     ];
 
     // Ordenar por data, mais recente primeiro
@@ -31,19 +34,27 @@ router.get('/', async (req, res) => {
     res.render('main', { items });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Erro ao buscar posts e recursos.');
+    res.status(500).send('Erro ao buscar posts, recursos e comunicados.');
   }
 });
 
 router.get('/listaRecursos', async (req, res) => {
+  const searchQuery = req.query.search;
+  let resources;
   try {
-    const resources = await Resource.find({});
-    res.render('listaRecursos', { userId: req.user._id, resources });
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, 'i'); // i para case insensitive
+      resources = await Resource.find({ title: regex });
+    } else {
+      resources = await Resource.find();
+    }
+    res.render('listaRecursos', { resources });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Erro ao buscar recursos.');
+    res.status(500).send('Erro ao buscar recursos');
   }
 });
+
 
 router.get('/listaPosts', async (req, res) => {
   try {
@@ -84,7 +95,6 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
     if (!resource) {
       return res.status(404).send('Resource não encontrado');
     }
-
     const user = await User.findById(post.userId).lean();
     if (!user) {
       return res.status(404).send('User não encontrado');
@@ -239,7 +249,12 @@ router.post('/create-post/:resourceId', verifyJWT, async (req, res) => {
       comments: [],
       date: new Date()
     });
+    
     await newPost.save();
+    
+    // Adiciona o ID do novo post à lista de posts do usuário
+    await User.findByIdAndUpdate(req.user.id, { $push: { myPosts: newPost._id } });
+
     res.redirect(`/post/${newPost._id}`);
   } catch (err) {
     console.error(err);
@@ -339,11 +354,53 @@ router.get('/rankings', (req, res) => {
   res.render('rankings');
 });
 
-router.get('/adicionarRecurso', (req, res) => {
+// Rota para exibir os recursos do usuário logado
+router.get('/meusrecursos', verifyJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const searchQuery = req.query.search;
+    const user = await User.findById(userId);
+    const resourceIds = user.myResources;
+
+    let resources;
+    if (searchQuery) {
+      resources = await Resource.find({
+        _id: { $in: resourceIds },
+        title: { $regex: searchQuery, $options: 'i' }
+      });
+    } else {
+      resources = await Resource.find({ _id: { $in: resourceIds } });
+    }
+
+    res.render('meusrecursos', { resources });
+  } catch (err) {
+    console.error('Erro ao buscar recursos do usuário:', err);
+    res.status(500).send('Erro ao buscar recursos do usuário');
+  }
+});
+
+
+// Rota para exibir os posts do usuário logado
+router.get('/meusposts', verifyJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate('myPosts');
+    const posts = await Post.find({ _id: { $in: user.myPosts } });
+
+    res.render('meusposts', { posts, user: req.user });
+  } catch (err) {
+    console.error('Erro ao buscar posts do usuário:', err);
+    res.status(500).send('Erro ao buscar posts do usuário');
+  }
+});
+
+// Rota para exibir o formulário de adição de recurso
+router.get('/adicionarRecurso', verifyJWT, (req, res) => {
   res.render('addRec');
 });
 
-router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res) => {
+// Rota para lidar com a adição de recurso
+router.post('/adicionarRecurso', verifyJWT, upload.array('ficheiros', 10), async (req, res) => {
   let form = req.body;
   let files = req.files;
 
@@ -359,7 +416,7 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
   let uploadedFiles = [];
   try {
     for (let file of files) {
-      let oldPath = path.join(__dirname, '../', file.path);
+      let oldPath = file.path;
       let newPath = path.join(storageDir, file.originalname);
 
       console.log(`Moving file from ${oldPath} to ${newPath}`); 
@@ -382,8 +439,11 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
 
   // Create a new resource in the database
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(400).send('Usuário não autenticado.');
+    }
+    
     const userId = req.user.id;
-    const userName = req.user.email;
 
     const resource = new Resource({
       _id: new mongoose.Types.ObjectId().toString(),
@@ -401,14 +461,18 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
       files: uploadedFiles,
       reviews: []
     });
-    await resource.save();
+    const savedResource = await resource.save();
 
-    res.redirect('/listaRecursos');
+    // Adiciona o ID do recurso à lista de recursos do usuário logado
+    await User.findByIdAndUpdate(userId, { $push: { myResources: savedResource._id.toString() } });
+
+    res.redirect(`/resource/${savedResource._id}`); // Redireciona para a página do recurso recém-criado
   } catch (err) {
     console.error('Erro ao salvar o recurso:', err);
     res.status(500).send('Erro ao salvar o recurso.');
   }
 });
+
 
 // Rota para alternar status de admin usando POST
 router.post('/users/:id/toggle-admin', async (req, res) => {
@@ -455,6 +519,46 @@ router.get('/users', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar usuários');
+  }
+});
+
+// Rota para exibir o formulário de criação de comunicado
+router.get('/comunicados/criar', verifyJWT, (req, res) => {
+  res.render('criarComunicado');
+});
+
+router.post('/comunicados', verifyJWT, async (req, res) => {
+  try {
+    const { title, subtitle, content } = req.body;
+    const author = req.user._id; // ID do autor do comunicado
+
+    const comunicado = new Comunicado({
+      title,
+      subtitle,
+      content,
+      author,
+      date: new Date()
+    });
+
+    const savedComunicado = await comunicado.save();
+
+    res.redirect(`/comunicados/${savedComunicado._id}`);
+  } catch (err) {
+    console.error('Erro ao criar comunicado:', err);
+    res.status(500).send('Erro ao criar comunicado');
+  }
+});
+
+router.get('/comunicados/:id', async (req, res) => {
+  try {
+    const comunicado = await Comunicado.findById(req.params.id);
+    if (!comunicado) {
+      return res.status(404).send('Comunicado não encontrado');
+    }
+    res.render('comunicado', { comunicado });
+  } catch (err) {
+    console.error('Erro ao buscar comunicado:', err);
+    res.status(500).send('Erro ao buscar comunicado');
   }
 });
 
