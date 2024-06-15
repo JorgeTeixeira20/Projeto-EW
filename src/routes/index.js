@@ -350,8 +350,67 @@ router.get('/perfil/:id', async (req, res) => {
   }
 });
 
-router.get('/rankings', (req, res) => {
-  res.render('rankings');
+router.get('/rankings', async (req, res) => {
+  try {
+    const resources = await Resource.find({});
+
+    // Calcular a média de classificações
+    resources.forEach(resource => {
+      const totalStars = resource.reviews.reduce((sum, review) => sum + review.stars, 0);
+      resource.averageRating = resource.reviews.length > 0 ? (totalStars / resource.reviews.length) : 0;
+    });
+
+    // Ordenar os recursos pela média de classificações em ordem decrescente
+    resources.sort((a, b) => b.averageRating - a.averageRating);
+
+    // Obter os top 5 recursos
+    const topResources = resources.slice(0, 5);
+
+    // Calcular as médias de avaliação por usuário
+    const userRatings = {};
+
+    resources.forEach(resource => {
+      if (!userRatings[resource.user]) {
+        userRatings[resource.user] = { totalStars: 0, totalReviews: 0 };
+      }
+      userRatings[resource.user].totalStars += resource.reviews.reduce((sum, review) => sum + review.stars, 0);
+      userRatings[resource.user].totalReviews += resource.reviews.length;
+    });
+
+    // Calcular a média de avaliação por usuário
+    const userAverageRatings = Object.keys(userRatings).map(userId => {
+      const { totalStars, totalReviews } = userRatings[userId];
+      return {
+        userId,
+        averageRating: totalReviews > 0 ? totalStars / totalReviews : 0
+      };
+    });
+
+    // Ordenar os usuários pela média de avaliação em ordem decrescente
+    userAverageRatings.sort((a, b) => b.averageRating - a.averageRating);
+
+    // Obter os top 5 usuários
+    const topUsers = userAverageRatings.slice(0, 5);
+
+    // Buscar os detalhes dos usuários
+    const topUserIds = topUsers.map(user => user.userId);
+    const topUserDetails = await User.find({ _id: { $in: topUserIds } }).lean();
+
+    // Mapear os detalhes dos usuários
+    const topUsersWithDetails = topUsers.map(user => {
+      const userDetails = topUserDetails.find(u => u._id.toString() === user.userId);
+      return {
+        ...user,
+        firstName: userDetails ? userDetails.firstName : 'Unknown',
+        lastName: userDetails ? userDetails.lastName : 'User'
+      };
+    });
+
+    res.render('rankings', { topResources, topUsers: topUsersWithDetails });
+  } catch (err) {
+    console.error('Erro ao buscar recursos para o ranking:', err);
+    res.status(500).send('Erro ao buscar recursos para o ranking.');
+  }
 });
 
 // Rota para exibir os recursos do usuário logado
