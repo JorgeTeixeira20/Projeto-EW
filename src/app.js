@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const { verifyJWT, setUser } = require('./middleware/auth');
+const verifyJWT = require('./middleware/auth');
 
 const app = express();
 

@@ -8,45 +8,26 @@ const archiver = require('archiver');
 const User = require('../models/user');
 const Resource = require('../models/resource');
 const Post = require('../models/post');
-const { verifyJWT, setUser } = require('../middleware/auth');
+const verifyJWT = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
 router.use(verifyJWT);
-router.use(setUser);
 
 router.get('/', async (req, res) => {
   try {
-<<<<<<< Updated upstream
-    const email = req.user.email;
-
-    const user = await User.findOne({ email }).exec();
-    const posts = await Post.find({});
-    const resources = await Resource.find({});
-    
-    console.log('Posts:', posts);
-    console.log('Resources:', resources);
-    
-=======
     const posts = await Post.find({}).lean();
     const resources = await Resource.find({}).lean();
 
     // Combine posts e resources em uma única lista
->>>>>>> Stashed changes
     const items = [
       ...posts.map(post => ({ ...post, type: 'post' })),
       ...resources.map(resource => ({ ...resource, type: 'resource' }))
     ];
 
-<<<<<<< Updated upstream
-    items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    console.log('Items:', items);
-=======
     // Ordenar por data, mais recente primeiro
     items.sort((a, b) => new Date(b.date) - new Date(a.date));
->>>>>>> Stashed changes
 
-    res.render('main', { items, user });
+    res.render('main', { items });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar posts e recursos.');
@@ -469,6 +450,20 @@ router.get('/download-all/:resourceId', async (req, res) => {
     console.error('Erro ao criar o arquivo zip:', err);
     res.status(500).send('Erro ao criar o arquivo zip.');
   }
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/auth'); 
+    });
+  });
 });
 
 module.exports = router;
