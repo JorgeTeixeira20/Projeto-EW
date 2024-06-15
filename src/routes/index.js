@@ -410,6 +410,43 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
   }
 });
 
+router.put('/users/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    // Alternar status de admin
+    user.admin = !user.admin;
+    await user.save();
+
+    res.redirect('/users'); // Redirecionar para a lista de usuários
+  } catch (err) {
+    console.error('Erro ao atualizar status de admin:', err);
+    res.status(500).send('Erro ao atualizar status de admin');
+  }
+});
+
+// Rota de exclusão usando DELETE
+router.delete('/users/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    res.redirect('/users'); // Redirecionar para a lista de usuários
+  } catch (err) {
+    console.error('Erro ao deletar usuário:', err);
+    res.status(500).send('Erro ao deletar usuário');
+  }
+});
+
 router.get('/users', async (req, res) => {
   try {
     const users = await User.find();

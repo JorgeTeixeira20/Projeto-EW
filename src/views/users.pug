@@ -25,12 +25,18 @@ block content
       width: 90%;
       max-width: 1200px;
     }
+    .buttons-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start; 
+    }
     .user-item {
       background-color: #444;
       padding: 20px;
       border-radius: 5px;
       color: #fff;
-      position: relative; /* Add this for positioning buttons */
+      position: relative;
     }
     .user-item:hover {
       color: #1fd761;
@@ -51,34 +57,39 @@ block content
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease, color 0.3s ease;
+      margin-top: 10px; 
     }
     .remove-button:hover,
     .make-admin-button:hover {
       background-color: #ff1a1a;
     }
     .make-admin-button {
-      margin-left: 10px; /* Adjust spacing between buttons */
+      margin-left: 10px; 
+      background-color: #4caf50;
+    }
+    .make-admin-button:hover {
+      background-color: #388e3c; 
     }
   .main-container
     .main-title
       h1 Lista de Usuários
     if users.length
       .user-list
-        each user in users
+        each userA in users
           .user-item
             .column
-              h3= user.firstName + ' ' + user.lastName
-              p Email: #{user.email}
-              p Role: #{user.role}
-              p Admin: #{user.admin ? 'Sim' : 'Não'}
-            .column
-              p Curso: #{user.course}
-              p Departamento: #{user.department}
-              p Data de Registro: #{user.registrationDate.toDateString()}
-              p Último Acesso: #{user.lastAccessDate.toDateString()}
-            form(action=`/users/${user._id}?_method=DELETE` method="POST")
-              button.remove-button(type="submit") Remover
-              form(action=`/users/${user._id}/admin?_method=PUT` method="POST")
-                button.make-admin-button(type="submit") #{user.admin ? 'Remover Admin' : 'Tornar Admin'}
+              h3= userA.firstName + ' ' + userA.lastName
+              p Email: #{userA.email}
+              p Cargo: #{userA.role}
+              p Admin: #{userA.admin ? 'Sim' : 'Não'}
+              p Curso: #{userA.course}
+              p Departamento: #{userA.department}
+              p Data de Registro: #{userA.registrationDate.toDateString()}
+              p Último Acesso: #{userA.lastAccessDate.toDateString()}
+            .buttons-container
+              form(action=`/users/${userA._id}` method="delete")
+                button.remove-button(type="submit") Remover
+              form(action=`/users/${userA._id}` method="put")
+                button.make-admin-button(type="submit") #{userA.admin ? 'Remover Admin' : 'Tornar Admin'}
     else
       p Nenhum usuário encontrado
