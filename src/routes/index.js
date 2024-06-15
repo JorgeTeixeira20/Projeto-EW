@@ -8,13 +8,17 @@ const archiver = require('archiver');
 const User = require('../models/user');
 const Resource = require('../models/resource');
 const Post = require('../models/post');
-const verifyJWT = require('../middleware/auth');
+const { verifyJWT, setUser } = require('../middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
 router.use(verifyJWT);
+router.use(setUser);
 
 router.get('/', async (req, res) => {
   try {
+    const email = req.user.email;
+
+    const user = await User.findOne({ email }).exec();
     const posts = await Post.find({});
     const resources = await Resource.find({});
     
@@ -26,11 +30,11 @@ router.get('/', async (req, res) => {
       ...resources.map(resource => ({ ...resource.toObject(), type: 'resource', title: resource.title }))
     ];
 
-    items.sort((a, b) => new Date(b.date) - new Date(a.date)); // Ordenar por data, mais recente primeiro
+    items.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     console.log('Items:', items);
 
-    res.render('main', { items });
+    res.render('main', { items, user });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar posts e recursos.');
@@ -360,20 +364,6 @@ router.get('/download-all/:resourceId', async (req, res) => {
     console.error('Erro ao criar o arquivo zip:', err);
     res.status(500).send('Erro ao criar o arquivo zip.');
   }
-});
-
-router.get('/logout', (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    req.session.destroy((err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect('/auth'); 
-    });
-  });
 });
 
 module.exports = router;
