@@ -595,18 +595,38 @@ router.get('/download-all/:resourceId', async (req, res) => {
   }
 });
 
-router.get('/logout', (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
+router.post('/rate', async (req, res) => {
+  const { resourceId, stars } = req.body;
+  const email = req.user.email;
+
+  const user = await User.findOne({ email }).exec();
+  const userId = user._id;
+
+  console.log('Recebendo avaliação:', { resourceId, stars, userId });
+
+  try {
+    const resource = await Resource.findById(resourceId);
+    if (!resource) {
+      console.error('Recurso não encontrado:', resourceId);
+      return res.status(404).json({ success: false, error: 'Recurso não encontrado' });
     }
-    req.session.destroy((err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect('/auth'); 
-    });
-  });
+
+    const existingReview = resource.reviews.find(review => review.userId.equals(userId));
+    if (existingReview) {
+      existingReview.stars = stars;
+      console.log('Atualizando avaliação existente:', existingReview);
+    } else {
+      resource.reviews.push({ userId, stars });
+      console.log('Adicionando nova avaliação:', { userId, stars });
+    }
+
+    await resource.save();
+    console.log('Avaliação salva com sucesso');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao salvar avaliação:', error);
+    res.status(500).json({ success: false, error: 'Erro ao avaliar o recurso' });
+  }
 });
 
 module.exports = router;

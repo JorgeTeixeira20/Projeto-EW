@@ -5,48 +5,51 @@ block content
     .title-container
       h2 #{resource.title}
       .reviews-box
-        - 
+        -
           var totalReviews = resource.reviews.length;
           var averageRating = totalReviews > 0 
             ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
             : 'Nenhuma avaliação';
-        p
+        div.rating-container
           span Rating:
-          | 
+          |
           span #{averageRating}
-          | 
+          |
           i.bi.bi-star-fill
-          | 
+          |
           span (#{totalReviews})
+        div.button-container
+          button.btn-avaliar(onclick="openModal()")
+            i.bi.bi-star
     .resource-details
       p
         span Tipo:
-        | 
+        |
         span #{resource.type}
       if resource.subtitle
         p
           span Subtítulo:
-          | 
+          |
           span #{resource.subtitle}
       p
         span Quem deu commit disto:
-        | 
+        |
         a(href=`/perfil/${resource.user}`) #{resource.user}
       p
         span Descrição:
-        | 
+        |
         span #{resource.description}
       p
         span Autor:
-        | 
+        |
         span #{resource.author}
       p
         span Ano:
-        | 
+        |
         span #{resource.year}
       p
         span Temas:
-        | 
+        |
         span #{resource.themes.join(', ')}
       p
         span Arquivos:
@@ -55,7 +58,7 @@ block content
             li
               if resource.visibilidade == 'Público' || resource.user == user._id
                 a(href=`/download/${file.fileName}`) #{file.fileName}
-              else 
+              else
                 | #{file.fileName}
       .bottom-right-container
         if resource.visibilidade == 'Público' || resource.user == user._id
@@ -72,87 +75,255 @@ block content
             i.bi.bi-pencil
             | Criar Post
 
-    style.
-      .title-container {
-        background-color: #333;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        width: 100%;
-        margin-top: 10%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+  // Modal
+  div#ratingModal.modal
+    div.modal-dialog.modal-dialog-centered
+      div.modal-content
+        div.modal-header
+          h5.modal-title Avaliar Recurso
+          button.close(type='button', onclick='closeModal()')
+            span &times;
+        div.modal-body
+          form#ratingForm
+            input(type='hidden', id='resourceIdInput', value=`${resource._id}`)
+            input(type='hidden', id='starsInput')
+            div.form-group
+              div.rating
+                each star in [1, 2, 3, 4, 5]
+                  i.bi.bi-star(onclick=`rate(${star})`, onmouseover=`highlightStars(${star})`, onmouseout='resetStars()')
+        div.modal-footer
+          button.btn.btn-primary(type='button', onclick='submitReview()') Enviar
+          button.btn.btn-secondary(type='button', onclick='closeModal()') Cancelar
+
+  style.
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .reviews-box {
+      background-color: #555;
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .rating-container {
+      display: flex;
+      align-items: center;
+    }
+    .button-container {
+      margin-left: 20px; /* Espaçamento entre o rating e o botão */
+    }
+    .btn-avaliar {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-avaliar:hover {
+      background-color: #1a9f50;
+    }
+    .resource-details {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      margin-top: 20px;
+      position: relative;
+    }
+    .resource-details p {
+      margin: 10px 0;
+    }
+    .resource-details span {
+      font-weight: bold;
+    }
+    .resource-details ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .resource-details li {
+      margin: 5px 0;
+    }
+    .resource-details a {
+      color: #1fd761;
+      text-decoration: none;
+    }
+    .resource-details a:hover {
+      text-decoration: underline;
+    }
+    .bottom-right-container {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      height: 12%;
+      display: flex;
+      gap: 10px;
+    }
+    button, .reviews-box button {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bi-star-fill {
+      color: #ffd700;
+    }
+    .bi-download, .bi-pencil {
+      font-weight: bold;
+      font-size: 100%;
+    }
+    .modal-content {
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      max-width: 300px;
+      margin: auto;
+    }
+    .modal-header, .modal-footer {
+      border: none;
+      background-color: #333;
+    }
+    .modal-header .close {
+      color: #fff;
+    }
+    .modal-header h5 {
+      color: #fff;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+    }
+    .btn-primary {
+      background-color: #1fd761;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #1a9f50;
+    }
+    .btn-secondary {
+      background-color: #555;
+      border: none;
+    }
+    .btn-secondary:hover {
+      background-color: #444;
+    }
+    .rating i {
+      font-size: 1.5rem;
+      color: #ddd;
+      cursor: pointer;
+    }
+    .rating i:hover, .rating i.active {
+      color: #ffd700;
+    }
+    .modal-dialog-centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 1rem);
+    }
+
+  script.
+    console.log('JavaScript carregado corretamente.');
+
+    function openModal() {
+      console.log('Abrindo modal de avaliação');
+      document.getElementById('ratingModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      console.log('Fechando modal de avaliação');
+      document.getElementById('ratingModal').style.display = 'none';
+    }
+
+    function rate(star) {
+      console.log('Selecionando avaliação:', star);
+      document.getElementById('starsInput').value = star;
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < star) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function highlightStars(star) {
+      console.log('Destacando estrelas até:', star);
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < star) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function resetStars() {
+      const starValue = document.getElementById('starsInput').value;
+      console.log('Resetando estrelas para o valor:', starValue);
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < starValue) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function submitReview() {
+      const resourceId = document.getElementById('resourceIdInput').value;
+      const stars = document.getElementById('starsInput').value;
+
+      if (!stars) {
+        alert('Por favor, selecione uma avaliação.');
+        return;
       }
-      .resource-details {
-        background-color: #444;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        margin-top: 20px;
-        position: relative;
-      }
-      .resource-details p {
-        margin: 10px 0;
-      }
-      .resource-details span {
-        font-weight: bold;
-      }
-      .resource-details ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      .resource-details li {
-        margin: 5px 0;
-      }
-      .resource-details a {
-        color: #1fd761;
-        text-decoration: none;
-      }
-      .resource-details a:hover {
-        text-decoration: underline;
-      }
-      .bottom-right-container {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        height: 12%;
-        display: flex;
-        gap: 10px;
-      }
-      .reviews-box {
-        background-color: #555;
-        padding: 10px;
-        border-radius: 5px;
-        color: #fff;
-        display: flex;
-        align-items: center;
-      }
-      .reviews-box p {
-        margin: 0;
-      }
-      .reviews-box span {
-        font-weight: bold;
-      }
-      button, .reviews-box button {
-        background-color: #1fd761;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        padding: 5px 10px;
-        cursor: pointer;
-        display: flex;
-        font-weight: bold;
-        align-items: center;
-        gap: 5px;
-      }
-      button:hover, .reviews-box button:hover {
-        background-color: #1a9f50;
-      }
-      .bi-star-fill {
-        color: #ffd700;
-      }
-      .bi-download, .bi-pencil {
-        font-weight: bold;
-        font-size: 100%;
-      }
+
+      console.log('Submissão do formulário capturada.');
+      console.log('Enviando avaliação:', { resourceId, stars });
+
+      fetch('/rate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ resourceId, stars })
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log('Avaliação enviada com sucesso');
+            closeModal();
+            window.location.reload(); // Recarregue a página para mostrar a nova avaliação
+          } else {
+            console.error('Erro ao enviar avaliação:', data.error);
+          }
+        }).catch(error => {
+          console.error('Erro ao avaliar o recurso:', error);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Documento carregado e script de avaliação pronto.');
+    });
