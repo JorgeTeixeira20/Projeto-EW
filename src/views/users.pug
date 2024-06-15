@@ -87,9 +87,9 @@ block content
               p Data de Registro: #{userA.registrationDate.toDateString()}
               p Último Acesso: #{userA.lastAccessDate.toDateString()}
             .buttons-container
-              form(action=`/users/${userA._id}` method="delete")
+              form(action=`/users/${userA._id}/delete` method="post")
                 button.remove-button(type="submit") Remover
-              form(action=`/users/${userA._id}` method="put")
+              form(action=`/users/${userA._id}/toggle-admin` method="post")
                 button.make-admin-button(type="submit") #{userA.admin ? 'Remover Admin' : 'Tornar Admin'}
     else
       p Nenhum usuário encontrado

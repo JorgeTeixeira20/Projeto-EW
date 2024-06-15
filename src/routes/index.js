@@ -410,7 +410,8 @@ router.post('/adicionarRecurso', upload.array('ficheiros', 10), async (req, res)
   }
 });
 
-router.put('/users/:id', async (req, res) => {
+// Rota para alternar status de admin usando POST
+router.post('/users/:id/toggle-admin', async (req, res) => {
   const userId = req.params.id;
 
   try {
@@ -430,8 +431,8 @@ router.put('/users/:id', async (req, res) => {
   }
 });
 
-// Rota de exclusão usando DELETE
-router.delete('/users/:id', async (req, res) => {
+// Rota para exclusão de usuário usando POST
+router.post('/users/:id/delete', async (req, res) => {
   const userId = req.params.id;
 
   try {
