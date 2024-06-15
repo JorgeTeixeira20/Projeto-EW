@@ -177,10 +177,9 @@ html
       a(href='/rankings') Consultar Rankings
       a(href='/listaRecursos') Consultar Recursos
       a(href='/listaPosts') Consultar Posts
-      if user.admin
-        a(href=`/users`) Consultar Utilizadores
       a(href='/adicionarRecurso') Adicionar Recurso
       if user.admin
+        a(href=`/users`) Consultar Utilizadores
         a(href='/comunicados/criar') Emitir Comunicado
     .container
       block content
