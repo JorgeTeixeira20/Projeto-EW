@@ -10,18 +10,37 @@ block content
           var averageRating = totalReviews > 0 
             ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
             : 'Nenhuma avaliação';
-        div.rating-container
-          span Rating:
+        p
+          span Rating: 
           |
-          span #{averageRating}
+          span #{averageRating} 
           |
           i.bi.bi-star-fill
           |
-          span (#{totalReviews})
-        div.button-container
-          button.btn-avaliar(onclick="openModal()")
+          span  (#{totalReviews})
+      button.btn-avaliar(onclick="openModal()")
             i.bi.bi-star
     .resource-details
+      .emoji-box
+        // Espaço reservado para os emojis
+        if resource.type == 'Relatório' 
+          i.bi.bi-file-earmark-text-fill
+        else if resource.type == 'Tese'
+          i.bi.bi-file-earmark-font-fill
+        else if resource.type == 'Artigo'
+          i.bi.bi-file-earmark-pdf-fill
+        else if resource.type == 'Aplicação'
+          i.bi.bi-file-earmark-code-fill
+        else if resource.type == 'Slides'
+          i.bi.bi-journals
+        else if resource.type == 'Teste/Exame'
+          i.bi.bi-file-earmark-richtext-fill
+        else if resource.type == 'Problema Resolvido'
+          i.bi.bi-file-check-fill
+        else if resource.type == 'Livro'
+          i.bi.bi-book-half
+        else if resource.type == 'Monografia'
+          i.bi.bi-journal-text
       p
         span Tipo:
         |
@@ -97,15 +116,16 @@ block content
 
   style.
     .title-container {
-      background-color: #333;
-      padding: 20px;
-      border-radius: 5px;
-      color: #fff;
-      width: 100%;
-      margin-top: 10%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
     }
     .reviews-box {
       background-color: #555;
@@ -113,8 +133,14 @@ block content
       border-radius: 5px;
       color: #fff;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      margin-left: auto; /* Adiciona margem à esquerda para mover a caixa para a direita */
+    }
+    .reviews-box p {
+      margin: 0;
+    }
+    .reviews-box span {
+      font-weight: bold;
     }
     .rating-container {
       display: flex;
@@ -145,6 +171,18 @@ block content
       color: #fff;
       margin-top: 20px;
       position: relative;
+    }
+    .emoji-box {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #333;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #fff;
+    }
+    .emoji-box i {
+      font-size: 24px;
     }
     .resource-details p {
       margin: 10px 0;

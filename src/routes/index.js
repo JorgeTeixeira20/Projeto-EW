@@ -265,9 +265,7 @@ router.post('/create-post/:resourceId', verifyJWT, async (req, res) => {
 router.get('/perfil', async (req, res) => {
   try {
     const email = req.user.email;
-
     const user = await User.findOne({ email }).exec();
-
     if (!user) {
       return res.status(404).send('Usuário não encontrado');
     }
@@ -281,6 +279,9 @@ router.get('/perfil', async (req, res) => {
     let highestRatedResource = null;
     let highestRating = 0;
 
+    // Count the type of resources
+    const resourceTypeCounts = {};
+
     resources.forEach(resource => {
       let resourceTotalStars = 0;
       resource.reviews.forEach(review => {
@@ -294,20 +295,37 @@ router.get('/perfil', async (req, res) => {
         highestRating = resourceAverageRating;
         highestRatedResource = resource;
       }
+
+      // Count the resource types
+      if (resource.type in resourceTypeCounts) {
+        resourceTypeCounts[resource.type]++;
+      } else {
+        resourceTypeCounts[resource.type] = 1;
+      }
     });
 
     const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
-
-    // Count resources and posts
     const resourceCount = user.myResources.length;
     const postCount = user.myPosts.length;
 
-    res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
+    // Determine the most frequent resource types
+    const maxCount = Math.max(...Object.values(resourceTypeCounts));
+    const mostFrequentTypes = Object.keys(resourceTypeCounts).filter(type => resourceTypeCounts[type] === maxCount);
+
+    res.render('perfil', {
+      user,
+      resourceCount,
+      averageRating,
+      postCount,
+      highestRatedResource,
+      mostFrequentTypes
+    });
   } catch (err) {
     console.error('Erro ao buscar perfil do usuário:', err);
     res.status(500).send('Erro ao buscar perfil do usuário');
   }
 });
+
 
 router.get('/perfil/:id', async (req, res) => {
   try {
@@ -319,10 +337,14 @@ router.get('/perfil/:id', async (req, res) => {
 
     const resources = await Resource.find({ _id: { $in: user.myResources } }).exec();
 
+    // Calculate average ratings
     let totalStars = 0;
     let totalReviews = 0;
     let highestRatedResource = null;
     let highestRating = 0;
+
+    // Count the type of resources
+    const resourceTypeCounts = {};
 
     resources.forEach(resource => {
       let resourceTotalStars = 0;
@@ -337,13 +359,31 @@ router.get('/perfil/:id', async (req, res) => {
         highestRating = resourceAverageRating;
         highestRatedResource = resource;
       }
-    });
-    const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
 
+      // Count the resource types
+      if (resource.type in resourceTypeCounts) {
+        resourceTypeCounts[resource.type]++;
+      } else {
+        resourceTypeCounts[resource.type] = 1;
+      }
+    });
+
+    const averageRating = totalReviews > 0 ? (totalStars / totalReviews) : 0;
     const resourceCount = user.myResources.length;
     const postCount = user.myPosts.length;
 
-    res.render('perfil', { user, resourceCount, averageRating, postCount, highestRatedResource });
+    // Determine the most frequent resource types
+    const maxCount = Math.max(...Object.values(resourceTypeCounts));
+    const mostFrequentTypes = Object.keys(resourceTypeCounts).filter(type => resourceTypeCounts[type] === maxCount);
+
+    res.render('perfil', {
+      user,
+      resourceCount,
+      averageRating,
+      postCount,
+      highestRatedResource,
+      mostFrequentTypes
+    });
   } catch (err) {
     console.error('Erro ao buscar perfil do usuário:', err);
     res.status(500).send('Erro ao buscar perfil do usuário');

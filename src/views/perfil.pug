@@ -20,7 +20,7 @@ block content
             p= postCount
           .detail-card
             span Especialista em
-            p ISTO AINDA ESTÁ ESTÁTICO
+            p= mostFrequentTypes.join(', ')
         hr
         if highestRatedResource
           a.bigger-container(href=`/resource/${highestRatedResource._id}`)
