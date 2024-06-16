@@ -55,7 +55,7 @@ router.post('/register', (req, res) => {
 
 // Login route
 router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', async (err, user, info) => {
         if (err) {
             console.error("Login error:", err);
             return res.redirect('/auth/login?error_msg=' + encodeURIComponent('An error occurred during login'));
@@ -70,6 +70,14 @@ router.post('/login', (req, res, next) => {
             }
             return res.redirect('/auth/login?error_msg=' + encodeURIComponent(errorMsg));
         }
+
+        // Update last access date
+        try {
+            await User.updateOne({ _id: user._id }, { lastAccessDate: new Date() });
+        } catch (updateErr) {
+            console.error("Error updating last access date:", updateErr);
+        }
+
         const token = jwt.sign({ id: user._id, email: user.email }, 'projeto-ew-2024', { expiresIn: '1h' });
         res.cookie('token', token, { httpOnly: true });
         return res.redirect('/?success_msg=' + encodeURIComponent('You are logged in successfully'));

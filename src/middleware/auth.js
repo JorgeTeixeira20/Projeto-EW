@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const jwtSecret = 'projeto-ew-2024';
 
 const verifyJWT = (req, res, next) => {
@@ -11,9 +12,27 @@ const verifyJWT = (req, res, next) => {
         req.user = decoded;
     } catch (err) {
         console.log("Invalid Token");
-        res.redirect('/auth');
+        return res.redirect('/auth');
     }
     next();
 };
 
-module.exports = verifyJWT;
+const setUser = async (req, res, next) => {
+    const email = req.user.email;
+
+    try {
+        const user = await User.findOne({ email }).exec();
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.locals.user = user;
+        next();
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
+module.exports = {
+    verifyJWT,
+    setUser
+};

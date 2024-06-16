@@ -3,14 +3,14 @@ extends layout-main
 block content
   .container
     .title-container
-      h2 Lista de Posts
+      h2 Meus Posts
       .filter-container
         .search-bar-container
-          form(action="/listaPosts" method="get" class="search-form")
+          form(action="/meusposts" method="get" class="search-form")
             input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
             button(type="submit" class="search-button")
               i.bi.bi-search.search-icon
-            form(action="/listaPosts" method="get" class="reset-form")
+            form(action="/meusposts" method="get" class="reset-form")
                 button(type="submit" class="reset-button")
                     i.bi.bi-arrow-counterclockwise.reset-icon
         .dropdown
@@ -28,7 +28,7 @@ block content
             p
               span Autor:
               | 
-              span #{post.user.firstName} #{post.user.lastName}
+              span #{user.firstName} #{user.lastName}
             hr
             .post-date
               | #{new Date(post.date).toLocaleDateString()}

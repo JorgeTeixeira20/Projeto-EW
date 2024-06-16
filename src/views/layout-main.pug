@@ -7,7 +7,7 @@ html
     style.
       body {
         margin: 0;
-        background-color: #212020;
+        background: linear-gradient(135deg, #212020, #272727);
       }
       header {
         width: 100%;
@@ -31,9 +31,13 @@ html
         justify-content: center;
         align-items: center;
         position: absolute;
+        cursor: pointer;
       }
       .menu-btn-container {
         left: 20px;
+      }
+      .menu-btn-container:hover { // ADICIONADO
+        background-color: #333; // Adicionado efeito hover para a caixa do menu (ADICIONADO)
       }
       .user-icon-container {
         right: 110px; 
@@ -158,26 +162,29 @@ html
       }
   body
     header
-      div.menu-btn-container
-        span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776;
+      div.menu-btn-container(onclick='toggleNav()')
+        span.menu-btn(id='menuBtn') &#9776;
       a.header-link(href='/')
         h1 Sistema de Recursos Educativos
-      div.logout-btn-container
-        a.logout-icon(href='/auth/logout')
-          i.bi.bi-box-arrow-right
       div.user-icon-container(onclick='toggleDropdown()')
         i.bi.bi-person-fill.user-icon
         i.bi.bi-chevron-down.dropdown-arrow(id='dropdownArrow')
       div.dropdown-menu(id='dropdownMenu')
         a(id="profile-link", href='/perfil') Perfil
-        a(href='#') Exemplo1
-        a(href='#') Exemplo2
+        a(href='/meusrecursos') Meus Recursos
+        a(href='/meusposts') Meus Posts
         a(href='#') Exemplo3
+      div.logout-btn-container
+        a.logout-icon(href='/auth/logout')
+          i.bi.bi-box-arrow-right
     .menu(id='mySidenav')
       a(href='/rankings') Consultar Rankings
       a(href='/listaRecursos') Consultar Recursos
       a(href='/listaPosts') Consultar Posts
       a(href='/adicionarRecurso') Adicionar Recurso
+      if user.admin
+        a(href=`/users`) Consultar Utilizadores
+        a(href='/comunicados/criar') Emitir Comunicado
     .container
       block content
     script.

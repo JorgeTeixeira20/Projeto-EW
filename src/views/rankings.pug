@@ -1,0 +1,65 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Rankings
+
+    .ranking-list
+      a.ranking-link(href='/rankings/recursos')
+        .ranking-item
+          h3 Rankings dos Recursos Melhor Classificados
+      a.ranking-link(href='/rankings/users')
+        .ranking-item
+          h3 Rankings dos Usuários com Recursos Melhor Classificados
+      a.ranking-link(href='/rankings/level')
+        .ranking-item
+          h3 Rankings dos Usuários com Maior Nível
+
+  style.
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3%;
+    }
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    a.ranking-link {
+      text-decoration: none;
+      color: inherit; /* Mantém a cor do texto herdada */
+    }
+    a.ranking-link:link,
+    a.ranking-link:visited,
+    a.ranking-link:hover,
+    a.ranking-link:active {
+      text-decoration: none;
+      color: inherit;
+    }
+    .ranking-item {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .ranking-item:hover {
+      background-color: #555;
+      text-decoration: none;
+      color: #1fd761;
+    }
+    .ranking-item h3 {
+      margin: 0;
+    }

@@ -1,0 +1,26 @@
+[
+    {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
+        "title": "Nova Funcionalidade Disponível",
+        "subtitle": "Introduzindo a Pesquisa Avançada",
+        "content": "Estamos felizes em anunciar a nova funcionalidade de pesquisa avançada na nossa plataforma. Agora você pode filtrar os resultados de forma mais eficaz.",
+        "author": "666dc2570e67439fdb41c223",
+        "date": "2024-06-07T00:00:00Z"
+    },
+    {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
+        "title": "Manutenção Programada",
+        "subtitle": "Serviço Temporariamente Indisponível",
+        "content": "Informamos que a plataforma passará por manutenção programada no dia 20 de junho de 2024, das 02:00 às 04:00. Durante esse período, o serviço ficará temporariamente indisponível.",
+        "author": "666dc2570e67439fdb41c223",
+        "date": "2024-06-07T00:00:00Z"
+    },
+    {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
+        "title": "Workshop de Capacitação",
+        "subtitle": "Participe do Nosso Workshop",
+        "content": "Estamos organizando um workshop de capacitação para os novos usuários. Inscreva-se e aprenda a utilizar todas as funcionalidades da plataforma.",
+        "author": "666dc2570e67439fdb41c223",
+        "date": "2024-06-07T00:00:00Z"
+    }
+]

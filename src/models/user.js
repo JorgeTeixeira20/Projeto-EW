@@ -12,8 +12,10 @@ const userSchema = new mongoose.Schema({
   admin: { type: Boolean, required: true, default: false },
   registrationDate: { type: Date, default: Date.now },
   lastAccessDate: { type: Date, default: Date.now },
-  myResources: { type: [mongoose.Schema.Types.ObjectId], ref: 'Resource', default: [] },
-  myPosts: { type: [mongoose.Schema.Types.ObjectId], ref: 'Post', default: [] }
+  myResources: { type: [String], default: [] }, // Lista de strings para recursos
+  myPosts: { type: [String], default: [] }, // Lista de strings para posts
+  xp: { type: Number, default: 0 },
+  level: { type: Number, default: 1 }
 });
 
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });

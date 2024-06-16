@@ -6,7 +6,10 @@ block content
     .post-container
       // Nome do utilizador que fez o post, como link
       .post-author 
-        a(href=`/perfil/${user._id}`) #{user.firstName} #{user.lastName}
+        if user
+          a(href=`/perfil/${user._id}`) #{user.firstName} #{user.lastName}
+        else
+          span Utilizador eliminado
       
       // Caixa grande com o conteúdo do post
       .post-titles
@@ -28,7 +31,10 @@ block content
       each comment in sortedComments
         .comment-wrapper
           .comment-box
-            a(href=`/perfil/${comment.user._id}`) #{comment.user.firstName} #{comment.user.lastName} (#{comment.user.email}):
+            if comment.user
+              a(href=`/perfil/${comment.user._id}`) #{comment.user.firstName} #{comment.user.lastName} (#{comment.user.email}):
+            else
+              span Utilizador eliminado:
             | #{comment.content}
             | (#{new Date(comment.date).toLocaleDateString()})
             button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
@@ -37,7 +43,10 @@ block content
               .reply-wrapper
                 .reply-line
                 .reply-box
-                  a(href=`/perfil/${reply.user._id}`) #{reply.user.firstName} #{reply.user.lastName} (#{reply.user.email}):
+                  if reply.user
+                    a(href=`/perfil/${reply.user._id}`) #{reply.user.firstName} #{reply.user.lastName} (#{reply.user.email}):
+                  else
+                    span Utilizador eliminado:
                   | #{reply.content}
                   | (#{new Date(reply.date).toLocaleDateString()})
           .reply-form(id=`reply-form-${comment._id}`)

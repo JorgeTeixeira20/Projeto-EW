@@ -32,6 +32,24 @@ block content
       transition: background-color 0.3s ease, color 0.3s ease;
       position: relative; /* Permite posicionamento relativo dos elementos internos */
     }
+    .comunicado-box {
+      background-color: #444;
+      color: white;
+      padding: 15px;
+      padding-right: 60px; /* Adiciona espaço suficiente à direita para o ícone do autor */
+      border-radius: 5px;
+      width: 90%;
+      max-width: 800px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative; /* Permite posicionamento relativo dos elementos internos */
+      border: 3px solid #1fd761;
+    }
+    .comunicado-box:hover {
+      background-color: #555;
+      color: #1fd761;
+    }
     .item-box:hover {
       background-color: #555;
       color: #1fd761;
@@ -86,8 +104,19 @@ block content
     .main-title
       h1 Notícias
     each item in items
-      .item-box(onclick=`location.href='/${item.type}/${item._id}'`)
-        if item.type === 'resource'
+      if item.type === 'comunicado'
+        .comunicado-box(onclick=`location.href='/comunicados/${item._id}'`)
+          h3 Comunicado: #{item.title}
+          h5 #{item.subtitle}
+          hr
+          .item-date
+            | #{new Date(item.date).toLocaleDateString()}
+          .author-box
+            a(href=`/perfil/${item.author}`)
+              i.bi.bi-person-fill
+    each item in items
+      if item.type === 'resource'
+        .item-box(onclick=`location.href='/resource/${item._id}'`)
           h3 Recurso: #{item.title}
           h5 #{item.subtitle}
           p #{item.themes}
@@ -97,7 +126,8 @@ block content
           .author-box
             a(href=`/perfil/${item.user}`)
               i.bi.bi-person-fill
-        else if item.type === 'post'
+      else if item.type === 'post'
+        .item-box(onclick=`location.href='/post/${item._id}'`)
           h3 Post: #{item.title}
           p #{item.subtitle}
           hr

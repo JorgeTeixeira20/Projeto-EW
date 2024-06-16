@@ -1,0 +1,53 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Rankings dos Recursos Melhor Classificados
+
+    if topResources.length > 0
+      each resource, index in topResources
+        .resource-item
+          h3 #{index + 1}. #{resource.title}
+          p Média de Avaliação: #{resource.averageRating.toFixed(2)}
+          p Autor: #{resource.author}
+          p Ano: #{resource.year}
+          a(href=`/resource/${resource._id}`) Ver Detalhes
+    else
+      p Nenhum recurso encontrado.
+
+  style.
+    .container{
+      margin-bottom: 15px;
+    }
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .resource-item {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      margin-top: 20px;
+    }
+    .resource-item h3 {
+      margin: 0 0 10px 0;
+    }
+    .resource-item p {
+      margin: 5px 0;
+    }
+    .resource-item a {
+      color: #1fd761;
+      text-decoration: none;
+    }
+    .resource-item a:hover {
+      text-decoration: underline;
+    }

@@ -2,7 +2,7 @@
     {
       "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
       "user": "666885199f7eb030e78ad809",
-      "type": "book",
+      "type": "Livro",
       "title": "Introduction to Algorithms",
       "subtitle": "",
       "description": "A comprehensive book on algorithms.",
@@ -23,7 +23,7 @@
     {
       "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
       "user": "666885199f7eb030e78ad809",
-      "type": "book",
+      "type": "Livro",
       "title": "Deep Learning",
       "subtitle": "",
       "description": "A comprehensive book on deep learning.",

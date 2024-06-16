@@ -44,12 +44,12 @@ block content
     .btn-register {
       background-color: #1fd761 !important;
       border-color: #1fd761 !important;
-      margin-left: 10px !important;
+      margin-right: 10px !important;
     }
     .btn-back {
       background-color: #6c757d !important;
       border-color: #6c757d !important;
-      margin-right: 10px !important;
+      margin-left: 10px !important;
     }
 
   form.register-container(action='/auth/register', method='post')
@@ -79,5 +79,5 @@ block content
         option(value='Estudante') Estudante
         option(value='Professor') Professor
     .btn-container
-      a.btn.btn-back(href='/auth') Return
       button.btn.btn-register(type='submit') Register
+      a.btn.btn-back(href='/auth') Return

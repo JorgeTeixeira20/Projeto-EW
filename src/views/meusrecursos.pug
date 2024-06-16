@@ -3,14 +3,14 @@ extends layout-main
 block content
   .container
     .title-container
-      h2 Lista de Posts
+      h2 Meus Recursos
       .filter-container
         .search-bar-container
-          form(action="/listaPosts" method="get" class="search-form")
+          form(action="/meusrecursos" method="get" class="search-form")
             input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
             button(type="submit" class="search-button")
               i.bi.bi-search.search-icon
-            form(action="/listaPosts" method="get" class="reset-form")
+            form(action="/meusrecursos" method="get" class="reset-form")
                 button(type="submit" class="reset-button")
                     i.bi.bi-arrow-counterclockwise.reset-icon
         .dropdown
@@ -19,19 +19,27 @@ block content
             a.dropdown-item(href="#") Categoria 1
             a.dropdown-item(href="#") Categoria 2
             a.dropdown-item(href="#") Categoria 3
-    .post-list
-      each post in posts
-        a.post-link(href=`/post/${post._id}`)
-          .post-item
-            h3 #{post.title}
-            h5 #{post.subtitle}
+    .resource-list
+      each resource in resources
+        a.resource-link(href=`/resource/${resource._id}`)
+          .resource-item
+            h3 #{resource.title}
+            h5 #{resource.subtitle}
+            p
+              span Tipo:
+              | 
+              span #{resource.type}
+            p
+              span Temas:
+              | 
+              span #{resource.themes}
             p
               span Autor:
               | 
-              span #{post.user.firstName} #{post.user.lastName}
+              span #{resource.author}
             hr
-            .post-date
-              | #{new Date(post.date).toLocaleDateString()}
+            .resource-date
+              | #{new Date(resource.dataCriacao).toLocaleDateString()}
 
     style.
       .title-container {
@@ -112,13 +120,13 @@ block content
       .dropdown-item:hover {
         background-color: #575757;
       }
-      .post-list {
+      .resource-list {
         margin-top: 20px;
         display: flex;
         flex-direction: column;
         gap: 15px;
       }
-      .post-item {
+      .resource-item {
         background-color: #444;
         padding: 20px;
         border-radius: 5px;
@@ -127,33 +135,33 @@ block content
         text-align: left;
         position: relative;
       }
-      .post-date {
+      .resource-date {
         position: absolute;
         bottom: 10px;
         right: 10px;
         font-size: 0.8em;
         color: #999;
       }
-      .post-link {
+      .resource-link {
         text-decoration: none; /* Remove a decoração do link */
         color: inherit; /* Mantém a cor do texto herdada */
         display: block; /* Garante que o link ocupe todo o espaço do item */
         position: relative;
         margin-bottom: 20px;
       }
-      .post-link:visited, .post-link:active, .post-link:hover {
+      .resource-link:visited, .resource-link:active, .resource-link:hover {
         color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
         text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
       }
-      .post-item:hover {
+      .resource-item:hover {
         background-color: #555;
         color: #1fd761;
         cursor: pointer;
       }
-      .post-item h3 {
+      .resource-item h3 {
         margin: 0 0 10px;
       }
-      .post-item p {
+      .resource-item p {
         margin: 5px 0;
       }
       hr {
