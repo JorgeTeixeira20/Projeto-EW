@@ -95,8 +95,8 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
     if (!resource) {
       return res.status(404).send('Resource não encontrado');
     }
-    const user = await User.findById(post.userId).lean();
-    if (!user) {
+    const userA = await User.findById(post.userId).lean();
+    if (!userA) {
       return res.status(404).send('User não encontrado');
     }
 
@@ -136,9 +136,9 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
 
     console.log('Post encontrado:', post);
     console.log('Resource encontrado:', resource);
-    console.log('User encontrado:', user);
+    console.log('User encontrado:', userA);
 
-    res.render('post', { post, resource, user });
+    res.render('post', { post, resource, userA });
   } catch (err) {
     console.error('Erro ao buscar post:', err);
     res.status(500).send('Erro ao buscar post');
