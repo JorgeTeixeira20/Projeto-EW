@@ -27,14 +27,6 @@ const commentSchema = new mongoose.Schema({
   votes: { type: votesSchema, default: () => ({ count: 0, details: [] }) },
 });
 
-const commentSchema = new mongoose.Schema({
-  _id: { type: String, required: true },
-  commentUserId: { type: String, required: true },
-  content: { type: String, required: true },
-  date: { type: Date, required: true },
-  replies: [replySchema]
-});
-
 const postSchema = new mongoose.Schema({
   _id: { type: String, required: true },
   title: { type: String, required: true },
