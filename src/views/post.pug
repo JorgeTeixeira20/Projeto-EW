@@ -18,8 +18,15 @@ block content
       // Caixa grande com o conteúdo do post
       .post-content
         | #{post.content}
-      
+
       a.resource-link(href=`/resource/${resource._id}`) Acessar recurso (#{resource.title})
+
+      .post-vote
+        button.vote-button.upvote-button(onclick=`votePost('${post._id}', 'upvote')`)
+          i.bi.bi-arrow-up-circle
+        .vote-count #{post.votes.count || 0}
+        button.vote-button.downvote-button(onclick=`votePost('${post._id}', 'downvote')`)
+          i.bi.bi-arrow-down-circle
       
       // Data de quando o post foi feito no canto inferior direito
       .post-date
@@ -29,7 +36,7 @@ block content
       h3 Comentários:
       - const sortedComments = post.comments.sort((a, b) => new Date(a.date) - new Date(b.date));
       each comment in sortedComments
-        .comment-wrapper
+        .comment-wrapper(data-comment-id=comment._id)
           .comment-box
             if comment.user
               a(href=`/perfil/${comment.user._id}`) #{comment.user.firstName} #{comment.user.lastName} (#{comment.user.email}):
@@ -37,11 +44,17 @@ block content
               span Utilizador eliminado:
             | #{comment.content}
             | (#{new Date(comment.date).toLocaleDateString()})
-            button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
+            .comment-actions
+              .comment-vote
+                button.vote-button.upvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'upvote')`)
+                  i.bi.bi-arrow-up-circle
+                .vote-count #{comment.votes.count || 0}
+                button.vote-button.downvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'downvote')`)
+                  i.bi.bi-arrow-down-circle
+              button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
           .replies
             each reply in comment.replies.sort((a, b) => new Date(a.date) - new Date(b.date))
-              .reply-wrapper
-                .reply-line
+              .reply-wrapper(data-reply-id=reply._id)
                 .reply-box
                   if reply.user
                     a(href=`/perfil/${reply.user._id}`) #{reply.user.firstName} #{reply.user.lastName} (#{reply.user.email}):
@@ -49,6 +62,13 @@ block content
                     span Utilizador eliminado:
                   | #{reply.content}
                   | (#{new Date(reply.date).toLocaleDateString()})
+                  .reply-actions
+                    .reply-vote
+                      button.vote-button.upvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'upvote')`)
+                        i.bi.bi-arrow-up-circle
+                      .vote-count #{reply.votes.count || 0}
+                      button.vote-button.downvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'downvote')`)
+                        i.bi.bi-arrow-down-circle
           .reply-form(id=`reply-form-${comment._id}`)
             form(action=`/post/${post._id}/comment/${comment._id}/reply` method="post")
               .form-group
@@ -69,6 +89,66 @@ block content
           replyForm.classList.remove('show');
         } else {
           replyForm.classList.add('show');
+        }
+      }
+
+      async function votePost(postId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector('.post-vote .vote-count').textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on post');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      async function voteComment(postId, commentId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/comment/${commentId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector(`.comment-wrapper[data-comment-id="${commentId}"] .comment-vote .vote-count`).textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on comment');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      async function voteReply(postId, commentId, replyId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/comment/${commentId}/reply/${replyId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector(`.reply-wrapper[data-reply-id="${replyId}"] .reply-vote .vote-count`).textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on reply');
+          }
+        } catch (error) {
+          console.error('Error:', error);
         }
       }
 
@@ -125,6 +205,26 @@ block content
         margin-bottom: 10px;
         text-align: left;
         font-weight: bold;
+      }
+      .post-vote {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+      .vote-button {
+        background: none;
+        border: none;
+        color: #1fd761;
+        cursor: pointer;
+        font-size: 1.5em;
+      }
+      .vote-button:hover {
+        color: #1a9f50;
+      }
+      .vote-count {
+        font-size: 1.2em;
+        color: #fff;
       }
       .post-date {
         text-align: right;
@@ -200,6 +300,17 @@ block content
       .comment-box a:hover {
         text-decoration: underline;
       }
+      .comment-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        align-items: center;
+      }
+      .comment-vote {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
       .reply-button {
         background-color: #1fd761;
         border: none;
@@ -207,8 +318,6 @@ block content
         color: #fff;
         padding: 5px 10px;
         cursor: pointer;
-        margin-top: 10px;
-        align-self: flex-end; /* Alinha o botão à direita */
       }
       .reply-button:hover {
         background-color: #1a9f50;
@@ -247,6 +356,17 @@ block content
       }
       .reply-box a:hover {
         text-decoration: underline;
+      }
+      .reply-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+      }
+      .reply-vote {
+        display: flex;
+        gap: 10px;
+        align-items: center;
       }
       .reply-form {
         background-color: #555; /* Fundo opaco para o formulário de resposta */

@@ -201,6 +201,136 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
   }
 });
 
+// Route to handle voting on posts
+router.post('/post/:id/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const existingVote = post.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        post.votes.count += (type === 'upvote' ? -1 : 1);
+        post.votes.details = post.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        post.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      post.votes.count += (type === 'upvote' ? 1 : -1);
+      post.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: post.votes });
+  } catch (err) {
+    console.error('Erro ao votar no post:', err);
+    res.status(500).send('Erro ao votar no post');
+  }
+});
+
+// Route to handle voting on comments
+router.post('/post/:postId/comment/:commentId/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const existingVote = comment.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        comment.votes.count += (type === 'upvote' ? -1 : 1);
+        comment.votes.details = comment.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        comment.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      comment.votes.count += (type === 'upvote' ? 1 : -1);
+      comment.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: comment.votes });
+  } catch (err) {
+    console.error('Erro ao votar no comentário:', err);
+    res.status(500).send('Erro ao votar no comentário');
+  }
+});
+
+// Route to handle voting on replies
+router.post('/post/:postId/comment/:commentId/reply/:replyId/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const reply = comment.replies.id(req.params.replyId);
+    if (!reply) {
+      return res.status(404).send('Resposta não encontrada');
+    }
+
+    const existingVote = reply.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        reply.votes.count += (type === 'upvote' ? -1 : 1);
+        reply.votes.details = reply.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        reply.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      reply.votes.count += (type === 'upvote' ? 1 : -1);
+      reply.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: reply.votes });
+  } catch (err) {
+    console.error('Erro ao votar na resposta:', err);
+    res.status(500).send('Erro ao votar na resposta');
+  }
+});
+
+
 router.get('/resource/:id', async (req, res) => {
   try {
     const email = req.user.email;
