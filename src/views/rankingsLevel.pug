@@ -1,0 +1,82 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Rankings dos Usuários com Maior Nível
+
+    if users.length > 0
+      .user-list
+        each user, index in users
+          a.user-link(href=`/perfil/${user._id}`)
+            .user-item
+              h3 #{index + 1}. #{user.firstName} #{user.lastName}
+              p
+                span Nível:
+                | 
+                span #{user.level}
+              p
+                span XP Total:
+                | 
+                span #{user.xp}
+              p
+                span Número de Posts:
+                | 
+                span #{user.myPosts.length}
+              p
+                span Número de Recursos:
+                | 
+                span #{user.myResources.length}
+    else
+      p Nenhum usuário encontrado.
+
+  style.
+    .container{
+      margin-bottom: 15px;
+    }
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3%;
+    }
+    .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    a.user-link {
+      text-decoration: none;
+      color: inherit; /* Mantém a cor do texto herdada */
+    }
+    a.user-link:link,
+    a.user-link:visited,
+    a.user-link:hover,
+    a.user-link:active {
+      text-decoration: none;
+      color: inherit;
+    }
+    .user-item {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+    .user-item:hover {
+      background-color: #555;
+      color: #1fd761;
+    }
+    .user-item h3 {
+      margin: 0 0 10px 0;
+    }
+    .user-item p {
+      margin: 5px 0;
+    }

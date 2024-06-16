@@ -15,6 +15,18 @@ const upload = multer({ dest: 'uploads/' });
 router.use(verifyJWT);
 router.use(setUser);
 
+function calculateLevel(xp) {
+  let level = 1;
+  let xpThreshold = 100;
+
+  while (xp >= xpThreshold) {
+    level += 1;
+    xp -= xpThreshold;
+  }
+
+  return level;
+}
+
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.find({}).lean();
@@ -55,10 +67,18 @@ router.get('/listaRecursos', async (req, res) => {
   }
 });
 
-
 router.get('/listaPosts', async (req, res) => {
   try {
-    const posts = await Post.find({}).lean();
+    const searchQuery = req.query.search;
+    let posts;
+
+    if (searchQuery) {
+      posts = await Post.find({
+        title: { $regex: searchQuery, $options: 'i' }
+      }).lean();
+    } else {
+      posts = await Post.find({}).lean();
+    }
 
     // Buscar detalhes do usuário para cada post
     const userIds = posts.map(post => post.userId);
@@ -164,6 +184,12 @@ router.post('/post/:id/comment', verifyJWT, async (req, res) => {
     post.comments.push(newComment);
     await post.save();
 
+    // Incrementar XP do usuário
+    const user = await User.findById(req.user.id);
+    user.xp += 10; // XP por adicionar comentário
+    user.level = calculateLevel(user.xp);
+    await user.save();
+
     res.redirect(`/post/${req.params.id}`);
   } catch (err) {
     console.error('Erro ao adicionar comentário:', err);
@@ -193,6 +219,12 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
 
     comment.replies.push(newReply);
     await post.save();
+
+    // Incrementar XP do usuário
+    const user = await User.findById(req.user.id);
+    user.xp += 5; // XP por adicionar resposta
+    user.level = calculateLevel(user.xp);
+    await user.save();
 
     res.redirect(`/post/${req.params.id}`);
   } catch (err) {
@@ -383,7 +415,13 @@ router.post('/create-post/:resourceId', verifyJWT, async (req, res) => {
     await newPost.save();
     
     // Adiciona o ID do novo post à lista de posts do usuário
-    await User.findByIdAndUpdate(req.user.id, { $push: { myPosts: newPost._id } });
+    const user = await User.findById(req.user.id);
+    user.myPosts.push(newPost._id);
+
+    // Incrementar XP do usuário
+    user.xp += 25; // XP por adicionar post
+    user.level = calculateLevel(user.xp);
+    await user.save();
 
     res.redirect(`/post/${newPost._id}`);
   } catch (err) {
@@ -520,23 +558,59 @@ router.get('/perfil/:id', async (req, res) => {
   }
 });
 
-router.get('/rankings', async (req, res) => {
+// Rota para a página principal de rankings
+router.get('/rankings', (req, res) => {
+  res.render('rankings');
+});
+
+// Rota para o ranking dos recursos
+router.get('/rankings/recursos', async (req, res) => {
   try {
     const resources = await Resource.find({});
 
-    // Calcular a média de classificações
     resources.forEach(resource => {
       const totalStars = resource.reviews.reduce((sum, review) => sum + review.stars, 0);
       resource.averageRating = resource.reviews.length > 0 ? (totalStars / resource.reviews.length) : 0;
     });
 
-    // Ordenar os recursos pela média de classificações em ordem decrescente
     resources.sort((a, b) => b.averageRating - a.averageRating);
 
-    // Obter os top 5 recursos
     const topResources = resources.slice(0, 5);
 
-    // Calcular as médias de avaliação por usuário
+    res.render('ranking-recursos', { topResources });
+  } catch (err) {
+    console.error('Erro ao buscar recursos para o ranking:', err);
+    res.status(500).send('Erro ao buscar recursos para o ranking.');
+  }
+});
+
+router.get('/rankings/level', async (req, res) => {
+  try {
+    const users = await User.find().lean();
+
+    users.forEach(user => {
+      user.level = calculateLevel(user.xp);
+    });
+
+    users.sort((a, b) => {
+      if (b.level === a.level) {
+        return b.xp - a.xp;
+      }
+      return b.level - a.level;
+    });
+
+    res.render('rankingsLevel', { users });
+  } catch (err) {
+    console.error('Erro ao buscar ranking de níveis dos usuários:', err);
+    res.status(500).send('Erro ao buscar ranking de níveis dos usuários.');
+  }
+});
+
+// Rota para o ranking dos usuários
+router.get('/rankings/users', async (req, res) => {
+  try {
+    const resources = await Resource.find({});
+
     const userRatings = {};
 
     resources.forEach(resource => {
@@ -547,7 +621,6 @@ router.get('/rankings', async (req, res) => {
       userRatings[resource.user].totalReviews += resource.reviews.length;
     });
 
-    // Calcular a média de avaliação por usuário
     const userAverageRatings = Object.keys(userRatings).map(userId => {
       const { totalStars, totalReviews } = userRatings[userId];
       return {
@@ -556,17 +629,13 @@ router.get('/rankings', async (req, res) => {
       };
     });
 
-    // Ordenar os usuários pela média de avaliação em ordem decrescente
     userAverageRatings.sort((a, b) => b.averageRating - a.averageRating);
 
-    // Obter os top 5 usuários
     const topUsers = userAverageRatings.slice(0, 5);
 
-    // Buscar os detalhes dos usuários
     const topUserIds = topUsers.map(user => user.userId);
     const topUserDetails = await User.find({ _id: { $in: topUserIds } }).lean();
 
-    // Mapear os detalhes dos usuários
     const topUsersWithDetails = topUsers.map(user => {
       const userDetails = topUserDetails.find(u => u._id.toString() === user.userId);
       return {
@@ -576,10 +645,10 @@ router.get('/rankings', async (req, res) => {
       };
     });
 
-    res.render('rankings', { topResources, topUsers: topUsersWithDetails });
+    res.render('ranking-users', { topUsers: topUsersWithDetails });
   } catch (err) {
-    console.error('Erro ao buscar recursos para o ranking:', err);
-    res.status(500).send('Erro ao buscar recursos para o ranking.');
+    console.error('Erro ao buscar usuários para o ranking:', err);
+    res.status(500).send('Erro ao buscar usuários para o ranking.');
   }
 });
 
@@ -613,8 +682,19 @@ router.get('/meusrecursos', verifyJWT, async (req, res) => {
 router.get('/meusposts', verifyJWT, async (req, res) => {
   try {
     const userId = req.user.id;
+    const searchQuery = req.query.search;
     const user = await User.findById(userId).populate('myPosts');
-    const posts = await Post.find({ _id: { $in: user.myPosts } });
+    const postIds = user.myPosts;
+
+    let posts;
+    if (searchQuery) {
+      posts = await Post.find({
+        _id: { $in: postIds },
+        title: { $regex: searchQuery, $options: 'i' }
+      });
+    } else {
+      posts = await Post.find({ _id: { $in: postIds } });
+    }
 
     res.render('meusposts', { posts, user: req.user });
   } catch (err) {
@@ -694,6 +774,15 @@ router.post('/adicionarRecurso', verifyJWT, upload.array('ficheiros', 10), async
 
     // Adiciona o ID do recurso à lista de recursos do usuário logado
     await User.findByIdAndUpdate(userId, { $push: { myResources: savedResource._id.toString() } });
+
+    const user = await User.findById(userId);
+    user.xp += 50; // XP por adicionar recurso
+    user.level = calculateLevel(user.xp);
+    await user.save();
+    console.log("XP");
+    console.log(user.xp);
+    console.log("LEVEL");
+    console.log(calculateLevel(user.xp));
 
     res.redirect(`/resource/${savedResource._id}`); // Redireciona para a página do recurso recém-criado
   } catch (err) {
@@ -824,7 +913,7 @@ router.get('/download-all/:resourceId', async (req, res) => {
   }
 });
 
-router.post('/rate', async (req, res) => {
+router.post('/rate', verifyJWT, async (req, res) => {
   const { resourceId, stars } = req.body;
   const email = req.user.email;
 
@@ -850,6 +939,12 @@ router.post('/rate', async (req, res) => {
     }
 
     await resource.save();
+
+    const user = await User.findById(req.user.id);
+    user.xp += 5; // XP por adicionar avaliação
+    user.level = calculateLevel(user.xp);
+    await user.save();
+
     console.log('Avaliação salva com sucesso');
     res.json({ success: true });
   } catch (error) {

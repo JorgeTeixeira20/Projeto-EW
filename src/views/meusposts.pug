@@ -6,8 +6,13 @@ block content
       h2 Meus Posts
       .filter-container
         .search-bar-container
-          input(type="text" placeholder="Pesquisar..." class="search-bar")
-          i.bi.bi-search.search-icon
+          form(action="/meusposts" method="get" class="search-form")
+            input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
+            button(type="submit" class="search-button")
+              i.bi.bi-search.search-icon
+            form(action="/meusposts" method="get" class="reset-form")
+                button(type="submit" class="reset-button")
+                    i.bi.bi-arrow-counterclockwise.reset-icon
         .dropdown
           button.dropdown-toggle Filtros
           .dropdown-menu
@@ -49,6 +54,10 @@ block content
         display: flex;
         align-items: center;
       }
+      .search-form {
+        display: flex;
+        align-items: center;
+      }
       .search-bar {
         padding: 10px 30px 10px 10px;
         border: none;
@@ -56,9 +65,14 @@ block content
         outline: none;
         color: #aaa; /* Cor do texto mais escura */
       }
+      .search-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
       .search-icon {
-        position: absolute;
-        right: 10px;
         font-size: 20px;
         color: #aaa; /* Cor da lupa */
       }
@@ -144,4 +158,15 @@ block content
       }
       hr {
         border: 1px solid #555;
+      }
+      .reset-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .reset-icon {
+        font-size: 20px;
+        color: #aaa; /* Cor da lupa */
       }

@@ -3,30 +3,18 @@ extends layout-main
 block content
   .container
     .title-container
-      h2 Rankings dos Recursos Melhor Classificados
+      h2 Rankings
 
-    if topResources.length > 0
-      each resource, index in topResources
-        .resource-item
-          h3 #{index + 1}. #{resource.title}
-          p Média de Avaliação: #{resource.averageRating.toFixed(2)}
-          p Autor: #{resource.author}
-          p Ano: #{resource.year}
-          a(href=`/resource/${resource._id}`) Ver Detalhes
-    else
-      p Nenhum recurso encontrado.
-
-    .title-container
-      h2 Rankings dos Usuários com Recursos Melhor Classificados
-
-    if topUsers.length > 0
-      each user, index in topUsers
-        .user-item
-          h3 #{index + 1}. #{user.firstName} #{user.lastName}
-          p Média de Avaliação dos Recursos: #{user.averageRating.toFixed(2)}
-          a(href=`/perfil/${user.userId}`) Ver Perfil
-    else
-      p Nenhum usuário encontrado.
+    .ranking-list
+      a.ranking-link(href='/rankings/recursos')
+        .ranking-item
+          h3 Rankings dos Recursos Melhor Classificados
+      a.ranking-link(href='/rankings/users')
+        .ranking-item
+          h3 Rankings dos Usuários com Recursos Melhor Classificados
+      a.ranking-link(href='/rankings/level')
+        .ranking-item
+          h3 Rankings dos Usuários com Maior Nível
 
   style.
     .title-container {
@@ -39,24 +27,39 @@ block content
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 3%;
     }
-    .resource-item, .user-item {
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    a.ranking-link {
+      text-decoration: none;
+      color: inherit; /* Mantém a cor do texto herdada */
+    }
+    a.ranking-link:link,
+    a.ranking-link:visited,
+    a.ranking-link:hover,
+    a.ranking-link:active {
+      text-decoration: none;
+      color: inherit;
+    }
+    .ranking-item {
       background-color: #444;
       padding: 20px;
       border-radius: 5px;
       color: #fff;
-      margin-top: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      justify-content: flex-start;
     }
-    .resource-item h3, .user-item h3 {
-      margin: 0 0 10px 0;
-    }
-    .resource-item p, .user-item p {
-      margin: 5px 0;
-    }
-    .resource-item a, .user-item a {
-      color: #1fd761;
+    .ranking-item:hover {
+      background-color: #555;
       text-decoration: none;
+      color: #1fd761;
     }
-    .resource-item a:hover, .user-item a:hover {
-      text-decoration: underline;
+    .ranking-item h3 {
+      margin: 0;
     }

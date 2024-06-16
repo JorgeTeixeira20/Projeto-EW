@@ -31,9 +31,13 @@ html
         justify-content: center;
         align-items: center;
         position: absolute;
+        cursor: pointer;
       }
       .menu-btn-container {
         left: 20px;
+      }
+      .menu-btn-container:hover { // ADICIONADO
+        background-color: #333; // Adicionado efeito hover para a caixa do menu (ADICIONADO)
       }
       .user-icon-container {
         right: 110px; 
@@ -158,8 +162,8 @@ html
       }
   body
     header
-      div.menu-btn-container
-        span.menu-btn(onclick='toggleNav()', id='menuBtn') &#9776;
+      div.menu-btn-container(onclick='toggleNav()')
+        span.menu-btn(id='menuBtn') &#9776;
       a.header-link(href='/')
         h1 Sistema de Recursos Educativos
       div.user-icon-container(onclick='toggleDropdown()')
