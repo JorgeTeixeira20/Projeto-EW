@@ -858,4 +858,72 @@ router.post('/rate', async (req, res) => {
   }
 });
 
+router.get('/upload-json', (req, res) => {
+  res.render('upload-json');
+});
+
+router.post('/upload-json', upload.single('jsonFile'), async (req, res) => {
+  try {
+    if (req.file) {
+      const filePath = req.file.path;
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const jsonData = JSON.parse(fileContent);
+
+      const dataType = req.body.dataType;
+      
+      switch (dataType) {
+        case 'users':
+          await User.insertMany(jsonData);
+          break;
+        case 'resources':
+          await Resource.insertMany(jsonData);
+          break;
+        case 'posts':
+          await Post.insertMany(jsonData);
+          break;
+        case 'comunicados':
+          await Comunicado.insertMany(jsonData);
+          break;
+        default:
+          throw new Error('Invalid data type specified');
+      }
+
+      // Deletar o arquivo após processar
+      fs.unlinkSync(filePath);
+
+      res.send('Dados carregados com sucesso!');
+    } else {
+      res.status(400).send('Nenhum arquivo enviado.');
+    }
+  } catch (error) {
+    console.error('Erro ao processar o upload do JSON:', error);
+    res.status(500).send('Erro ao processar o upload do JSON.');
+  }
+});
+
+router.get('/download-jsons', async (req, res) => {
+  try {
+    const users = await User.find({}).lean();
+    const resources = await Resource.find({}).lean();
+    const posts = await Post.find({}).lean();
+    const comunicados = await Comunicado.find({}).lean();
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    res.attachment('data.zip');
+
+    archive.pipe(res);
+
+    archive.append(JSON.stringify(users, null, 2), { name: 'users.json' });
+    archive.append(JSON.stringify(resources, null, 2), { name: 'resources.json' });
+    archive.append(JSON.stringify(posts, null, 2), { name: 'posts.json' });
+    archive.append(JSON.stringify(comunicados, null, 2), { name: 'comunicados.json' });
+
+    await archive.finalize();
+  } catch (error) {
+    console.error('Erro ao criar o arquivo ZIP:', error);
+    res.status(500).send('Erro ao criar o arquivo ZIP.');
+  }
+});
+
 module.exports = router;
