@@ -6,8 +6,8 @@ block content
     .post-container
       // Nome do utilizador que fez o post, como link
       .post-author 
-        if user
-          a(href=`/perfil/${user._id}`) #{user.firstName} #{user.lastName}
+        if author
+          a(href=`/perfil/${author._id}`) #{author.firstName} #{author.lastName}
         else
           span Utilizador eliminado
       
@@ -28,10 +28,15 @@ block content
         button.vote-button.downvote-button(onclick=`votePost('${post._id}', 'downvote')`)
           i.bi.bi-arrow-down-circle
       
-      // Data de quando o post foi feito no canto inferior direito
+      // Data de quando o post foi feito no canto inferior esquerdo
       .post-date
         | #{new Date(post.date).toLocaleDateString()}
-
+      
+      // Botão de eliminar post, visível apenas para o autor do post ou admin
+      if isOwner || isAdmin
+        button.delete-post(onclick=`deletePost('${post._id}')`)
+          i.bi.bi-trash
+          
     .comments-container
       h3 Comentários:
       - const sortedComments = post.comments.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -51,7 +56,12 @@ block content
                 .vote-count #{comment.votes.count || 0}
                 button.vote-button.downvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'downvote')`)
                   i.bi.bi-arrow-down-circle
-              button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
+              .comment-buttons
+                button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
+                if user && comment.user && (user.id === comment.user.id || user.admin)
+                  button.delete-comment(onclick=`deleteComment('${post._id}', '${comment._id}')`)
+                    i.bi.bi-trash
+
           .replies
             each reply in comment.replies.sort((a, b) => new Date(a.date) - new Date(b.date))
               .reply-wrapper(data-reply-id=reply._id)
@@ -69,18 +79,25 @@ block content
                       .vote-count #{reply.votes.count || 0}
                       button.vote-button.downvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'downvote')`)
                         i.bi.bi-arrow-down-circle
+                  .reply-buttons
+                    button.reply-button(onclick=`toggleReplyForm('${reply._id}')`) Reply
+                    if user && reply.user && (user.id === reply.user.id || user.admin)
+                      button.delete-reply(onclick=`deleteReply('${post._id}', '${comment._id}', '${reply._id}')`)
+                        i.bi.bi-trash
           .reply-form(id=`reply-form-${comment._id}`)
             form(action=`/post/${post._id}/comment/${comment._id}/reply` method="post")
               .form-group
                 label(for="reply-content") Responder:
                 textarea#reply-content(name="content" required placeholder="Escreva sua resposta aqui...")
               button(type="submit") Adicionar Resposta
+
       .add-comment-box
         form(action=`/post/${post._id}/comment` method="post")
           .form-group
             label(for="content") Adicionar Comentário:
             textarea#content(name="content" required placeholder="Escreva seu comentário aqui...")
           button(type="submit") Adicionar Comentário
+
 
     script.
       function toggleReplyForm(commentId) {
@@ -151,6 +168,66 @@ block content
           console.error('Error:', error);
         }
       }
+
+      function deletePost(postId) {
+        if (confirm('Tem certeza que deseja eliminar este post?')) {
+          fetch(`/post/${postId}`, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.href = '/';
+            } else {
+              alert('Erro ao eliminar post');
+            }
+          });
+        }
+      }
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+
+      function deleteComment(postId, commentId) {
+        const token = getCookie('token');
+        if (confirm('Tem certeza que deseja eliminar este comentário?')) {
+          fetch(`/post/${postId}/comment/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao eliminar comentário');
+            }
+          });
+        }
+      }
+
+      function deleteReply(postId, commentId, replyId) {
+        const token = getCookie('token');
+        if (confirm('Tem certeza que deseja eliminar esta resposta?')) {
+          fetch(`/post/${postId}/comment/${commentId}/reply/${replyId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao eliminar resposta');
+            }
+          });
+        }
+      }
+
 
     style.
       .resource-link {
@@ -227,12 +304,26 @@ block content
         color: #fff;
       }
       .post-date {
-        text-align: right;
+        text-align: left;
         font-size: 0.8em;
         color: #999;
         position: absolute;
         bottom: 10px;
+        left: 20px;
+      }
+      .delete-post {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 5px;
         right: 20px;
+      }
+      .delete-post:hover {
+        background-color: #1a9f50;
       }
       .title-container {
         background-color: #333;
@@ -288,7 +379,6 @@ block content
         border-radius: 5px;
         color: #fff;
         display: flex;
-        justify-content: flex-start;
         flex-direction: column;
         position: relative;
         text-align: left;
@@ -347,8 +437,9 @@ block content
         border-radius: 5px;
         color: #fff;
         display: flex;
-        justify-content: flex-start;
         flex-direction: column;
+        position: relative;
+        text-align: left;
       }
       .reply-box a {
         color: #1fd761;
@@ -442,3 +533,22 @@ block content
       .add-comment-box button:hover {
         background-color: #1a9f50;
       }
+      .delete-comment, .delete-reply {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .delete-comment:hover, .delete-reply:hover {
+        background-color: #1a9f50;
+      }
+      .reply-buttons, .comment-buttons {
+        display: flex;
+        gap: 10px; /* Espaço entre os botões */
+        justify-content: flex-end; /* Alinha os botões à direita */
+        margin-top: 10px; /* Adicione uma margem superior para mover os botões para baixo */
+      }
+
