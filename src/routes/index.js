@@ -27,7 +27,7 @@ function calculateLevel(xp) {
   return level;
 }
 
-router.get('/', async (req, res) => {
+router.get('/', verifyJWT, setUser, async (req, res) => {
   try {
     const posts = await Post.find({}).lean();
     const resources = await Resource.find({}).lean();
@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
     ];
 
     // Ordenar por data, mais recente primeiro
-    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
     res.render('main', { items });
   } catch (err) {
