@@ -10,15 +10,22 @@ block content
             input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
             button(type="submit" class="search-button")
               i.bi.bi-search.search-icon
-            form(action="/listaRecursos" method="get" class="reset-form")
-                button(type="submit" class="reset-button")
-                    i.bi.bi-arrow-counterclockwise.reset-icon
-        .dropdown
-          button.dropdown-toggle Filtros
-          .dropdown-menu
-            a.dropdown-item(href="#") Categoria 1
-            a.dropdown-item(href="#") Categoria 2
-            a.dropdown-item(href="#") Categoria 3
+          form(action="/listaRecursos" method="get" class="reset-form")
+            button(type="submit" class="reset-button")
+              i.bi.bi-arrow-counterclockwise.reset-icon
+    .filters-box
+      h3 Filtros
+      form(action="/listaRecursos" method="get" class="filter-form")
+        .form-group
+          label(for="filterYear") Ano
+          input#filterYear(type="text" name="year" placeholder="Digite o ano")
+        .form-group
+          label(for="filterTheme") Tema
+          input#filterTheme(type="text" name="theme" placeholder="Digite o tema")
+        .form-group
+          label(for="filterType") Tipo de Recurso
+          input#filterType(type="text" name="type" placeholder="Digite o tipo de recurso")
+        button(type="submit" class="apply-filters-button") Aplicar Filtros
     .resource-list
       each resource in resources
         a.resource-link(href=`/resource/${resource._id}`)
@@ -52,6 +59,7 @@ block content
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
       }
       .filter-container {
         display: flex;
@@ -62,7 +70,7 @@ block content
         display: flex;
         align-items: center;
       }
-      .search-form {
+      .search-form, .reset-form {
         display: flex;
         align-items: center;
       }
@@ -73,68 +81,61 @@ block content
         outline: none;
         color: #aaa; /* Cor do texto mais escura */
       }
-      .search-button {
+      .search-button, .reset-button {
         background: none;
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
       }
-      .search-icon {
+      .search-icon, .reset-icon {
         font-size: 20px;
         color: #aaa; /* Cor da lupa */
       }
-      .reset-form {
-        display: flex;
-        align-items: center;
-        margin-left: 10px;
+      label {
+        text-align: left;
       }
-      .reset-button {
-        background: none;
+      .filters-box {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        position: absolute;
+        right: 50px; /* Move um pouco para a esquerda */
+        top: 0;
+        width: 300px;
+        margin-top: 5.7%;
+      }
+      .filters-box h3 {
+        margin: 0 0 10px;
+      }
+      .filters-box .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+      .filters-box .form-group label {
+        font-weight: bold;
+      }
+      .filters-box .form-group input {
+        padding: 5px;
         border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
+        border-radius: 5px;
+        color: #333;
       }
-      .reset-icon {
-        font-size: 20px;
-        color: #aaa; /* Cor do ícone de reset */
-      }
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-      .dropdown-toggle {
+      .apply-filters-button {
         background-color: #1fd761;
         color: white;
         padding: 10px 20px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        align-self: flex-end;
+        margin-top: 5px;
       }
-      .dropdown-toggle:hover {
+      .apply-filters-button:hover {
         background-color: #1a9f50;
-      }
-      .dropdown-menu {
-        display: none;
-        position: absolute;
-        background-color: #111;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-        border-radius: 5px;
-      }
-      .dropdown:hover .dropdown-menu {
-        display: block;
-      }
-      .dropdown-item {
-        color: white;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-      .dropdown-item:hover {
-        background-color: #575757;
       }
       .resource-list {
         margin-top: 20px;
@@ -182,15 +183,4 @@ block content
       }
       hr {
         border: 1px solid #555;
-      }
-      .reset-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-      }
-      .reset-icon {
-        font-size: 20px;
-        color: #aaa; /* Cor da lupa */
       }
