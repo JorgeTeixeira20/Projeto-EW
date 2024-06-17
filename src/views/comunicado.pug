@@ -3,51 +3,99 @@ extends layout-main
 block content
   .container
     .comunicado-container
-      .comunicado-titles
-        h3 #{comunicado.title}
-        h5 #{comunicado.subtitle}
+      .title-container
+        .title-content
+          h2 #{comunicado.title}
+        if user && user.admin
+          button.delete-comunicado(onclick=`deleteComunicado('${comunicado._id}')`)
+            i.bi.bi-trash
+      .subtitle
+        h3 #{comunicado.subtitle}
       .comunicado-content
-        | #{comunicado.content}
-    .comunicado-date
-      | #{new Date(comunicado.date).toLocaleDateString()}
+        p #{comunicado.content}
+      .comunicado-date
+        p #{new Date(comunicado.date).toLocaleDateString()}
 
-    style.
-      .comunicado-container {
-        background-color: #333;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        margin-bottom: 10px;
-        margin-top: 10%;
-        position: relative; /* Para permitir posicionamento relativo dos elementos internos */
-        text-align: left;
+  script.
+    function deleteComunicado(comunicadoId) {
+      if (confirm('Tem certeza que deseja eliminar este comunicado?')) {
+        fetch(`/comunicado/${comunicadoId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            alert('Erro ao eliminar comunicado');
+          }
+        });
       }
-      .comunicado-titles {
-        background-color: #444;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        margin-bottom: 10px;
-        text-align: left;
-        font-weight: bold;
-      }
-      .comunicado-content {
-        background-color: #444;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        margin-bottom: 10px;
-        text-align: left;
-        min-height: 100px; /* Altura mínima */
-        overflow: hidden;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-      }
-      .comunicado-date {
-        text-align: right;
-        font-size: 0.8em;
-        color: #999;
-        position: absolute;
-        bottom: 10px;
-        right: 20px;
-      }
+    }
+
+  style.
+    .comunicado-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      margin-bottom: 20px;
+      margin-top: 10%;
+      position: relative; /* Para permitir posicionamento relativo dos elementos internos */
+      text-align: left;
+    }
+    .title-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px; /* Espaço abaixo do título e do botão */
+    }
+    .title-content {
+      display: flex;
+      align-items: center;
+    }
+    .title-content h2 {
+      margin: 0;
+    }
+    .subtitle {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      margin-bottom: 20px; /* Espaço abaixo da subtítulo */
+      text-align: left;
+      font-weight: bold;
+    }
+    .comunicado-content {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      margin-bottom: 20px; /* Espaço abaixo do conteúdo */
+      text-align: left;
+      min-height: 100px; /* Altura mínima */
+      overflow: hidden;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    .comunicado-date {
+      text-align: right;
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 20px; /* Espaço acima da data */
+    }
+    .delete-comunicado {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+    }
+    .delete-comunicado:hover {
+      background-color: #1a9f50;
+    }

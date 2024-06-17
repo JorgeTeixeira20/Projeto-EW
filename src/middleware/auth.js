@@ -3,7 +3,7 @@ const User = require('../models/user');
 const jwtSecret = 'projeto-ew-2024';
 
 const verifyJWT = (req, res, next) => {
-    const token = req.cookies.token || req.headers['authorization'].split(' ')[1];  
+    const token = req.cookies.token || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
     if (!token) {
         return res.redirect('/auth');
     }
