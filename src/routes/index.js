@@ -73,8 +73,11 @@ router.get('/listaPosts', async (req, res) => {
     res.status(500).send('Erro ao buscar posts.');
   }
 });
-router.get('/post/:id', verifyJWT, async (req, res) => {
+router.get('/post/:id', verifyJWT, setUser, async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).send('Usuário não autenticado');
+    }
     const post = await Post.findById(req.params.id).lean();
     if (!post) {
       return res.status(404).send('Post não encontrado');
@@ -85,8 +88,8 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
       return res.status(404).send('Resource não encontrado');
     }
 
-    const user = await User.findById(post.userId).lean();
-    if (!user) {
+    const author = await User.findById(post.userId).lean();
+    if (!author) {
       return res.status(404).send('User não encontrado');
     }
 
@@ -106,7 +109,12 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
 
     // Criar um mapa de IDs de usuário para objetos de usuário
     const userMap = users.reduce((map, user) => {
-      map[user._id] = user;
+      map[user._id] = {
+        id: user._id.toString(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+      };
       return map;
     }, {});
 
@@ -126,15 +134,56 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
 
     console.log('Post encontrado:', post);
     console.log('Resource encontrado:', resource);
-    console.log('User encontrado:', user);
+    console.log('Author encontrado:', author);
+    console.log('Usuário logado:', req.user); // Log do usuário logado
+    console.log('req.user.id:', req.user.id); // Log do id do usuário logado
+    console.log('post.userId:', post.userId); // Log do userId do post
+    console.log('req.user.admin:', req.user.admin); // Log do campo admin do usuário logado
 
-    res.render('post', { post, resource, user });
+    // Verificar se o usuário logado é o dono do post ou um administrador
+    const user = req.user;
+    const isOwner = user && post.userId && user.id && (post.userId.toString() === user.id.toString());
+    const isAdmin = user && user.admin;
+
+    console.log('isOwner:', isOwner); // Log do isOwner
+    console.log('isAdmin:', isAdmin); // Log do isAdmin
+
+    res.render('post', { post, resource, user, isOwner, isAdmin, author });
   } catch (err) {
     console.error('Erro ao buscar post:', err);
     res.status(500).send('Erro ao buscar post');
   }
 });
 
+
+router.delete('/post/:id', verifyJWT, setUser, async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    // Verifique se o post existe
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    // Verifique se o usuário é o dono do post ou um administrador
+    const user = req.user;
+    const isOwner = user && post.userId && user.id && (post.userId.toString() === user.id.toString());
+    const isAdmin = user && user.admin;
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).send('Permissão negada');
+    }
+
+    // Delete o post
+    await Post.findByIdAndDelete(postId);
+
+    res.status(200).send('Post deletado com sucesso');
+  } catch (err) {
+    console.error('Erro ao deletar post:', err);
+    res.status(500).send('Erro ao deletar post');
+  }
+});
 router.post('/post/:id/comment', verifyJWT, async (req, res) => {
   const { content } = req.body;
   try {
@@ -191,24 +240,122 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
   }
 });
 
-router.get('/resource/:id', async (req, res) => {
+// Rota para deletar um comentário
+router.delete('/post/:postId/comment/:commentId', verifyJWT, setUser, async (req, res) => {
   try {
-    const email = req.user.email;
-
-    const user = await User.findOne({ email }).exec();
-
-    if (!user) {
-      return res.status(404).send('Usuário não encontrado');
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
     }
 
+    const commentIndex = post.comments.findIndex(comment => comment._id.toString() === req.params.commentId);
+    if (commentIndex === -1) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const comment = post.comments[commentIndex];
+
+    // Verificar se o usuário logado é o dono do comentário ou um administrador
+    if (req.user.id.toString() !== comment.commentUserId.toString() && !req.user.admin) {
+      return res.status(403).send('Você não tem permissão para deletar este comentário');
+    }
+
+    // Remover o comentário do array de comentários
+    post.comments.splice(commentIndex, 1);
+
+    await post.save();
+
+    res.status(200).send('Comentário deletado com sucesso');
+  } catch (err) {
+    console.error('Erro ao deletar comentário:', err);
+    res.status(500).send('Erro ao deletar comentário');
+  }
+});
+
+
+// Rota para deletar uma resposta
+router.delete('/post/:postId/comment/:commentId/reply/:replyId', verifyJWT, setUser, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const replyIndex = comment.replies.findIndex(reply => reply._id.toString() === req.params.replyId);
+    if (replyIndex === -1) {
+      return res.status(404).send('Resposta não encontrada');
+    }
+
+    const reply = comment.replies[replyIndex];
+
+    // Verificar se o usuário logado é o dono da resposta ou um administrador
+    if (req.user.id.toString() !== reply.commentUserId.toString() && !req.user.admin) {
+      return res.status(403).send('Você não tem permissão para deletar esta resposta');
+    }
+
+    // Remover a resposta do array de respostas
+    comment.replies.splice(replyIndex, 1);
+
+    await post.save();
+
+    res.status(200).send('Resposta deletada com sucesso');
+  } catch (err) {
+    console.error('Erro ao deletar resposta:', err);
+    res.status(500).send('Erro ao deletar resposta');
+  }
+});
+
+
+
+router.get('/resource/:id', verifyJWT, setUser, async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id).lean();
+    if (!resource) {
+      return res.status(404).send('Resource não encontrado');
+    }
+
+    const creator = await User.findById(resource.user).lean();
+    if (!creator) {
+      return res.status(404).send('Criador não encontrado');
+    }
+
+    const user = req.user;
+    const isOwner = user && resource.user && user.id && (resource.user.toString() === user.id.toString());
+    const isAdmin = user && user.admin;
+
+    res.render('recurso', { resource, user, isOwner, isAdmin, creator });
+  } catch (err) {
+    console.error('Erro ao buscar recurso:', err);
+    res.status(500).send('Erro ao buscar recurso');
+  }
+});
+
+router.delete('/resource/:id', verifyJWT, setUser, async (req, res) => {
+  try {
     const resource = await Resource.findById(req.params.id);
+
     if (!resource) {
       return res.status(404).send('Recurso não encontrado');
     }
-    res.render('recurso', { resource, user });
+
+    const user = req.user;
+    const isOwner = user && resource.user && user.id && (resource.user.toString() === user.id.toString());
+    const isAdmin = user && user.admin;
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).send('Você não tem permissão para deletar este recurso');
+    }
+
+    await Resource.findByIdAndDelete(req.params.id);
+    res.status(200).send('Recurso deletado com sucesso');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao buscar recurso');
+    console.error('Erro ao deletar recurso:', err);
+    res.status(500).send('Erro ao deletar recurso');
   }
 });
 

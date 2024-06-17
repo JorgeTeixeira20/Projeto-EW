@@ -5,60 +5,58 @@ block content
     .title-container
       h2 #{resource.title}
       .reviews-box
-        - 
+        -
           var totalReviews = resource.reviews.length;
           var averageRating = totalReviews > 0 
             ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
             : 'Nenhuma avaliação';
         p
           span Rating:
-          | 
+          |
           span #{averageRating}
-          | 
+          |
           i.bi.bi-star-fill
-          | 
+          |
           span (#{totalReviews})
     .resource-details
-      p
-        span Tipo:
-        | 
-        span #{resource.type}
-      if resource.subtitle
-        p
-          span Subtítulo:
-          | 
-          span #{resource.subtitle}
-      p
-        span Quem deu commit disto:
-        | 
-        a(href=`/perfil/${resource.user}`) #{resource.user}
-      p
-        span Descrição:
-        | 
-        span #{resource.description}
-      p
-        span Autor:
-        | 
-        span #{resource.author}
-      p
-        span Ano:
-        | 
-        span #{resource.year}
-      p
-        span Temas:
-        | 
-        span #{resource.themes.join(', ')}
-      p
-        span Arquivos:
-        ul
-          each file in resource.files
-            li
-              if resource.visibilidade == 'Público' || resource.user == user._id
-                a(href=`/download/${file.fileName}`) #{file.fileName}
-              else 
-                | #{file.fileName}
+      .resource-columns
+        .left-column
+          .info-box
+            p
+              span.label Tipo:
+              span.info #{resource.type}
+            if resource.subtitle
+              p
+                span.label Subtítulo:
+                span.info #{resource.subtitle}
+            p
+              span.label Criador:
+              a.info(href=`/perfil/${creator._id}`) #{creator.firstName} #{creator.lastName}
+            p
+              span.label Descrição:
+              span.info #{resource.description}
+        .right-column
+          .info-box
+            p
+              span.label Autor:
+              span.info #{resource.author}
+            p
+              span.label Ano:
+              span.info #{resource.year}
+            p
+              span.label Temas:
+              span.info #{resource.themes.join(', ')}
+            p
+              span.label Arquivos:
+              ul
+                each file in resource.files
+                  li
+                    if resource.visibilidade == 'Público' || resource.user._id == user._id
+                      a.info(href=`/download/${file.fileName}`) #{file.fileName}
+                    else 
+                      span.info #{file.fileName}
       .bottom-right-container
-        if resource.visibilidade == 'Público' || resource.user == user._id
+        if resource.visibilidade == 'Público' || resource.user._id == user._id
           a(href=`/download-all/${resource._id}`)
             button
               i.bi.bi-download
@@ -71,88 +69,163 @@ block content
           button
             i.bi.bi-pencil
             | Criar Post
+        if resource.user._id == user._id || user.admin
+          button.delete-resource(onclick=`deleteResource('${resource._id}')`)
+            i.bi.bi-trash
 
-    style.
-      .title-container {
-        background-color: #333;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        width: 100%;
-        margin-top: 10%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+  script.
+    function deleteResource(resourceId) {
+      if (confirm('Tem certeza que deseja eliminar este recurso?')) {
+        fetch(`/resource/${resourceId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            alert('Erro ao eliminar recurso');
+          }
+        });
       }
-      .resource-details {
-        background-color: #444;
-        padding: 20px;
-        border-radius: 5px;
-        color: #fff;
-        margin-top: 20px;
-        position: relative;
-      }
-      .resource-details p {
-        margin: 10px 0;
-      }
-      .resource-details span {
-        font-weight: bold;
-      }
-      .resource-details ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      .resource-details li {
-        margin: 5px 0;
-      }
-      .resource-details a {
-        color: #1fd761;
-        text-decoration: none;
-      }
-      .resource-details a:hover {
-        text-decoration: underline;
-      }
-      .bottom-right-container {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        height: 12%;
-        display: flex;
-        gap: 10px;
-      }
-      .reviews-box {
-        background-color: #555;
-        padding: 10px;
-        border-radius: 5px;
-        color: #fff;
-        display: flex;
-        align-items: center;
-      }
-      .reviews-box p {
-        margin: 0;
-      }
-      .reviews-box span {
-        font-weight: bold;
-      }
-      button, .reviews-box button {
-        background-color: #1fd761;
-        border: none;
-        border-radius: 5px;
-        color: #fff;
-        padding: 5px 10px;
-        cursor: pointer;
-        display: flex;
-        font-weight: bold;
-        align-items: center;
-        gap: 5px;
-      }
-      button:hover, .reviews-box button:hover {
-        background-color: #1a9f50;
-      }
-      .bi-star-fill {
-        color: #ffd700;
-      }
-      .bi-download, .bi-pencil {
-        font-weight: bold;
-        font-size: 100%;
-      }
+    }
+
+  style.
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .resource-details {
+      background-color: #444;
+      padding: 20px 20px 55px;
+      border-radius: 5px;
+      color: #fff;
+      margin-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      min-height: 300px; /* Ajustar a altura mínima para ter uma margem de sobra em torno dos botões */
+    }
+    .resource-columns {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .left-column, .right-column {
+      width: 48%;
+    }
+    .info-box {
+      background-color: #555;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .info-box p {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .label {
+      font-weight: bold;
+      color: #1fd761;
+    }
+    .info {
+      color: #fff;
+      margin-left: 10px;
+    }
+    .info a.info {
+      color: #fff; /* Cor branca para os links */
+      text-decoration: none;
+    }
+    .info a.info:hover {
+      color: #1fd761; /* Cor verde ao passar o mouse */
+      text-decoration: underline;
+    }
+    .resource-details ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .resource-details li {
+      margin: 5px 0;
+    }
+    .bottom-right-container {
+      position: absolute;
+      bottom: 20px; /* Ajustar para mover os botões mais para baixo */
+      right: 20px;
+      height: auto; /* Ajustar a altura */
+      display: flex;
+      gap: 10px;
+      align-items: flex-end; /* Alinhar os botões ao final */
+    }
+    .reviews-box {
+      background-color: #555;
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+    }
+    .reviews-box p {
+      margin: 0;
+    }
+    .reviews-box span {
+      font-weight: bold;
+    }
+    button, .reviews-box button {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+      width: 150px; /* Largura padrão para todos os botões */
+      text-align: center;
+    }
+    button:hover, .reviews-box button:hover {
+      background-color: #1a9f50;
+    }
+    .bi-star-fill {
+      color: #ffd700;
+    }
+    .bi-download, .bi-pencil, .bi-trash {
+      font-weight: bold;
+      font-size: 100%;
+    }
+    .resource-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .delete-resource {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      height: 36px; /* Altura fixa para garantir que todos os botões tenham a mesma altura */
+      width: auto; /* Ajustar a largura para ser menor */
+      text-align: center;
+    }
+    .delete-resource:hover {
+      background-color: #1a9f50;
+    }
+    a.info {
+      color: #fff; /* Cor branca para os links */
+      text-decoration: none;
+    }
+
+    a.info:hover {
+      color: #1fd761; /* Cor verde ao passar o mouse */
+      text-decoration: underline;
+    }
