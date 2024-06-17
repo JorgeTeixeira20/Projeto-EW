@@ -52,20 +52,37 @@ router.get('/', async (req, res) => {
 
 router.get('/listaRecursos', async (req, res) => {
   const searchQuery = req.query.search;
-  let resources;
+  const filterYear = req.query.year;
+  const filterTheme = req.query.theme;
+  const filterType = req.query.type;
+
+  let query = {};
+
+  if (searchQuery) {
+    query.title = { $regex: searchQuery, $options: 'i' };
+  }
+
+  if (filterYear) {
+    query.year = filterYear;
+  }
+
+  if (filterTheme) {
+    query.themes = { $regex: filterTheme, $options: 'i' };
+  }
+
+  if (filterType) {
+    query.type = { $regex: filterType, $options: 'i' };
+  }
+
   try {
-    if (searchQuery) {
-      const regex = new RegExp(searchQuery, 'i'); // i para case insensitive
-      resources = await Resource.find({ title: regex });
-    } else {
-      resources = await Resource.find();
-    }
+    const resources = await Resource.find(query);
     res.render('listaRecursos', { resources });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao buscar recursos');
   }
 });
+
 
 router.get('/listaPosts', async (req, res) => {
   try {
@@ -116,8 +133,8 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
     if (!resource) {
       return res.status(404).send('Resource não encontrado');
     }
-    const user = await User.findById(post.userId).lean();
-    if (!user) {
+    const userA = await User.findById(post.userId).lean();
+    if (!userA) {
       return res.status(404).send('User não encontrado');
     }
 
@@ -157,9 +174,9 @@ router.get('/post/:id', verifyJWT, async (req, res) => {
 
     console.log('Post encontrado:', post);
     console.log('Resource encontrado:', resource);
-    console.log('User encontrado:', user);
+    console.log('User encontrado:', userA);
 
-    res.render('post', { post, resource, user });
+    res.render('post', { post, resource, userA });
   } catch (err) {
     console.error('Erro ao buscar post:', err);
     res.status(500).send('Erro ao buscar post');
@@ -233,6 +250,136 @@ router.post('/post/:id/comment/:commentId/reply', verifyJWT, async (req, res) =>
     res.status(500).send('Erro ao adicionar resposta');
   }
 });
+
+// Route to handle voting on posts
+router.post('/post/:id/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const existingVote = post.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        post.votes.count += (type === 'upvote' ? -1 : 1);
+        post.votes.details = post.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        post.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      post.votes.count += (type === 'upvote' ? 1 : -1);
+      post.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: post.votes });
+  } catch (err) {
+    console.error('Erro ao votar no post:', err);
+    res.status(500).send('Erro ao votar no post');
+  }
+});
+
+// Route to handle voting on comments
+router.post('/post/:postId/comment/:commentId/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const existingVote = comment.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        comment.votes.count += (type === 'upvote' ? -1 : 1);
+        comment.votes.details = comment.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        comment.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      comment.votes.count += (type === 'upvote' ? 1 : -1);
+      comment.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: comment.votes });
+  } catch (err) {
+    console.error('Erro ao votar no comentário:', err);
+    res.status(500).send('Erro ao votar no comentário');
+  }
+});
+
+// Route to handle voting on replies
+router.post('/post/:postId/comment/:commentId/reply/:replyId/vote', verifyJWT, async (req, res) => {
+  const { type } = req.body; // 'upvote' or 'downvote'
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post não encontrado');
+    }
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    const reply = comment.replies.id(req.params.replyId);
+    if (!reply) {
+      return res.status(404).send('Resposta não encontrada');
+    }
+
+    const existingVote = reply.votes.details.find(vote => vote.userId === userId);
+
+    if (existingVote) {
+      // User is changing their vote
+      if (existingVote.type === type) {
+        // User is removing their vote
+        reply.votes.count += (type === 'upvote' ? -1 : 1);
+        reply.votes.details = reply.votes.details.filter(vote => vote.userId !== userId);
+      } else {
+        // User is switching their vote
+        reply.votes.count += (type === 'upvote' ? 2 : -2);
+        existingVote.type = type;
+      }
+    } else {
+      // User is voting for the first time
+      reply.votes.count += (type === 'upvote' ? 1 : -1);
+      reply.votes.details.push({ userId, type });
+    }
+
+    await post.save();
+    res.json({ success: true, votes: reply.votes });
+  } catch (err) {
+    console.error('Erro ao votar na resposta:', err);
+    res.status(500).send('Erro ao votar na resposta');
+  }
+});
+
 
 router.get('/resource/:id', async (req, res) => {
   try {
@@ -523,23 +670,35 @@ router.get('/rankings/users', async (req, res) => {
   }
 });
 
-// Rota para exibir os recursos do usuário logado
 router.get('/meusrecursos', verifyJWT, async (req, res) => {
   try {
     const userId = req.user.id;
     const searchQuery = req.query.search;
+    const filterYear = req.query.year;
+    const filterTheme = req.query.theme;
+    const filterType = req.query.type;
     const user = await User.findById(userId);
     const resourceIds = user.myResources;
 
-    let resources;
+    let query = { _id: { $in: resourceIds } };
+
     if (searchQuery) {
-      resources = await Resource.find({
-        _id: { $in: resourceIds },
-        title: { $regex: searchQuery, $options: 'i' }
-      });
-    } else {
-      resources = await Resource.find({ _id: { $in: resourceIds } });
+      query.title = { $regex: searchQuery, $options: 'i' };
     }
+
+    if (filterYear) {
+      query.year = filterYear;
+    }
+
+    if (filterTheme) {
+      query.themes = { $regex: filterTheme, $options: 'i' };
+    }
+
+    if (filterType) {
+      query.type = { $regex: filterType, $options: 'i' };
+    }
+
+    const resources = await Resource.find(query);
 
     res.render('meusrecursos', { resources });
   } catch (err) {
@@ -547,7 +706,6 @@ router.get('/meusrecursos', verifyJWT, async (req, res) => {
     res.status(500).send('Erro ao buscar recursos do usuário');
   }
 });
-
 
 // Rota para exibir os posts do usuário logado
 router.get('/meusposts', verifyJWT, async (req, res) => {
@@ -821,6 +979,74 @@ router.post('/rate', verifyJWT, async (req, res) => {
   } catch (error) {
     console.error('Erro ao salvar avaliação:', error);
     res.status(500).json({ success: false, error: 'Erro ao avaliar o recurso' });
+  }
+});
+
+router.get('/upload-json', (req, res) => {
+  res.render('upload-json');
+});
+
+router.post('/upload-json', upload.single('jsonFile'), async (req, res) => {
+  try {
+    if (req.file) {
+      const filePath = req.file.path;
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const jsonData = JSON.parse(fileContent);
+
+      const dataType = req.body.dataType;
+      
+      switch (dataType) {
+        case 'users':
+          await User.insertMany(jsonData);
+          break;
+        case 'resources':
+          await Resource.insertMany(jsonData);
+          break;
+        case 'posts':
+          await Post.insertMany(jsonData);
+          break;
+        case 'comunicados':
+          await Comunicado.insertMany(jsonData);
+          break;
+        default:
+          throw new Error('Invalid data type specified');
+      }
+
+      // Deletar o arquivo após processar
+      fs.unlinkSync(filePath);
+
+      res.send('Dados carregados com sucesso!');
+    } else {
+      res.status(400).send('Nenhum arquivo enviado.');
+    }
+  } catch (error) {
+    console.error('Erro ao processar o upload do JSON:', error);
+    res.status(500).send('Erro ao processar o upload do JSON.');
+  }
+});
+
+router.get('/download-jsons', async (req, res) => {
+  try {
+    const users = await User.find({}).lean();
+    const resources = await Resource.find({}).lean();
+    const posts = await Post.find({}).lean();
+    const comunicados = await Comunicado.find({}).lean();
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    res.attachment('data.zip');
+
+    archive.pipe(res);
+
+    archive.append(JSON.stringify(users, null, 2), { name: 'users.json' });
+    archive.append(JSON.stringify(resources, null, 2), { name: 'resources.json' });
+    archive.append(JSON.stringify(posts, null, 2), { name: 'posts.json' });
+    archive.append(JSON.stringify(comunicados, null, 2), { name: 'comunicados.json' });
+
+    await archive.finalize();
+  } catch (error) {
+    console.error('Erro ao criar o arquivo ZIP:', error);
+    res.status(500).send('Erro ao criar o arquivo ZIP.');
   }
 });
 

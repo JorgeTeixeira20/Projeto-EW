@@ -1,10 +1,21 @@
 const mongoose = require('mongoose');
 
+const voteSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  type: { type: String, required: true, enum: ['upvote', 'downvote'] }
+});
+
+const votesSchema = new mongoose.Schema({
+  count: { type: Number, default: 0 },
+  details: { type: [voteSchema], default: [] }
+});
+
 const replySchema = new mongoose.Schema({
   _id: { type: String, required: true },
   commentUserId: { type: String, required: true },
   content: { type: String, required: true },
-  date: { type: Date, required: true }
+  date: { type: Date, required: true },
+  votes: { type: votesSchema, default: () => ({ count: 0, details: [] }) },
 });
 
 const commentSchema = new mongoose.Schema({
@@ -12,7 +23,8 @@ const commentSchema = new mongoose.Schema({
   commentUserId: { type: String, required: true },
   content: { type: String, required: true },
   date: { type: Date, required: true },
-  replies: [replySchema]
+  replies: { type: [replySchema], default: [] },
+  votes: { type: votesSchema, default: () => ({ count: 0, details: [] }) },
 });
 
 const postSchema = new mongoose.Schema({
@@ -22,8 +34,9 @@ const postSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   resourceId: { type: String, required: true },
   content: { type: String, required: true },
-  comments: [commentSchema],
-  date: { type: Date, required: true }
+  comments: { type: [commentSchema], default: [] },
+  date: { type: Date, required: true },
+  votes: { type: votesSchema, default: () => ({ count: 0, details: [] }) },
 });
 
 module.exports = mongoose.model('Post', postSchema);
