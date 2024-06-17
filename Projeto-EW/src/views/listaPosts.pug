@@ -1,0 +1,130 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Lista de Posts
+      .filter-container
+        .search-bar-container
+          form(action="/listaPosts" method="get" class="search-form")
+            input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
+            button(type="submit" class="search-button")
+              i.bi.bi-search.search-icon
+            form(action="/listaPosts" method="get" class="reset-form")
+                button(type="submit" class="reset-button")
+                    i.bi.bi-arrow-counterclockwise.reset-icon
+    .post-list
+      each post in posts
+        a.post-link(href=`/post/${post._id}`)
+          .post-item
+            h3 #{post.title}
+            h5 #{post.subtitle}
+            p
+              span Autor:
+              | 
+              span #{post.user.firstName} #{post.user.lastName}
+            hr
+            .post-date
+              | #{new Date(post.date).toLocaleDateString()}
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .filter-container {
+        display: flex;
+        gap: 10px;
+      }
+      .search-bar-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .search-form {
+        display: flex;
+        align-items: center;
+      }
+      .search-bar {
+        padding: 10px 30px 10px 10px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        color: #aaa; /* Cor do texto mais escura */
+      }
+      .search-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .search-icon {
+        font-size: 20px;
+        color: #aaa; /* Cor da lupa */
+      }
+      .post-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .post-item {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+        position: relative;
+      }
+      .post-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #999;
+      }
+      .post-link {
+        text-decoration: none; /* Remove a decoração do link */
+        color: inherit; /* Mantém a cor do texto herdada */
+        display: block; /* Garante que o link ocupe todo o espaço do item */
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .post-link:visited, .post-link:active, .post-link:hover {
+        color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
+        text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
+      }
+      .post-item:hover {
+        background-color: #555;
+        color: #1fd761;
+        cursor: pointer;
+      }
+      .post-item h3 {
+        margin: 0 0 10px;
+      }
+      .post-item p {
+        margin: 5px 0;
+      }
+      hr {
+        border: 1px solid #555;
+      }
+      .reset-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .reset-icon {
+        font-size: 20px;
+        color: #aaa; /* Cor da lupa */
+      }

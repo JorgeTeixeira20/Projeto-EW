@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+    style.
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #212020;
+      }
+      header {
+        width: 100%;
+        background-color: #161716;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        position: absolute;
+        top: 0;
+      }
+      .container {
+        text-align: center;
+        margin-top: 0px; /* Ajuste conforme necessário para a distância do header */
+      }
+      .btn-group-horizontal {
+        display: flex;
+        justify-content: center;
+        gap: 20px; /* Espaço entre os botões */
+      }
+      .btn-group-horizontal .btn {
+        padding: 50px; /* Aumentar o tamanho dos botões */
+        font-size: 1.5rem; /* Aumentar o tamanho do texto dos botões */
+        flex: 1; /* Garantir que os botões ocupem o mesmo espaço */
+        max-width: 300px; /* Limitar o tamanho máximo dos botões */
+      }
+      .btn-login {
+        background-color: #1fd761; /* Cor personalizada para o botão de Login */
+        border-color: #1fd761;
+        border-radius: 3%;
+        color: white;
+        border-width: 2px;
+      }
+      .btn-register {
+        background-color: #212020; /* Cor personalizada para o botão de Registrar */
+        border-color: #1fd761;
+        border-radius: 3%;
+        color: white;
+        border-width: 2px;
+      }
+  body
+    header
+      h1 Sistema de Recursos Educativos
+    .container
+      block content

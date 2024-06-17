@@ -1,0 +1,204 @@
+extends layout-main
+
+block content
+  .container
+    .form-container
+      h2 Upload JSON Data
+      form(method="POST" action="/upload-json" enctype="multipart/form-data")
+        .form-group.inline
+          label(for="dataType") Selecione o Tipo de Dados
+          select#dataType(name="dataType" required)
+            option(value="") Selecione...
+            option(value="users") Users
+            option(value="resources") Resources
+            option(value="posts") Posts
+            option(value="comunicados") Comunicados
+        .form-group.inline
+          label(for="jsonFile") Upload JSON File
+          input(type="file" name="jsonFile" accept=".json" required onchange="updateFileName()")
+        .file-name Nenhum arquivo selecionado
+        button(type="submit") Upload
+
+    // Caixa separada para download dos JSONs
+    .download-container
+      h2 Download JSON Data
+      p Transfira o estado atual.
+      .download-button-container
+        button.btn-download(onclick="downloadJSONs()")
+          i.bi.bi-download
+          | Download
+
+    // Seção para mensagens de sucesso e erro
+    .notification-container
+      .success-message(style="display: none;") Sucesso: Dados carregados com sucesso!
+      .error-message(style="display: none;") Erro: Ocorreu um problema ao carregar os dados.
+
+  style.
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding-top: 30px;
+      margin-top: 2%; /* Início no topo da página */
+    }
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 50%; /* Largura uniforme */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-container, .download-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 50%; /* Largura uniforme */
+    }
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .form-group {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-group.inline {
+      flex-direction: row;
+    }
+    .form-group label {
+      font-weight: bold;
+      color: #fff; /* Texto branco */
+    }
+    .form-group input, .form-group select {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #444; /* Fundo escuro */
+      color: #fff; /* Texto branco */
+    }
+    .file-name {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #aaa; /* Cor do texto do nome do arquivo */
+    }
+    button {
+      background-color: #1fd761;
+      color: white;
+      cursor: pointer;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 10px; /* Adicionar espaço acima do botão */
+      align-self: flex-start; /* Alinha o botão à esquerda */
+    }
+    button:hover {
+      background-color: #1a9f50;
+    }
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .success-message, .error-message {
+      background-color: #444;
+      color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      transition: opacity 0.5s;
+    }
+    .success-message {
+      background-color: #1fd761;
+    }
+    .error-message {
+      background-color: #e74c3c;
+    }
+    .download-button-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .btn-download {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-download:hover {
+      background-color: #1a9f50;
+    }
+
+  script.
+    document.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      
+      fetch('/upload-json', {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          showSuccessMessage('Dados carregados com sucesso!');
+        } else {
+          response.json().then(data => {
+            showErrorMessage(data.error || 'Ocorreu um problema ao carregar os dados.');
+          });
+        }
+      }).catch(error => {
+        showErrorMessage('Ocorreu um problema ao carregar os dados.');
+        console.error('Erro:', error);
+      });
+    });
+
+    function updateFileName() {
+      const input = document.querySelector('input[name="jsonFile"]');
+      const fileName = input.files.length > 0 ? input.files[0].name : 'Nenhum arquivo selecionado';
+      document.querySelector('.file-name').textContent = fileName;
+    }
+
+    function showSuccessMessage(message) {
+      const successMessage = document.querySelector('.success-message');
+      successMessage.textContent = message;
+      successMessage.style.display = 'block';
+      setTimeout(() => {
+        successMessage.style.opacity = '0';
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+          successMessage.style.opacity = '1';
+        }, 500);
+      }, 3000);
+    }
+
+    function showErrorMessage(message) {
+      const errorMessage = document.querySelector('.error-message');
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+      setTimeout(() => {
+        errorMessage.style.opacity = '0';
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+          errorMessage.style.opacity = '1';
+        }, 3000);
+      }, 3000);
+    }
+
+    function downloadJSONs() {
+      window.location.href = '/download-jsons';
+    }

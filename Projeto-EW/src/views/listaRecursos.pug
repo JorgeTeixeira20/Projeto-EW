@@ -1,0 +1,186 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Lista de Recursos
+      .filter-container
+        .search-bar-container
+          form(action="/listaRecursos" method="get" class="search-form")
+            input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
+            button(type="submit" class="search-button")
+              i.bi.bi-search.search-icon
+          form(action="/listaRecursos" method="get" class="reset-form")
+            button(type="submit" class="reset-button")
+              i.bi.bi-arrow-counterclockwise.reset-icon
+    .filters-box
+      h3 Filtros
+      form(action="/listaRecursos" method="get" class="filter-form")
+        .form-group
+          label(for="filterYear") Ano
+          input#filterYear(type="text" name="year" placeholder="Digite o ano")
+        .form-group
+          label(for="filterTheme") Tema
+          input#filterTheme(type="text" name="theme" placeholder="Digite o tema")
+        .form-group
+          label(for="filterType") Tipo de Recurso
+          input#filterType(type="text" name="type" placeholder="Digite o tipo de recurso")
+        button(type="submit" class="apply-filters-button") Aplicar Filtros
+    .resource-list
+      each resource in resources
+        a.resource-link(href=`/resource/${resource._id}`)
+          .resource-item
+            h3 #{resource.title}
+            h5 #{resource.subtitle}
+            p
+              span Tipo:
+              | 
+              span #{resource.type}
+            p
+              span Temas:
+              | 
+              span #{resource.themes}
+            p
+              span Autor:
+              | 
+              span #{resource.author}
+            hr
+            .resource-date
+              | #{new Date(resource.dataCriacao).toLocaleDateString()}
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .filter-container {
+        display: flex;
+        gap: 10px;
+      }
+      .search-bar-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .search-form, .reset-form {
+        display: flex;
+        align-items: center;
+      }
+      .search-bar {
+        padding: 10px 30px 10px 10px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        color: #aaa; /* Cor do texto mais escura */
+      }
+      .search-button, .reset-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .search-icon, .reset-icon {
+        font-size: 20px;
+        color: #aaa; /* Cor da lupa */
+      }
+      label {
+        text-align: left;
+      }
+      .filters-box {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        position: absolute;
+        right: 50px; /* Move um pouco para a esquerda */
+        top: 0;
+        width: 300px;
+        margin-top: 5.7%;
+      }
+      .filters-box h3 {
+        margin: 0 0 10px;
+      }
+      .filters-box .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+      .filters-box .form-group label {
+        font-weight: bold;
+      }
+      .filters-box .form-group input {
+        padding: 5px;
+        border: none;
+        border-radius: 5px;
+        color: #333;
+      }
+      .apply-filters-button {
+        background-color: #1fd761;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        align-self: flex-end;
+        margin-top: 5px;
+      }
+      .apply-filters-button:hover {
+        background-color: #1a9f50;
+      }
+      .resource-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .resource-item {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-align: left;
+        position: relative;
+      }
+      .resource-date {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.8em;
+        color: #999;
+      }
+      .resource-link {
+        text-decoration: none; /* Remove a decoração do link */
+        color: inherit; /* Mantém a cor do texto herdada */
+        display: block; /* Garante que o link ocupe todo o espaço do item */
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .resource-link:visited, .resource-link:active, .resource-link:hover {
+        color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
+        text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
+      }
+      .resource-item:hover {
+        background-color: #555;
+        color: #1fd761;
+        cursor: pointer;
+      }
+      .resource-item h3 {
+        margin: 0 0 10px;
+      }
+      .resource-item p {
+        margin: 5px 0;
+      }
+      hr {
+        border: 1px solid #555;
+      }

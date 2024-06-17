@@ -1,0 +1,62 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Criar Comunicado
+    .form-container
+      form(action="/comunicados" method="post")
+        .form-group
+          label(for="title") Título
+          input#title.form-control(type="text" name="title" required placeholder="Digite o título do comunicado")
+        .form-group
+          label(for="subtitle") Subtítulo
+          input#subtitle.form-control(type="text" name="subtitle" required placeholder="Digite o subtítulo do comunicado")
+        .form-group
+          label(for="content") Conteúdo
+          textarea#content.form-control(name="content" required placeholder="Digite o conteúdo do comunicado")
+        button(type="submit" class="submit-button") Criar Comunicado
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+        text-align: center;
+      }
+      .form-container {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input.form-control, textarea.form-control {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+      }
+      .submit-button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .submit-button:hover {
+        background-color: #1a9f50;
+      }

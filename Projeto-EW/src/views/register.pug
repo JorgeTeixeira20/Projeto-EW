@@ -1,0 +1,83 @@
+extends layout
+
+block content
+  style.
+    .register-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center; /* Center the form items */
+      gap: 20px !important; /* Space between elements */
+      margin: 20px auto !important; /* Center the form horizontally and add top margin */
+      width: 60% !important; /* Form width */
+    }
+    .form-group {
+      width: 48% !important; /* Adjusted width for two columns */
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .register-title {
+      background-color: #1fd761 !important; /* Background color */
+      width: 100% !important;
+      color: white !important;
+      padding: 10px 20px !important;
+      border-radius: 5px !important;
+      margin-bottom: 20px !important;
+      text-align: center !important;
+    }
+    .form-group label {
+      color: #1fd761 !important; 
+      margin-bottom: 5px !important; 
+    }
+    .btn-container {
+      display: flex !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      margin-top: 20px !important;
+    }
+    .btn-register, .btn-back {
+      border-radius: 3% !important;
+      color: white !important;
+      padding: 10px 20px !important;
+      border-width: 2px !important;
+      flex: 1 !important;
+    }
+    .btn-register {
+      background-color: #1fd761 !important;
+      border-color: #1fd761 !important;
+      margin-right: 10px !important;
+    }
+    .btn-back {
+      background-color: #6c757d !important;
+      border-color: #6c757d !important;
+      margin-left: 10px !important;
+    }
+
+  form.register-container(action='/auth/register', method='post')
+    .register-title
+      h1 Register
+    .form-group
+      label(for='firstName') First Name
+      input#firstName.form-control(name='firstName', type='text')
+    .form-group
+      label(for='lastName') Last Name
+      input#lastName.form-control(name='lastName', type='text')
+    .form-group
+      label(for='email') Email
+      input#email.form-control(name='email', type='email')
+    .form-group
+      label(for='password') Password
+      input#password.form-control(name='password', type='password')
+    .form-group
+      label(for='course') Course
+      input#course.form-control(name='course', type='text')
+    .form-group
+      label(for='department') Department
+      input#department.form-control(name='department', type='text')
+    .form-group
+      label(for='role') Role
+      select#role.form-control(name='role')
+        option(value='Estudante') Estudante
+        option(value='Professor') Professor
+    .btn-container
+      button.btn.btn-register(type='submit') Register
+      a.btn.btn-back(href='/auth') Return

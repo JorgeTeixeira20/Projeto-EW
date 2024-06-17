@@ -1,0 +1,468 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      .title-content
+        .emoji-box
+          // Espaço reservado para os emojis
+          if resource.type == 'Relatório' 
+            i.bi.bi-file-earmark-text-fill
+          else if resource.type == 'Tese'
+            i.bi.bi-file-earmark-font-fill
+          else if resource.type == 'Artigo'
+            i.bi.bi-file-earmark-pdf-fill
+          else if resource.type == 'Aplicação'
+            i.bi.bi-file-earmark-code-fill
+          else if resource.type == 'Slides'
+            i.bi.bi-journals
+          else if resource.type == 'Teste/Exame'
+            i.bi.bi-file-earmark-richtext-fill
+          else if resource.type == 'Problema Resolvido'
+            i.bi.bi-file-check-fill
+          else if resource.type == 'Livro'
+            i.bi.bi-book-half
+          else if resource.type == 'Monografia'
+            i.bi.bi-journal-text
+        h2 #{resource.title}
+      .reviews-box
+        -
+          var totalReviews = resource.reviews.length;
+          var averageRating = totalReviews > 0 
+            ? (resource.reviews.reduce((sum, review) => sum + review.stars, 0) / totalReviews).toFixed(1) 
+            : 'Nenhuma avaliação';
+        p
+          span Rating: 
+          |
+          span #{averageRating} 
+          |
+          i.bi.bi-star-fill
+          |
+          span  (#{totalReviews})
+      button.btn-avaliar(onclick="openModal()")
+        i.bi.bi-star
+
+    .resource-details
+      .resource-columns
+        .left-column
+          .info-box
+            p
+              span.label Tipo:
+              span.info #{resource.type}
+            if resource.subtitle
+              p
+                span.label Subtítulo:
+                span.info #{resource.subtitle}
+            p
+              span.label Criador:
+              a.info(href=`/perfil/${creator._id}`) #{creator.firstName} #{creator.lastName}
+            p
+              span.label Descrição:
+              span.info #{resource.description}
+        .right-column
+          .info-box
+            p
+              span.label Autor:
+              span.info #{resource.author}
+            p
+              span.label Ano:
+              span.info #{resource.year}
+            p
+              span.label Temas:
+              span.info #{resource.themes.join(', ')}
+            p
+              span.label Arquivos:
+              ul
+                each file in resource.files
+                  li
+                    if resource.visibilidade == 'Público' || resource.user._id == user._id
+                      a.info(href=`/download/${file.fileName}`) #{file.fileName}
+                    else 
+                      span.info #{file.fileName}
+      .bottom-right-container
+        if resource.visibilidade == 'Público' || resource.user._id == user._id
+          a(href=`/download-all/${resource._id}`)
+            button
+              i.bi.bi-download
+              | Download
+        else
+          button
+            i.bi.bi-lock-fill
+            | Private
+        a(href=`/create-post/${resource._id}`)
+          button
+            i.bi.bi-pencil
+            | Criar Post
+        if resource.user._id == user._id || user.admin
+          button.delete-resource(onclick=`deleteResource('${resource._id}')`)
+            i.bi.bi-trash
+
+  // Modal
+  div#ratingModal.modal
+    div.modal-dialog.modal-dialog-centered
+      div.modal-content
+        div.modal-header
+          h5.modal-title Avaliar Recurso
+          button.close(type='button', onclick='closeModal()')
+            span &times;
+        div.modal-body
+          form#ratingForm
+            input(type='hidden', id='resourceIdInput', value=`${resource._id}`)
+            input(type='hidden', id='starsInput')
+            div.form-group
+              div.rating
+                each star in [1, 2, 3, 4, 5]
+                  i.bi.bi-star(onclick=`rate(${star})`, onmouseover=`highlightStars(${star})`, onmouseout='resetStars()')
+        div.modal-footer
+          button.btn.btn-primary(type='button', onclick='submitReview()') Enviar
+          button.btn.btn-secondary(type='button', onclick='closeModal()') Cancelar
+
+  style.
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title-container {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title-content {
+      display: flex;
+      align-items: center; /* Alinha os itens ao centro verticalmente */
+    }
+
+    .title-content .emoji-box {
+      margin-right: 10px; /* Espaçamento entre o emoji e o título */
+    }
+
+    .title-content h2 {
+      margin: 0; /* Remove a margem padrão do título */
+    }
+
+    .resource-details {
+      background-color: #444;
+      padding: 20px 20px 55px;
+      border-radius: 5px;
+      color: #fff;
+      margin-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      min-height: 300px; /* Ajustar a altura mínima para ter uma margem de sobra em torno dos botões */
+    }
+    .resource-columns {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .left-column, .right-column {
+      width: 48%;
+    }
+    .info-box {
+      background-color: #555;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .info-box p {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .label {
+      font-weight: bold;
+      color: #1fd761;
+    }
+    .info {
+      color: #fff;
+      margin-left: 10px;
+    }
+    .info a.info {
+      color: #fff; /* Cor branca para os links */
+      text-decoration: none;
+    }
+    .info a.info:hover {
+      color: #1fd761; /* Cor verde ao passar o mouse */
+      text-decoration: underline;
+    }
+    .resource-details ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .resource-details li {
+      margin: 5px 0;
+    }
+    .bottom-right-container {
+      position: absolute;
+      bottom: 20px; /* Ajustar para mover os botões mais para baixo */
+      right: 20px;
+      height: auto; /* Ajustar a altura */
+      display: flex;
+      gap: 10px;
+      align-items: flex-end; /* Alinhar os botões ao final */
+    }
+    .reviews-box {
+      background-color: #555;
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      margin-left: 20px; /* Adiciona margem à esquerda para mover a caixa para a direita */
+      margin-right: 10px; /* Adiciona margem à direita para separar dos botões */
+    }
+    .reviews-box p {
+      margin: 0;
+    }
+    .reviews-box span {
+      font-weight: bold;
+    }
+    button, .reviews-box button {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+    }
+    button:hover, .reviews-box button:hover {
+      background-color: #1a9f50;
+    }
+    .bi-star-fill {
+      color: #ffd700;
+    }
+    .bi-download, .bi-pencil, .bi-trash {
+      font-weight: bold;
+      font-size: 100%;
+    }
+    .resource-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .delete-resource {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      height: 36px; /* Altura fixa para garantir que todos os botões tenham a mesma altura */
+      width: auto; /* Ajustar a largura para ser menor */
+      text-align: center;
+    }
+    .delete-resource:hover {
+      background-color: #1a9f50;
+    }
+    a.info {
+      color: #fff; /* Cor branca para os links */
+      text-decoration: none;
+    }
+
+    a.info:hover {
+      color: #1fd761; /* Cor verde ao passar o mouse */
+      text-decoration: underline;
+    }
+    .reviews-box {
+      background-color: #555;
+      padding: 10px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      margin-left: auto; /* Adiciona margem à esquerda para mover a caixa para a direita */
+    }
+    .reviews-box p {
+      margin: 0;
+    }
+    .reviews-box span {
+      font-weight: bold;
+    }
+    .rating-container {
+      display: flex;
+      align-items: center;
+    }
+    .btn-avaliar {
+      background-color: #1fd761;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-avaliar:hover {
+      background-color: #1a9f50;
+    }
+    .emoji-box {
+      margin-right: 10px; /* Espaçamento entre o emoji e o título */
+      background-color: #333;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: #fff;
+      bottom: 10px; /* Ajustar a posição do emoji */
+    }
+    .emoji-box i {
+      font-size: 24px;
+    }
+    .bi-star-fill {
+      color: #ffd700;
+    }
+    .modal-content {
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      max-width: 300px;
+      margin: auto;
+    }
+    .modal-header, .modal-footer {
+      border: none;
+      background-color: #333;
+    }
+    .modal-header .close {
+      color: #fff;
+    }
+    .modal-header h5 {
+      color: #fff;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+    }
+    .rating i {
+      font-size: 1.5rem;
+      color: #ddd;
+      cursor: pointer;
+    }
+    .rating i:hover, .rating i.active {
+      color: #ffd700;
+    }
+    .modal-dialog-centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 1rem);
+    }
+
+  script.
+    console.log('JavaScript carregado corretamente.');
+
+    function openModal() {
+      console.log('Abrindo modal de avaliação');
+      document.getElementById('ratingModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      console.log('Fechando modal de avaliação');
+      document.getElementById('ratingModal').style.display = 'none';
+    }
+
+    function rate(star) {
+      console.log('Selecionando avaliação:', star);
+      document.getElementById('starsInput').value = star;
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < star) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function highlightStars(star) {
+      console.log('Destacando estrelas até:', star);
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < star) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function deleteResource(resourceId) {
+      if (confirm('Tem certeza que deseja eliminar este recurso?')) {
+        fetch(`/resource/${resourceId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            alert('Erro ao eliminar recurso');
+          }
+        });
+      }
+    }
+
+    function resetStars() {
+      const starValue = document.getElementById('starsInput').value;
+      console.log('Resetando estrelas para o valor:', starValue);
+      document.querySelectorAll('.rating i').forEach((el, index) => {
+        if (index < starValue) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function submitReview() {
+      const resourceId = document.getElementById('resourceIdInput').value;
+      const stars = document.getElementById('starsInput').value;
+
+      if (!stars) {
+        alert('Por favor, selecione uma avaliação.');
+        return;
+      }
+
+      console.log('Submissão do formulário capturada.');
+      console.log('Enviando avaliação:', { resourceId, stars });
+
+      fetch('/rate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ resourceId, stars })
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log('Avaliação enviada com sucesso');
+            closeModal();
+            window.location.reload(); // Recarregue a página para mostrar a nova avaliação
+          } else {
+            console.error('Erro ao enviar avaliação:', data.error);
+          }
+        }).catch(error => {
+          console.error('Erro ao avaliar o recurso:', error);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Documento carregado e script de avaliação pronto.');
+    });

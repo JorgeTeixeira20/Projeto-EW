@@ -1,0 +1,553 @@
+extends layout-main
+
+block content
+  .container
+    
+    .post-container
+      // Nome do utilizador que fez o post, como link
+      .post-author 
+        if author
+          a(href=`/perfil/${author._id}`) #{author.firstName} #{author.lastName}
+        else
+          span Utilizador eliminado
+      
+      // Caixa grande com o conteúdo do post
+      .post-titles
+        h3 #{post.title}
+
+      // Caixa grande com o conteúdo do post
+      .post-content
+        | #{post.content}
+
+      a.resource-link(href=`/resource/${resource._id}`) Acessar recurso (#{resource.title})
+
+      .post-vote
+        button.vote-button.upvote-button(onclick=`votePost('${post._id}', 'upvote')`)
+          i.bi.bi-arrow-up-circle
+        .vote-count #{post.votes && post.votes.count || 0}
+        button.vote-button.downvote-button(onclick=`votePost('${post._id}', 'downvote')`)
+          i.bi.bi-arrow-down-circle
+      
+      // Data de quando o post foi feito no canto inferior esquerdo
+      .post-date
+        | #{new Date(post.date).toLocaleDateString()}
+      
+      // Botão de eliminar post, visível apenas para o autor do post ou admin
+      if isOwner || isAdmin
+        button.delete-post(onclick=`deletePost('${post._id}')`)
+          i.bi.bi-trash
+          
+    .comments-container
+      h3 Comentários:
+      - const sortedComments = post.comments.sort((a, b) => new Date(a.date) - new Date(b.date));
+      each comment in sortedComments
+        .comment-wrapper(data-comment-id=comment._id)
+          .comment-box
+            if comment.user
+              a(href=`/perfil/${comment.user._id}`) #{comment.user.firstName} #{comment.user.lastName} (#{comment.user.email}):
+            else
+              span Utilizador eliminado:
+            | #{comment.content}
+            | (#{new Date(comment.date).toLocaleDateString()})
+            .comment-actions
+              .comment-vote
+                button.vote-button.upvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'upvote')`)
+                  i.bi.bi-arrow-up-circle
+                .vote-count #{comment.votes && comment.votes.count || 0}
+                button.vote-button.downvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'downvote')`)
+                  i.bi.bi-arrow-down-circle
+              .comment-buttons
+                button.reply-button(onclick=`toggleReplyForm('${comment._id}')`) Reply
+                if user && comment.user && (user.id === comment.user.id || user.admin)
+                  button.delete-comment(onclick=`deleteComment('${post._id}', '${comment._id}')`)
+                    i.bi.bi-trash
+
+          .replies
+            each reply in comment.replies.sort((a, b) => new Date(a.date) - new Date(b.date))
+              .reply-wrapper(data-reply-id=reply._id)
+                .reply-box
+                  if reply.user
+                    a(href=`/perfil/${reply.user._id}`) #{reply.user.firstName} #{reply.user.lastName} (#{reply.user.email}):
+                  else
+                    span Utilizador eliminado:
+                  | #{reply.content}
+                  | (#{new Date(reply.date).toLocaleDateString()})
+                  .reply-actions
+                    .reply-vote
+                      button.vote-button.upvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'upvote')`)
+                        i.bi.bi-arrow-up-circle
+                      .vote-count #{reply.votes && reply.votes.count || 0}
+                      button.vote-button.downvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'downvote')`)
+                        i.bi.bi-arrow-down-circle
+                    if user && reply.user && (user.id === reply.user.id || user.admin)
+                      button.delete-reply(onclick=`deleteReply('${post._id}', '${comment._id}', '${reply._id}')`)
+                        i.bi.bi-trash
+          .reply-form(id=`reply-form-${comment._id}`)
+            form(action=`/post/${post._id}/comment/${comment._id}/reply` method="post")
+              .form-group
+                label(for="reply-content") Responder:
+                textarea#reply-content(name="content" required placeholder="Escreva sua resposta aqui...")
+              button(type="submit") Adicionar Resposta
+
+      .add-comment-box
+        form(action=`/post/${post._id}/comment` method="post")
+          .form-group
+            label(for="content") Adicionar Comentário:
+            textarea#content(name="content" required placeholder="Escreva seu comentário aqui...")
+          button(type="submit") Adicionar Comentário
+
+
+    script.
+      function toggleReplyForm(commentId) {
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        if (replyForm.classList.contains('show')) {
+          replyForm.classList.remove('show');
+        } else {
+          replyForm.classList.add('show');
+        }
+      }
+
+      async function votePost(postId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector('.post-vote .vote-count').textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on post');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      async function voteComment(postId, commentId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/comment/${commentId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector(`.comment-wrapper[data-comment-id="${commentId}"] .comment-vote .vote-count`).textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on comment');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      async function voteReply(postId, commentId, replyId, type) {
+        try {
+          const response = await fetch(`/post/${postId}/comment/${commentId}/reply/${replyId}/vote`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector(`.reply-wrapper[data-reply-id="${replyId}"] .reply-vote .vote-count`).textContent = data.votes.count;
+          } else {
+            console.error('Failed to vote on reply');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      function deletePost(postId) {
+        if (confirm('Tem certeza que deseja eliminar este post?')) {
+          fetch(`/post/${postId}`, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.href = '/';
+            } else {
+              alert('Erro ao eliminar post');
+            }
+          });
+        }
+      }
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+
+      function deleteComment(postId, commentId) {
+        const token = getCookie('token');
+        if (confirm('Tem certeza que deseja eliminar este comentário?')) {
+          fetch(`/post/${postId}/comment/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao eliminar comentário');
+            }
+          });
+        }
+      }
+
+      function deleteReply(postId, commentId, replyId) {
+        const token = getCookie('token');
+        if (confirm('Tem certeza que deseja eliminar esta resposta?')) {
+          fetch(`/post/${postId}/comment/${commentId}/reply/${replyId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao eliminar resposta');
+            }
+          });
+        }
+      }
+
+
+    style.
+      .resource-link {
+        font-size: 0.8em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .resource-link:hover {
+        text-decoration: underline;
+        color: #1fd761;
+      }
+      .post-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        margin-top: 10%;
+        position: relative; /* Para permitir posicionamento relativo dos elementos internos */
+        text-align: left;
+      }
+      .post-author {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+      .post-author a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .post-author a:hover {
+        text-decoration: underline;
+      }
+      .post-content {
+          background-color: #444;
+          padding: 20px;
+          border-radius: 5px;
+          color: #fff;
+          margin-bottom: 10px;
+          text-align: left;
+          min-height: 100px; /* Altura mínima */
+          height: auto; /* Ajusta a altura automaticamente */
+          word-break: break-word; /* Quebra palavras longas */
+          white-space: pre-wrap; /* Preserva espaços e quebras de linha */
+      }
+      .post-titles {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-align: left;
+        font-weight: bold;
+      }
+      .post-vote {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+      .vote-button {
+        background: none;
+        border: none;
+        color: #1fd761;
+        cursor: pointer;
+        font-size: 1.5em;
+      }
+      .vote-button:hover {
+        color: #1a9f50;
+      }
+      .vote-count {
+        font-size: 1.2em;
+        color: #fff;
+      }
+      .post-date {
+        text-align: left;
+        font-size: 0.8em;
+        color: #999;
+        position: absolute;
+        bottom: 10px;
+        left: 20px;
+      }
+      .delete-post {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 5px;
+        right: 20px;
+      }
+      .delete-post:hover {
+        background-color: #1a9f50;
+      }
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 100%;
+        margin-top: 10%;
+      }
+      .post-details {
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+        position: relative;
+      }
+      .post-details p {
+        margin: 10px 0;
+      }
+      .post-details span {
+        font-weight: bold;
+      }
+      .post-details ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .post-details li {
+        margin: 5px 0;
+      }
+      .post-details a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .post-details a:hover {
+        text-decoration: underline;
+      }
+      .comments-container {
+        margin-top: 20px;
+        background-color: #444;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+      }
+      .comment-wrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .comment-box {
+        background-color: #555;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        text-align: left;
+      }
+      .comment-box a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .comment-box a:hover {
+        text-decoration: underline;
+      }
+      .comment-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        align-items: center;
+      }
+      .comment-vote {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .reply-button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .reply-button:hover {
+        background-color: #1a9f50;
+      }
+      .replies {
+        position: relative;
+        text-align: left;
+      }
+      .reply-wrapper {
+        margin-left: 50px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
+      .reply-line {
+        position: absolute;
+        top: 0;
+        left: -30px;
+        width: 20px;
+        border-left: 2px solid #1fd761;
+        height: 100%;
+      }
+      .reply-box {
+        background-color: #696869;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        text-align: left;
+      }
+      .reply-box a {
+        color: #1fd761;
+        text-decoration: none;
+      }
+      .reply-box a:hover {
+        text-decoration: underline;
+      }
+      .reply-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .reply-vote {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .reply-form {
+        background-color: #555; /* Fundo opaco para o formulário de resposta */
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 10px;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+      }
+      .reply-form.show {
+        max-height: 500px; /* Define um valor suficiente para o conteúdo */
+        opacity: 1;
+      }
+      .reply-form .form-group {
+        margin-bottom: 15px;
+      }
+      .reply-form label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .reply-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+        min-height: 50px; /* Altura mínima para a caixa de texto */
+      }
+      .reply-form button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .reply-form button:hover {
+        background-color: #1a9f50;
+      }
+      .add-comment-box {
+        background-color: #555;
+        padding: 15px;
+        border-radius: 5px;
+        color: #fff;
+        margin-top: 20px;
+      }
+      .add-comment-box .form-group {
+        margin-bottom: 15px;
+      }
+      .add-comment-box label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .add-comment-box textarea {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        resize: vertical;
+        min-height: 100px;
+      }
+      .add-comment-box button {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .add-comment-box button:hover {
+        background-color: #1a9f50;
+      }
+      .delete-comment, .delete-reply {
+        background-color: #1fd761;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .delete-comment:hover, .delete-reply:hover {
+        background-color: #1a9f50;
+      }
+      .reply-buttons, .comment-buttons {
+        display: flex;
+        gap: 10px; /* Espaço entre os botões */
+        justify-content: flex-end; /* Alinha os botões à direita */
+        margin-top: 10px; /* Adicione uma margem superior para mover os botões para baixo */
+      }
+

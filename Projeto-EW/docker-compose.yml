@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo-export
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    depends_on:
+      - mongo-seed
+
+  mongo-seed:
+    image: mongo:latest
+    volumes:
+      - ./data/posts.json:/datasets/posts.json
+      - ./data/users.json:/datasets/users.json
+      - ./data/resources.json:/datasets/resources.json
+      - ./data/comunicados.json:/datasets/comunicados.json
+    entrypoint: sh -c "
+          mongoimport --host mongodb --db recursosEducativos --collection users --file /datasets/users.json --jsonArray &&
+          mongoimport --host mongodb --db recursosEducativos --collection resources --file /datasets/resources.json --jsonArray &&
+          mongoimport --host mongodb --db recursosEducativos --collection posts --file /datasets/posts.json --jsonArray &&
+          mongoimport --host mongodb --db recursosEducativos --collection comunicados --file /datasets/comunicados.json --jsonArray
+        "
+
+  mongo-export:
+    image: mongo:latest
+    volumes:
+      - ./data/export:/export
+    depends_on:
+      - mongodb
+    entrypoint: sh -c "
+          mongoexport --host mongodb --db recursosEducativos --collection users --out /export/users.json --jsonArray &&
+          mongoexport --host mongodb --db recursosEducativos --collection resources --out /export/resources.json --jsonArray &&
+          mongoexport --host mongodb --db recursosEducativos --collection posts --out /export/posts.json --jsonArray &&
+          mongoexport --host mongodb --db recursosEducativos --collection comunicados --out /export/comunicados.json --jsonArray
+        "

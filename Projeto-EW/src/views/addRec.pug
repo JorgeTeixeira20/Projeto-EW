@@ -1,0 +1,188 @@
+extends layout-main
+
+block content
+  .container
+    .title-container
+      h2 Adicionar Recurso  
+    .add-rec-container
+      form(action="/adicionarRecurso" method="post" enctype="multipart/form-data" id="uploadForm")
+        .form-row
+          .form-group-left
+            label(for="ficheiros") Inserir um ou mais ficheiros:
+            .file-drop-zone
+              input#ficheiros(type="file" name="ficheiros" multiple required)
+              p Arraste os ficheiros aqui ou clique para selecionar
+              i.bi.bi-upload
+          .form-group-right
+            .form-group
+              label(for="titulo") Título:
+              input#titulo(type="text" name="titulo" required placeholder="Insira o título")
+            .form-group
+              label(for="subtitulo") SubTítulo:
+              textarea#subtitulo(name="subtitulo" rows="2" required placeholder="Insira o subtítulo")
+            .form-group
+              label(for="categoria") Categoria:
+              select#categoria(name="categoria" required)
+                option(value="Relatório") Relatório
+                option(value="Tese") Tese
+                option(value="Artigo") Artigo
+                option(value="Aplicação") Aplicação
+                option(value="Slides") Slides
+                option(value="Teste/Exame") Teste/Exame
+                option(value="Problema Resolvido") Problema Resolvido
+                option(value="Livro") Livro
+                option(value="Monografia") Monografia
+            .form-group
+              label Visibilidade:
+              select#visibilidade(name="visibilidade" required)
+                option(value="Público") Público
+                option(value="Privado") Privado
+        .form-group-desc
+          label(for="descricao") Descrição:
+          textarea#descricao(name="descricao" rows="4" required placeholder="Insira a descrição")
+        .form-group-submit
+          button(type="submit") Adicionar Recurso
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        var fileInput = document.getElementById('ficheiros');
+        var dropZone = document.querySelector('.file-drop-zone');
+
+        dropZone.addEventListener('click', function() {
+          fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          dropZone.style.backgroundColor = '#666';
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+          e.preventDefault();
+          dropZone.style.backgroundColor = '#555';
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          dropZone.style.backgroundColor = '#555';
+
+          var files = Array.from(e.dataTransfer.files);
+          var currentFiles = Array.from(fileInput.files);
+          var allFiles = currentFiles.concat(files);
+
+          var dataTransfer = new DataTransfer();
+          allFiles.forEach(file => dataTransfer.items.add(file));
+          fileInput.files = dataTransfer.files;
+
+          // Display the file names
+          var fileList = Array.from(fileInput.files).map(file => file.name).join(', ');
+          dropZone.querySelector('p').innerText = fileList;
+        });
+
+        fileInput.addEventListener('change', function() {
+          // Display the file names when selected via dialog
+          var fileList = Array.from(fileInput.files).map(file => file.name).join(', ');
+          dropZone.querySelector('p').innerText = fileList;
+        });
+      });
+
+    style.
+      .title-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 10%;
+      }
+      .add-rec-container {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 5px;
+        color: #fff;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 1.5%;
+      }
+      .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .form-group-left {
+        width: 48%;
+      }
+      .form-group-right {
+        width: 48%;
+      }
+      .file-drop-zone {
+        background-color: #555;
+        border: 2px dashed #888;
+        border-radius: 5px;
+        padding: 20px;
+        text-align: center;
+        color: #fff;
+        cursor: pointer;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .file-drop-zone input[type="file"] {
+        display: none;
+      }
+      .file-drop-zone p {
+        margin: 0;
+      }
+      .file-drop-zone i {
+        font-size: 40px;
+        margin-top: 20px;
+      }
+      .form-group {
+        margin-bottom: 2.5%;
+      }
+      .form-group-desc {
+        margin-top: 1%;
+      }
+      .form-group-submit {
+        margin-top: 2%;
+      }
+      label {
+        display: block;
+        margin-bottom: 1%;
+        font-weight: bold;
+        text-align: left;
+      }
+      input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 5px;
+        color: #000;
+      }
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .radio-item {
+        display: flex;
+        align-items: center;
+      }
+      .radio-item input {
+        margin-right: 10px;
+      }
+      button {
+        background-color: #1fd761;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #1a9f50;
+      }
