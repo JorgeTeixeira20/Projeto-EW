@@ -61,12 +61,12 @@ A plataforma oferece uma ampla gama de funcionalidades para garantir uma experi�
 - Sistema de níveis baseado na experiência acumulada através da participação ativa na plataforma.
 
 #### Funcionalidades Administrativas
-- Administradores têm a capacidade de gerenciar usuários, alternando status de administrador e removendo contas quando necessário.
+- Administradores têm a capacidade de gerenciar utilizadores, alternando status de administrador e removendo contas quando necessário.
 - Sistema de autenticação seguro com registro, login e logout, utilizando tokens JWT para gerenciamento de sessões.
 
 #### Upload e Download de Arquivos
 - Recursos podem incluir múltiplos arquivos anexados, os quais podem ser baixados individualmente ou em lote, no formato zip.
-- Suporte para upload de dados em formato JSON para facilitar a importação em massa de recursos, usuários, posts e comunicados.
+- Suporte para upload de dados em formato JSON para facilitar a importação em massa de recursos, utilizadores, posts e comunicados.
 
 ## Arquitetura da Solução
 
@@ -84,10 +84,9 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 - **Express.js**: Framework para Node.js que facilita a criação de rotas e middleware.
 - **MongoDB**: Banco de dados NoSQL utilizado para armazenar os dados da aplicação.
 - **Mongoose**: Biblioteca de modelagem de dados para MongoDB em Node.js.
-- **Passport.js**: Middleware de autenticação para Node.js, utilizado para autenticação de usuários.
+- **Passport.js**: Middleware de autenticação para Node.js, utilizado para autenticação de utilizadores.
 - **JWT (JSON Web Tokens)**: Utilizado para autenticação e gerenciamento de sessões.
 - **Multer**: Middleware para manipulação de uploads de arquivos.
-- **Handlebars**: Motor de templates para gerar HTML dinâmico.
 
 ## Detalhes das Rotas
 
@@ -130,8 +129,8 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 
 - **GET `/rankings`**: Exibe a página principal de rankings.
 - **GET `/rankings/recursos`**: Exibe o ranking dos recursos por classificação média.
-- **GET `/rankings/level`**: Exibe o ranking dos usuários por nível e XP.
-- **GET `/rankings/users`**: Exibe o ranking dos usuários por classificação média dos recursos.
+- **GET `/rankings/level`**: Exibe o ranking dos utilizadores por nível e XP.
+- **GET `/rankings/users`**: Exibe o ranking dos utilizadores por classificação média dos recursos.
 
 ### Rotas de Autenticação
 
@@ -148,13 +147,13 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 - **POST `/adicionarRecurso`**: Adiciona um novo recurso e atualiza o XP do usuário.
 - **GET `/upload-json`**: Exibe o formulário de upload de JSON.
 - **POST `/upload-json`**: Faz o upload de um arquivo JSON e insere os dados no banco de dados.
-- **GET `/download-jsons`**: Baixa todos os dados de usuários, recursos, posts e comunicados como um arquivo zip.
+- **GET `/download-jsons`**: Baixa todos os dados de utilizadores, recursos, posts e comunicados como um arquivo zip.
 
 ### Rotas de Administração
 
 - **POST `/users/:id/toggle-admin`**: Alterna o status de administrador de um usuário específico.
 - **POST `/users/:id/delete`**: Deleta um usuário específico.
-- **GET `/users`**: Exibe uma lista de todos os usuários.
+- **GET `/users`**: Exibe uma lista de todos os utilizadores.
 
 ## Conclusão
 
