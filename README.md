@@ -157,8 +157,18 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 
 ## Interface
 
-### Menu de Login
-
+![autenticacao](Imagens/autenticacao.png  "Autenticação")
+![pagprinc](Imagens/pagPrinc.png  "Página Principal")
+![perfil](Imagens/perfil.png  "Perfil")
+![recmc](Imagens/recmc.png  "Recursos Melhores Classificados")
+![usermc](Imagens/usermc.png  "Utilizadores Melhores Classificados")
+![usermn](Imagens/usersmn.png  "")
+![listaRecursos](Imagens/listaRecursos.png  "")
+![listaUsers](Imagens/listaUsers.png  "")
+![listaPosts](Imagens/listaPosts.png  "")
+![addComunicado](Imagens/addComunicado.png  "")
+![](Imagens/expImporDados.png  "")
+![](Imagens/meusPosts.png  "")
 
 ## Conclusão
 
