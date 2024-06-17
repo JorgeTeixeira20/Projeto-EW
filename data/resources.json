@@ -1,332 +1,781 @@
 [
-  {
-      "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
-      "user": "666885199f7eb030e78ad809",
-      "type": "Livro",
-      "title": "Introduction to Algorithms",
-      "subtitle": "",
-      "description": "A comprehensive book on algorithms.",
-      "dataCriacao": "2023-01-01T00:00:00Z",
-      "dataRegisto": "2023-01-01T00:00:00Z",
-      "visibilidade": "publico",
-      "author": "Thomas H. Cormen",
-      "year": 2009,
-      "themes": [
-          "algorithms",
-          "computer science"
-      ],
-      "files": [],
-      "reviews": [
-          {
-              "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
-              "stars": 5
-          },
-          {
-              "userId": {
-                  "$oid": "666885089f7eb030e78ad806"
-              },
-              "stars": 3,
-              "_id": {
-                  "$oid": "6670890a9f530360f698b834"
-              }
-          }
-      ],
-      "__v": 1
-  },
-  {
-      "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
-      "user": "666885199f7eb030e78ad809",
-      "type": "Livro",
-      "title": "Deep Learning",
-      "subtitle": "",
-      "description": "A comprehensive book on deep learning.",
-      "dataCriacao": "2023-01-01T00:00:00Z",
-      "dataRegisto": "2023-01-01T00:00:00Z",
-      "visibilidade": "publico",
-      "author": "Ian Goodfellow",
-      "year": 2016,
-      "themes": [
-          "machine learning",
-          "deep learning"
-      ],
-      "files": [],
-      "reviews": [
-          {
-              "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
-              "stars": 4
-          }
-      ]
-  },
-  {
-      "_id": "666cbc75aa0367678f71d639",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "EW 2024",
-      "subtitle": "Teste e Recurso",
-      "description": "Avaliação teórica de 2024.",
-      "dataCriacao": "2024-06-14T21:56:05.344Z",
-      "dataRegisto": "2024-06-14T21:56:05.344Z",
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "engweb2024-recurso.pdf",
-              "filePath": "/filestore/engweb2024-recurso.pdf",
-              "_id": "666cbc75aa0367678f71d63a"
-          },
-          {
-              "fileName": "engweb2024-normal.pdf",
-              "filePath": "/filestore/engweb2024-normal.pdf",
-              "_id": "666cbc75aa0367678f71d63b"
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "66709edadfb8d2802a53bbcf",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Cálculo Numérico",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Cálculo Numérico de PI realizado na data 2010-03-09.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:38:50.637Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:38:50.637Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste1D.pdf",
-              "filePath": "/filestore/pi2010-miniteste1D.pdf",
-              "_id": {
-                  "$oid": "66709edadfb8d2802a53bbd0"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste1C.pdf",
-              "filePath": "/filestore/pi2010-miniteste1C.pdf",
-              "_id": {
-                  "$oid": "66709edadfb8d2802a53bbd1"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste1B.pdf",
-              "filePath": "/filestore/pi2010-miniteste1B.pdf",
-              "_id": {
-                  "$oid": "66709edadfb8d2802a53bbd2"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste1A.pdf",
-              "filePath": "/filestore/pi2010-miniteste1A.pdf",
-              "_id": {
-                  "$oid": "66709edadfb8d2802a53bbd3"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "66709f28dfb8d2802a53bbde",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Sequências",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Sequências realizado na data 2010-03-23.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:40:08.613Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:40:08.613Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste2D.pdf",
-              "filePath": "/filestore/pi2010-miniteste2D.pdf",
-              "_id": {
-                  "$oid": "66709f28dfb8d2802a53bbdf"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste2C.pdf",
-              "filePath": "/filestore/pi2010-miniteste2C.pdf",
-              "_id": {
-                  "$oid": "66709f28dfb8d2802a53bbe0"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste2B.pdf",
-              "filePath": "/filestore/pi2010-miniteste2B.pdf",
-              "_id": {
-                  "$oid": "66709f28dfb8d2802a53bbe1"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste2A.pdf",
-              "filePath": "/filestore/pi2010-miniteste2A.pdf",
-              "_id": {
-                  "$oid": "66709f28dfb8d2802a53bbe2"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "66709f60dfb8d2802a53bbed",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Produto Cartesiano",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Produto Cartesiano realizado na data 2010-04-20.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:41:04.194Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:41:04.194Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste3B.pdf",
-              "filePath": "/filestore/pi2010-miniteste3B.pdf",
-              "_id": {
-                  "$oid": "66709f60dfb8d2802a53bbee"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste3A.pdf",
-              "filePath": "/filestore/pi2010-miniteste3A.pdf",
-              "_id": {
-                  "$oid": "66709f60dfb8d2802a53bbef"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "66709fa8dfb8d2802a53bbfa",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Listas Ligadas",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Listas Ligadas realizado na data 2010-04-27.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:42:16.418Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:42:16.418Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste4B.pdf",
-              "filePath": "/filestore/pi2010-miniteste4B.pdf",
-              "_id": {
-                  "$oid": "66709fa8dfb8d2802a53bbfb"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste4A.pdf",
-              "filePath": "/filestore/pi2010-miniteste4A.pdf",
-              "_id": {
-                  "$oid": "66709fa8dfb8d2802a53bbfc"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "6670a0b0825d186b6d2b9f29",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Modelação",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Modelação realizado na data 2010-05-18.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:46:40.741Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:46:40.741Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste5B.pdf",
-              "filePath": "/filestore/pi2010-miniteste5B.pdf",
-              "_id": {
-                  "$oid": "6670a0b0825d186b6d2b9f2a"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste5A.pdf",
-              "filePath": "/filestore/pi2010-miniteste5A.pdf",
-              "_id": {
-                  "$oid": "6670a0b0825d186b6d2b9f2b"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  },
-  {
-      "_id": "6670a0db825d186b6d2b9f36",
-      "user": "666885089f7eb030e78ad806",
-      "type": "Teste/Exame",
-      "title": "Mini-teste de Árvores Binárias",
-      "subtitle": "PI 2010",
-      "description": "Mini-teste de Árvores Binárias realizado na data 2010-05-25.",
-      "dataCriacao": {
-          "$date": "2024-06-17T20:47:23.815Z"
-      },
-      "dataRegisto": {
-          "$date": "2024-06-17T20:47:23.815Z"
-      },
-      "visibilidade": "Público",
-      "author": "jl@fc",
-      "year": 2024,
-      "themes": [],
-      "files": [
-          {
-              "fileName": "pi2010-miniteste6B.pdf",
-              "filePath": "/filestore/pi2010-miniteste6B.pdf",
-              "_id": {
-                  "$oid": "6670a0db825d186b6d2b9f37"
-              }
-          },
-          {
-              "fileName": "pi2010-miniteste6A.pdf",
-              "filePath": "/filestore/pi2010-miniteste6A.pdf",
-              "_id": {
-                  "$oid": "6670a0db825d186b6d2b9f38"
-              }
-          }
-      ],
-      "reviews": [],
-      "__v": 0
-  }
+    {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6f9",
+        "user": "666885199f7eb030e78ad809",
+        "type": "Livro",
+        "title": "Introduction to Algorithms",
+        "subtitle": "",
+        "description": "A comprehensive book on algorithms.",
+        "dataCriacao": "2023-01-01T00:00:00Z",
+        "dataRegisto": "2023-01-01T00:00:00Z",
+        "visibilidade": "publico",
+        "author": "Thomas H. Cormen",
+        "year": 2009,
+        "themes": [
+            "algorithms",
+            "computer science"
+        ],
+        "files": [],
+        "reviews": [
+            {
+                "userId": "60f7c1e2b3a1a2b3c4d5e6f7",
+                "stars": 5
+            },
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 5,
+                "_id": {
+                    "$oid": "6670a8ca78cb40c54e72d175"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6fa",
+        "user": "666885199f7eb030e78ad809",
+        "type": "Livro",
+        "title": "Deep Learning",
+        "subtitle": "",
+        "description": "A comprehensive book on deep learning.",
+        "dataCriacao": "2023-01-01T00:00:00Z",
+        "dataRegisto": "2023-01-01T00:00:00Z",
+        "visibilidade": "publico",
+        "author": "Ian Goodfellow",
+        "year": 2016,
+        "themes": [
+            "machine learning",
+            "deep learning"
+        ],
+        "files": [],
+        "reviews": [
+            {
+                "userId": "60f7c1e2b3a1a2b3c4d5e6f8",
+                "stars": 4
+            },
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 2,
+                "_id": {
+                    "$oid": "6670a8ce78cb40c54e72d185"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "666cbc75aa0367678f71d639",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "EW 2024",
+        "subtitle": "Teste e Recurso",
+        "description": "Avaliação teórica de 2024.",
+        "dataCriacao": "2024-06-14T21:56:05.344Z",
+        "dataRegisto": "2024-06-14T21:56:05.344Z",
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "engweb2024-recurso.pdf",
+                "filePath": "/filestore/engweb2024-recurso.pdf",
+                "_id": "666cbc75aa0367678f71d63a"
+            },
+            {
+                "fileName": "engweb2024-normal.pdf",
+                "filePath": "/filestore/engweb2024-normal.pdf",
+                "_id": "666cbc75aa0367678f71d63b"
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 4,
+                "_id": {
+                    "$oid": "6670a8d878cb40c54e72d19a"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "66709f60dfb8d2802a53bbed",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Produto Cartesiano",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Produto Cartesiano realizado na data 2010-04-20.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:41:04.194Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:41:04.194Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste3B.pdf",
+                "filePath": "/filestore/pi2010-miniteste3B.pdf",
+                "_id": {
+                    "$oid": "66709f60dfb8d2802a53bbee"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste3A.pdf",
+                "filePath": "/filestore/pi2010-miniteste3A.pdf",
+                "_id": {
+                    "$oid": "66709f60dfb8d2802a53bbef"
+                }
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 1,
+                "_id": {
+                    "$oid": "6670a8dc78cb40c54e72d1ab"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "66709fa8dfb8d2802a53bbfa",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Listas Ligadas",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Listas Ligadas realizado na data 2010-04-27.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:42:16.418Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:42:16.418Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste4B.pdf",
+                "filePath": "/filestore/pi2010-miniteste4B.pdf",
+                "_id": {
+                    "$oid": "66709fa8dfb8d2802a53bbfb"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste4A.pdf",
+                "filePath": "/filestore/pi2010-miniteste4A.pdf",
+                "_id": {
+                    "$oid": "66709fa8dfb8d2802a53bbfc"
+                }
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 5,
+                "_id": {
+                    "$oid": "6670a8df78cb40c54e72d1bc"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "66709f28dfb8d2802a53bbde",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Sequências",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Sequências realizado na data 2010-03-23.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:40:08.613Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:40:08.613Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste2D.pdf",
+                "filePath": "/filestore/pi2010-miniteste2D.pdf",
+                "_id": {
+                    "$oid": "66709f28dfb8d2802a53bbdf"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste2C.pdf",
+                "filePath": "/filestore/pi2010-miniteste2C.pdf",
+                "_id": {
+                    "$oid": "66709f28dfb8d2802a53bbe0"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste2B.pdf",
+                "filePath": "/filestore/pi2010-miniteste2B.pdf",
+                "_id": {
+                    "$oid": "66709f28dfb8d2802a53bbe1"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste2A.pdf",
+                "filePath": "/filestore/pi2010-miniteste2A.pdf",
+                "_id": {
+                    "$oid": "66709f28dfb8d2802a53bbe2"
+                }
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 3,
+                "_id": {
+                    "$oid": "6670a8e278cb40c54e72d1cf"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "6670a0b0825d186b6d2b9f29",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Modelação",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Modelação realizado na data 2010-05-18.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:46:40.741Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:46:40.741Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste5B.pdf",
+                "filePath": "/filestore/pi2010-miniteste5B.pdf",
+                "_id": {
+                    "$oid": "6670a0b0825d186b6d2b9f2a"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste5A.pdf",
+                "filePath": "/filestore/pi2010-miniteste5A.pdf",
+                "_id": {
+                    "$oid": "6670a0b0825d186b6d2b9f2b"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a0db825d186b6d2b9f36",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Árvores Binárias",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Árvores Binárias realizado na data 2010-05-25.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:47:23.815Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:47:23.815Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste6B.pdf",
+                "filePath": "/filestore/pi2010-miniteste6B.pdf",
+                "_id": {
+                    "$oid": "6670a0db825d186b6d2b9f37"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste6A.pdf",
+                "filePath": "/filestore/pi2010-miniteste6A.pdf",
+                "_id": {
+                    "$oid": "6670a0db825d186b6d2b9f38"
+                }
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 5,
+                "_id": {
+                    "$oid": "6670a8e678cb40c54e72d1e0"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "66709edadfb8d2802a53bbcf",
+        "user": "666885089f7eb030e78ad806",
+        "type": "Teste/Exame",
+        "title": "Mini-teste de Cálculo Numérico",
+        "subtitle": "PI 2010",
+        "description": "Mini-teste de Cálculo Numérico de PI realizado na data 2010-03-09.",
+        "dataCriacao": {
+            "$date": "2024-06-17T20:38:50.637Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T20:38:50.637Z"
+        },
+        "visibilidade": "Público",
+        "author": "jl@fc",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "pi2010-miniteste1D.pdf",
+                "filePath": "/filestore/pi2010-miniteste1D.pdf",
+                "_id": {
+                    "$oid": "66709edadfb8d2802a53bbd0"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste1C.pdf",
+                "filePath": "/filestore/pi2010-miniteste1C.pdf",
+                "_id": {
+                    "$oid": "66709edadfb8d2802a53bbd1"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste1B.pdf",
+                "filePath": "/filestore/pi2010-miniteste1B.pdf",
+                "_id": {
+                    "$oid": "66709edadfb8d2802a53bbd2"
+                }
+            },
+            {
+                "fileName": "pi2010-miniteste1A.pdf",
+                "filePath": "/filestore/pi2010-miniteste1A.pdf",
+                "_id": {
+                    "$oid": "66709edadfb8d2802a53bbd3"
+                }
+            }
+        ],
+        "reviews": [
+            {
+                "userId": {
+                    "$oid": "6670a77078cb40c54e72d0d5"
+                },
+                "stars": 3,
+                "_id": {
+                    "$oid": "6670a8e878cb40c54e72d1f3"
+                }
+            }
+        ],
+        "__v": 1
+    },
+    {
+        "_id": "6670a4ce78cb40c54e72d028",
+        "user": "6670a48978cb40c54e72d01d",
+        "type": "Aplicação",
+        "title": "Consola para gestão de alunos",
+        "subtitle": "Consola para gestão de alunos",
+        "description": "Consola para gestão de alunos.",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:04:14.508Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:04:14.508Z"
+        },
+        "visibilidade": "Público",
+        "author": "pj@sapo.pt",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "alunos.h",
+                "filePath": "/filestore/alunos.h",
+                "_id": {
+                    "$oid": "6670a4ce78cb40c54e72d029"
+                }
+            },
+            {
+                "fileName": "ALUNOS.TXT",
+                "filePath": "/filestore/ALUNOS.TXT",
+                "_id": {
+                    "$oid": "6670a4ce78cb40c54e72d02a"
+                }
+            },
+            {
+                "fileName": "interp.y",
+                "filePath": "/filestore/interp.y",
+                "_id": {
+                    "$oid": "6670a4ce78cb40c54e72d02b"
+                }
+            },
+            {
+                "fileName": "interp1.l",
+                "filePath": "/filestore/interp1.l",
+                "_id": {
+                    "$oid": "6670a4ce78cb40c54e72d02c"
+                }
+            },
+            {
+                "fileName": "makefile",
+                "filePath": "/filestore/makefile",
+                "_id": {
+                    "$oid": "6670a4ce78cb40c54e72d02d"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a59078cb40c54e72d038",
+        "user": "6670a48978cb40c54e72d01d",
+        "type": "Aplicação",
+        "title": "Árvores Binárias de Procura",
+        "subtitle": "Árvores Binárias de Procura",
+        "description": "Árvores Binárias de Procura",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:07:28.968Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:07:28.968Z"
+        },
+        "visibilidade": "Público",
+        "author": "pj@sapo.pt",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "abin.l",
+                "filePath": "/filestore/abin.l",
+                "_id": {
+                    "$oid": "6670a59078cb40c54e72d039"
+                }
+            },
+            {
+                "fileName": "abin.y",
+                "filePath": "/filestore/abin.y",
+                "_id": {
+                    "$oid": "6670a59078cb40c54e72d03a"
+                }
+            },
+            {
+                "fileName": "arvbin.c",
+                "filePath": "/filestore/arvbin.c",
+                "_id": {
+                    "$oid": "6670a59078cb40c54e72d03b"
+                }
+            },
+            {
+                "fileName": "arvbin.h",
+                "filePath": "/filestore/arvbin.h",
+                "_id": {
+                    "$oid": "6670a59078cb40c54e72d03c"
+                }
+            },
+            {
+                "fileName": "makefile2",
+                "filePath": "/filestore/makefile2",
+                "_id": {
+                    "$oid": "6670a59078cb40c54e72d03d"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a64f78cb40c54e72d052",
+        "user": "6670a61b78cb40c54e72d047",
+        "type": "Aplicação",
+        "title": "Agenda de Contactos",
+        "subtitle": "Agenda de Contactos",
+        "description": "Agenda de Contactos",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:10:39.317Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:10:39.317Z"
+        },
+        "visibilidade": "Privado",
+        "author": "jrrrr@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "makefile3",
+                "filePath": "/filestore/makefile3",
+                "_id": {
+                    "$oid": "6670a64f78cb40c54e72d053"
+                }
+            },
+            {
+                "fileName": "agenda.l",
+                "filePath": "/filestore/agenda.l",
+                "_id": {
+                    "$oid": "6670a64f78cb40c54e72d054"
+                }
+            },
+            {
+                "fileName": "agenda.y",
+                "filePath": "/filestore/agenda.y",
+                "_id": {
+                    "$oid": "6670a64f78cb40c54e72d055"
+                }
+            },
+            {
+                "fileName": "agendadata.c",
+                "filePath": "/filestore/agendadata.c",
+                "_id": {
+                    "$oid": "6670a64f78cb40c54e72d056"
+                }
+            },
+            {
+                "fileName": "agendadata.h",
+                "filePath": "/filestore/agendadata.h",
+                "_id": {
+                    "$oid": "6670a64f78cb40c54e72d057"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a6ee78cb40c54e72d0b7",
+        "user": "6670a6b778cb40c54e72d086",
+        "type": "Slides",
+        "title": "Slides SSI",
+        "subtitle": "Slides SSI",
+        "description": "Slides SSI",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:13:18.617Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:13:18.617Z"
+        },
+        "visibilidade": "Público",
+        "author": "ac@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "2.pdf",
+                "filePath": "/filestore/2.pdf",
+                "_id": {
+                    "$oid": "6670a6ee78cb40c54e72d0b8"
+                }
+            },
+            {
+                "fileName": "3.pdf",
+                "filePath": "/filestore/3.pdf",
+                "_id": {
+                    "$oid": "6670a6ee78cb40c54e72d0b9"
+                }
+            },
+            {
+                "fileName": "4.pdf",
+                "filePath": "/filestore/4.pdf",
+                "_id": {
+                    "$oid": "6670a6ee78cb40c54e72d0ba"
+                }
+            },
+            {
+                "fileName": "5.pdf",
+                "filePath": "/filestore/5.pdf",
+                "_id": {
+                    "$oid": "6670a6ee78cb40c54e72d0bb"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a6fc78cb40c54e72d0c6",
+        "user": "6670a6b778cb40c54e72d086",
+        "type": "Slides",
+        "title": "Slides SSI 2 ",
+        "subtitle": "Slides SSI 2",
+        "description": "Slides SSI 2",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:13:32.945Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:13:32.945Z"
+        },
+        "visibilidade": "Privado",
+        "author": "ac@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "6.pdf",
+                "filePath": "/filestore/6.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0c7"
+                }
+            },
+            {
+                "fileName": "7.pdf",
+                "filePath": "/filestore/7.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0c8"
+                }
+            },
+            {
+                "fileName": "8.pdf",
+                "filePath": "/filestore/8.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0c9"
+                }
+            },
+            {
+                "fileName": "9.pdf",
+                "filePath": "/filestore/9.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0ca"
+                }
+            },
+            {
+                "fileName": "10.pdf",
+                "filePath": "/filestore/10.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0cb"
+                }
+            },
+            {
+                "fileName": "11.pdf",
+                "filePath": "/filestore/11.pdf",
+                "_id": {
+                    "$oid": "6670a6fc78cb40c54e72d0cc"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a7a078cb40c54e72d0e0",
+        "user": "6670a77078cb40c54e72d0d5",
+        "type": "Problema Resolvido",
+        "title": "Leitura de um inteiro com scanf",
+        "subtitle": "Leitura de um inteiro com scanf",
+        "description": "Leitura de um inteiro com scanf",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:16:16.859Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:16:16.859Z"
+        },
+        "visibilidade": "Privado",
+        "author": "k@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "scan1int.c",
+                "filePath": "/filestore/scan1int.c",
+                "_id": {
+                    "$oid": "6670a7a078cb40c54e72d0e1"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a7db78cb40c54e72d0ec",
+        "user": "6670a77078cb40c54e72d0d5",
+        "type": "Problema Resolvido",
+        "title": "Leitura de um inteiro com getchar()",
+        "subtitle": "Leitura de um inteiro com getchar()",
+        "description": "Leitura de um inteiro com getchar()",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:17:15.609Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:17:15.609Z"
+        },
+        "visibilidade": "Público",
+        "author": "k@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "parsint.c",
+                "filePath": "/filestore/parsint.c",
+                "_id": {
+                    "$oid": "6670a7db78cb40c54e72d0ed"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    },
+    {
+        "_id": "6670a89b78cb40c54e72d12b",
+        "user": "6670a77078cb40c54e72d0d5",
+        "type": "Livro",
+        "title": "Livro",
+        "subtitle": "Livro",
+        "description": "Livro",
+        "dataCriacao": {
+            "$date": "2024-06-17T21:20:27.707Z"
+        },
+        "dataRegisto": {
+            "$date": "2024-06-17T21:20:27.707Z"
+        },
+        "visibilidade": "Privado",
+        "author": "k@gmail.com",
+        "year": 2024,
+        "themes": [],
+        "files": [
+            {
+                "fileName": "1.jpg",
+                "filePath": "/filestore/1.jpg",
+                "_id": {
+                    "$oid": "6670a89b78cb40c54e72d12c"
+                }
+            },
+            {
+                "fileName": "2.jpg",
+                "filePath": "/filestore/2.jpg",
+                "_id": {
+                    "$oid": "6670a89b78cb40c54e72d12d"
+                }
+            }
+        ],
+        "reviews": [],
+        "__v": 0
+    }
 ]

@@ -1,82 +1,601 @@
 [
-    {
-      "_id": "60f7c1e2b3a1a2b3c4d5e6fb",
-      "title": "Introduction to Algorithms it's really a nice Help!",
-      "subtitle": "Introduction to Algorithms it's really a nice Help! It provides comprehensive insights and practical solutions for algorithmic challenges.",
-      "userId": "666885089f7eb030e78ad806",
-      "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
-      "content": "This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms. This is an excellent book on algorithms.",
-      "votes": {
-        "count": 2,
-        "details": [
-          { "userId": "666885089f7eb030e78ad806", "type": "upvote" },
-          { "userId": "666885199f7eb030e78ad809", "type": "upvote" }
-        ]
-      },
-      "comments": [
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
+    "title": "Mastering Algorithms",
+    "subtitle": "A guide to mastering algorithms.",
+    "userId": "6668852d9f7eb030e78ad80c",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+    "content": "This book provides an in-depth look at algorithms, making it an essential read for computer science students.",
+    "votes": {
+      "count": 3,
+      "details": [
         {
-          "_id": "60f7c1e2b3a1a2b3c4d5e6fc",
-          "commentUserId": "666885199f7eb030e78ad809",
-          "content": "I agree, it's very informative.",
-          "date": "2024-06-06T00:00:00Z",
-          "votes": {
-            "count": 1,
-            "details": [
-              { "userId": "666885089f7eb030e78ad806", "type": "upvote" }
-            ]
-          },
-          "replies": [
+          "userId": "6670a48978cb40c54e72d01d",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7761"
+          }
+        },
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7762"
+          }
+        },
+        {
+          "userId": "666dc2570e67439fdb41c223",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7763"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76ac"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
+        "commentUserId": "6670a61b78cb40c54e72d047",
+        "content": "Highly recommend for understanding complex algorithms.",
+        "date": "2024-06-06T00:00:00Z",
+        "votes": {
+          "count": 1,
+          "details": [
             {
-              "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
-              "commentUserId": "6668852d9f7eb030e78ad80c",
-              "content": "Thanks for the feedback!",
-              "date": "2024-06-08T00:00:00Z",
-              "votes": {
-                "count": 0,
-                "details": []
-              }
-            },
-            {
-              "_id": "60f7c1e2b3a1a2b3c4d5e6fe",
-              "commentUserId": "6668852d9f7eb030e78ad80c",
-              "content": "It was really helpful!",
-              "date": "2024-06-07T00:00:00Z",
-              "votes": {
-                "count": 0,
-                "details": []
+              "userId": "6670a6b778cb40c54e72d086",
+              "type": "upvote",
+              "_id": {
+                "$oid": "6670490d8ebbfd67828c7759"
               }
             }
           ]
         },
+        "replies": [
+          {
+            "_id": "60f7c1e2b3a1a2b3c4d5e6fe",
+            "commentUserId": "666885089f7eb030e78ad806",
+            "content": "I found it very useful too!",
+            "date": "2024-06-08T00:00:00Z",
+            "votes": {
+              "count": 0,
+              "details": []
+            }
+          }
+        ]
+      }
+    ],
+    "date": "2024-06-05T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e6fe",
+    "title": "Deep Learning Simplified",
+    "subtitle": "An essential guide to deep learning.",
+    "userId": "6670a77078cb40c54e72d0d5",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+    "content": "This book covers the basics of deep learning, making it accessible to beginners.",
+    "votes": {
+      "count": 1,
+      "details": [
         {
-          "_id": "60f7c1e2b3a1a2b3c4d5e6ff",
-          "commentUserId": "6668852d9f7eb030e78ad80c",
-          "content": "Very helpful book.",
-          "date": "2024-06-06T00:00:00Z",
-          "votes": {
-            "count": 0,
-            "details": []
-          },
-          "replies": []
+          "userId": "666dc2570e67439fdb41c223",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7764"
+          }
         }
       ],
-      "date": "2024-06-05T00:00:00Z"
+      "_id": {
+        "$oid": "667049058ebbfd67828c76ad"
+      }
     },
-    {
-      "_id": "60f7c1e2b3a1a2b3c4d5e6fd",
-      "title": "Deep Learning: Revolutionizing Artificial Intelligence",
-      "subtitle": "Deep Learning: Revolutionizing AI with powerful neural networks and groundbreaking applications.",
-      "userId": "666885089f7eb030e78ad806",
-      "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
-      "content": "Great insights on deep learning.",
-      "votes": {
-        "count": -1,
-        "details": [
-          { "userId": "666885199f7eb030e78ad809", "type": "downvote" }
-        ]
-      },
-      "comments": [],
-      "date": "2024-06-07T00:00:00Z"
-    }
-  ]
-  
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e6ff",
+        "commentUserId": "666885089f7eb030e78ad806",
+        "content": "Great book for understanding the fundamentals.",
+        "date": "2024-06-07T00:00:00Z",
+        "votes": {
+          "count": 0,
+          "details": []
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-07T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e6ff",
+    "title": "Exploring Data Structures",
+    "subtitle": "Understanding data structures through algorithms.",
+    "userId": "6670a61b78cb40c54e72d047",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+    "content": "This book is a great resource for anyone looking to understand data structures and their applications.",
+    "votes": {
+      "count": 0,
+      "details": [],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76ae"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-10T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e700",
+    "title": "AI Revolution",
+    "subtitle": "The impact of deep learning on AI.",
+    "userId": "666885089f7eb030e78ad806",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+    "content": "Deep learning has revolutionized the field of artificial intelligence, providing new techniques and insights.",
+    "votes": {
+      "count": -1,
+      "details": [
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "downvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7765"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76af"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-08T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e701",
+    "title": "Modern Computer Science",
+    "subtitle": "A comprehensive look at modern algorithms.",
+    "userId": "666dc2570e67439fdb41c223",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+    "content": "This book offers a deep dive into modern algorithms, making it a must-read for computer science enthusiasts.",
+    "votes": {
+      "count": 2,
+      "details": [
+        {
+          "userId": "6670a48978cb40c54e72d01d",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7766"
+          }
+        },
+        {
+          "userId": "6668852d9f7eb030e78ad80c",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7767"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b0"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e702",
+        "commentUserId": "6670a6b778cb40c54e72d086",
+        "content": "A very informative book.",
+        "date": "2024-06-09T00:00:00Z",
+        "votes": {
+          "count": 0,
+          "details": []
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-09T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e702",
+    "title": "Learning Machine Learning",
+    "subtitle": "Deep learning fundamentals.",
+    "userId": "6670a61b78cb40c54e72d047",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+    "content": "This book is a great starting point for anyone interested in machine learning and its applications.",
+    "votes": {
+      "count": 0,
+      "details": [],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b1"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-10T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e703",
+    "title": "Algorithm Insights",
+    "subtitle": "Comprehensive insights into algorithms.",
+    "userId": "6670a77078cb40c54e72d0d5",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6f9",
+    "content": "This book provides detailed insights into algorithms, making it a valuable resource for students and professionals alike.",
+    "votes": {
+      "count": 1,
+      "details": [
+        {
+          "userId": "666885089f7eb030e78ad806",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7768"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b2"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-07T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e704",
+    "title": "Deep Dive into Deep Learning",
+    "subtitle": "An advanced guide to deep learning.",
+    "userId": "6670a61b78cb40c54e72d047",
+    "resourceId": "60f7c1e2b3a1a2b3c4d5e6fa",
+    "content": "For those looking to dive deeper into deep learning, this book is an excellent resource.",
+    "votes": {
+      "count": 2,
+      "details": [
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7769"
+          }
+        },
+        {
+          "userId": "6670a77078cb40c54e72d0d5",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7770"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b3"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e705",
+        "commentUserId": "6668852d9f7eb030e78ad80c",
+        "content": "A must-read for deep learning enthusiasts.",
+        "date": "2024-06-11T00:00:00Z",
+        "votes": {
+          "count": 1,
+          "details": [
+            {
+              "userId": "6670a6b778cb40c54e72d086",
+              "type": "upvote",
+              "_id": {
+                "$oid": "6670490e8ebbfd67828c7771"
+              }
+            }
+          ]
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-10T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e706",
+    "title": "Algorithmic Challenges",
+    "subtitle": "Overcoming common algorithmic challenges.",
+    "userId": "6668852d9f7eb030e78ad80c",
+    "resourceId": "66709f28dfb8d2802a53bbde",
+    "content": "This book helps in overcoming common challenges faced while dealing with algorithms.",
+    "votes": {
+      "count": 3,
+      "details": [
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7772"
+          }
+        },
+        {
+          "userId": "6670a61b78cb40c54e72d047",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7773"
+          }
+        },
+        {
+          "userId": "6670a77078cb40c54e72d0d5",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7774"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b4"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e707",
+        "commentUserId": "666885089f7eb030e78ad806",
+        "content": "Very helpful for tackling complex problems.",
+        "date": "2024-06-12T00:00:00Z",
+        "votes": {
+          "count": 0,
+          "details": []
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-11T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e708",
+    "title": "AI and Deep Learning",
+    "subtitle": "How deep learning is changing AI.",
+    "userId": "6670a77078cb40c54e72d0d5",
+    "resourceId": "6670a0b0825d186b6d2b9f29",
+    "content": "Deep learning is at the forefront of AI innovation, offering new methods and applications.",
+    "votes": {
+      "count": 1,
+      "details": [
+        {
+          "userId": "666885089f7eb030e78ad806",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7775"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b5"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-08T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e709",
+    "title": "Effective Algorithms",
+    "subtitle": "Creating efficient algorithms.",
+    "userId": "6670a6b778cb40c54e72d086",
+    "resourceId": "6670a0db825d186b6d2b9f36",
+    "content": "This book provides guidance on creating efficient algorithms for various applications.",
+    "votes": {
+      "count": 0,
+      "details": [],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b6"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-12T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e710",
+    "title": "AI Innovations",
+    "subtitle": "Deep learning and AI innovations.",
+    "userId": "6668852d9f7eb030e78ad80c",
+    "resourceId": "6670a89b78cb40c54e72d12b",
+    "content": "The innovations in AI driven by deep learning are transforming industries and research.",
+    "votes": {
+      "count": 2,
+      "details": [
+        {
+          "userId": "6670a61b78cb40c54e72d047",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7776"
+          }
+        },
+        {
+          "userId": "6670a77078cb40c54e72d0d5",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7777"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b7"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e711",
+        "commentUserId": "666885089f7eb030e78ad806",
+        "content": "A great overview of the latest trends in AI.",
+        "date": "2024-06-13T00:00:00Z",
+        "votes": {
+          "count": 1,
+          "details": [
+            {
+              "userId": "6670a61b78cb40c54e72d047",
+              "type": "upvote",
+              "_id": {
+                "$oid": "6670490e8ebbfd67828c7778"
+              }
+            }
+          ]
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-12T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e712",
+    "title": "Computer Science Essentials",
+    "subtitle": "Essential algorithms for computer science.",
+    "userId": "6670a61b78cb40c54e72d047",
+    "resourceId": "6670a7db78cb40c54e72d0ec",
+    "content": "A must-read for anyone studying computer science, covering all the essential algorithms.",
+    "votes": {
+      "count": 1,
+      "details": [
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7779"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b8"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-10T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e713",
+    "title": "Advanced Deep Learning",
+    "subtitle": "Exploring advanced topics in deep learning.",
+    "userId": "666dc2570e67439fdb41c223",
+    "resourceId": "6670a7a078cb40c54e72d0e0",
+    "content": "This book covers advanced topics in deep learning, perfect for those looking to expand their knowledge.",
+    "votes": {
+      "count": 3,
+      "details": [
+        {
+          "userId": "6668852d9f7eb030e78ad80c",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7780"
+          }
+        },
+        {
+          "userId": "6670a61b78cb40c54e72d047",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7781"
+          }
+        },
+        {
+          "userId": "6670a48978cb40c54e72d01d",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7782"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76b9"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-13T00:00:00Z",
+    "__v": 23
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e714",
+    "title": "Algorithmic Efficiency",
+    "subtitle": "Boosting efficiency in algorithms.",
+    "userId": "6668852d9f7eb030e78ad80c",
+    "resourceId": "6670a6fc78cb40c54e72d0c6",
+    "content": "This book provides strategies for boosting efficiency in various algorithms.",
+    "votes": {
+      "count": 0,
+      "details": [],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76c0"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-11T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e715",
+    "title": "Innovations in Algorithms",
+    "subtitle": "New techniques in algorithm development.",
+    "userId": "666885089f7eb030e78ad806",
+    "resourceId": "6670a6ee78cb40c54e72d0b7",
+    "content": "A look at the latest innovations and techniques in algorithm development.",
+    "votes": {
+      "count": 1,
+      "details": [
+        {
+          "userId": "6670a6b778cb40c54e72d086",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7783"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76c1"
+      }
+    },
+    "comments": [
+      {
+        "_id": "60f7c1e2b3a1a2b3c4d5e716",
+        "commentUserId": "6670a61b78cb40c54e72d047",
+        "content": "Very insightful for modern development.",
+        "date": "2024-06-14T00:00:00Z",
+        "votes": {
+          "count": 0,
+          "details": []
+        },
+        "replies": []
+      }
+    ],
+    "date": "2024-06-12T00:00:00Z",
+    "__v": 53
+  },
+  {
+    "_id": "60f7c1e2b3a1a2b3c4d5e717",
+    "title": "AI Techniques",
+    "subtitle": "Exploring advanced AI techniques.",
+    "userId": "6670a6b778cb40c54e72d086",
+    "resourceId": "6670a64f78cb40c54e72d052",
+    "content": "This book explores advanced AI techniques, providing insights into the latest research and applications.",
+    "votes": {
+      "count": 2,
+      "details": [
+        {
+          "userId": "666dc2570e67439fdb41c223",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7784"
+          }
+        },
+        {
+          "userId": "6670a61b78cb40c54e72d047",
+          "type": "upvote",
+          "_id": {
+            "$oid": "6670490e8ebbfd67828c7785"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "667049058ebbfd67828c76c2"
+      }
+    },
+    "comments": [],
+    "date": "2024-06-14T00:00:00Z",
+    "__v": 23
+  }
+]

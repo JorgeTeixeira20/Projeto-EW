@@ -1,0 +1,17 @@
+agenda : y.tab.o lex.yy.o agendadata.o
+	gcc -o agenda y.tab.o lex.yy.o agendadata.o
+
+y.tab.o : y.tab.c
+	gcc -c y.tab.c
+
+lex.yy.o : lex.yy.c
+	gcc -c lex.yy.c
+
+lex.yy.c : agenda.l y.tab.h
+	flex agenda.l
+
+y.tab.c y.tab.h : agenda.y
+	yacc -d agenda.y
+
+agendadata.o : agendadata.c agendadata.h
+	gcc -c agendadata.c
