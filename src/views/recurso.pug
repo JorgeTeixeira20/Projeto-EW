@@ -93,7 +93,7 @@ block content
           button
             i.bi.bi-pencil
             | Criar Post
-        if resource.user._id == user._id || user.admin
+        if resource.user == user._id || user.admin
           button.delete-resource(onclick=`deleteResource('${resource._id}')`)
             i.bi.bi-trash
 
