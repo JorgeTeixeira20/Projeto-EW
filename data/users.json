@@ -61,7 +61,17 @@
     "registrationDate": "2024-06-11T17:11:09.290Z",
     "lastAccessDate": "2024-06-11T17:11:09.290Z",
     "myResources": [],
-    "myPosts": [],
+    "myPosts": [
+      "60f7c1e2b3a1a2b3c4d5e6fc",
+      "60f7c1e2b3a1a2b3c4d5e706",
+      "60f7c1e2b3a1a2b3c4d5e710",
+      "60f7c1e2b3a1a2b3c4d5e714",
+      "60f7c1e2b3a1a2b3c4d5e6fc",
+      "60f7c1e2b3a1a2b3c4d5e6fc",
+      "60f7c1e2b3a1a2b3c4d5e706",
+      "60f7c1e2b3a1a2b3c4d5e710",
+      "60f7c1e2b3a1a2b3c4d5e714"
+    ],
     "level": 1,
     "xp": 0,
     "salt": "5d2932e63d2ae7c46fb403e594b89631af284cd4cf2349dd48ad16f22834258e",
@@ -82,7 +92,10 @@
       "$date": "2024-06-17T17:41:54.548Z"
     },
     "myResources": [],
-    "myPosts": [],
+    "myPosts": [
+      "60f7c1e2b3a1a2b3c4d5e701",
+      "60f7c1e2b3a1a2b3c4d5e713"
+    ],
     "salt": "27fd3f6ceb386981eb7db733f815de86ca8a0fab7ea5f0898095916c03c478dd",
     "hash": "0d8d132cb6fe50a328510f67d720b382018d526490c2f8ba2abbda7e700070fe75d1e0de18b1ad579cfd5cf9998420787671e0804ef33b508dfcfdb38ccf49d7ec5e53fed1c7dc08ed263808f0b8ddbe0cd337a3e2817e9a2ae9dfac07b3f3a8a5d6d3518d9cf775d7db39ed0fbae712477000d66777ca943f2ec4442e547f112ab27fa11787f9719be6d568638a9cb9a0bedb075bd64e2039f63f5c0123bb87c0c34b476f3094e8d9dc84e0b9e34cfabdbb9c5f8c8dbd5edcc60caf4ee28283bd06f970535870a64b9ed6621d3f4466dde031ee605658c30aa74c981bbb92d174d762f0c29e96d9338660564af1a39e18279c480aa6074de5b57357e4a2c4b238aea89424caa086636bf3d1a5bb5efcc8cd6820bbe91e1e699edc790f656805180bee1999c78b5d303f96941e1fa78af6e73830546c57cb1960f9564a18d91213103c274068043e08f215fe98830638a6dd3941b6d022d313f1f46d6c05f744205821818670b1c93637ff0be267b871ed8602cdfac87bf63f96f3f1212c7b755c88fe9cda2ea90a1777b555960680b2ea35ffe624b63b37e6c56bd25ae1fd468d48899182aefed4232c9894b751560309e3d960fdad1ce172fc0d6a6e296e6d7fb9cc30b2debd515537207dabdbe4115fdd05e959788323f293dbf43028f3f285f9235efc3bc4bbee82aa4272f35a5c0d74087d08e4a7d5b6a5da3de5efd97a",
     "__v": 0
@@ -131,7 +144,12 @@
     "myResources": [
       "6670a64f78cb40c54e72d052"
     ],
-    "myPosts": [],
+    "myPosts": [
+      "60f7c1e2b3a1a2b3c4d5e6ff",
+      "60f7c1e2b3a1a2b3c4d5e702",
+      "60f7c1e2b3a1a2b3c4d5e704",
+      "60f7c1e2b3a1a2b3c4d5e712"
+    ],
     "xp": 50,
     "level": 1,
     "salt": "e202941b784bcbebf13048a5a2bb38ed8e49c2ebf7fe4a6cb6a51a1a18ff55e5",
@@ -157,7 +175,10 @@
       "6670a6ee78cb40c54e72d0b7",
       "6670a6fc78cb40c54e72d0c6"
     ],
-    "myPosts": [],
+    "myPosts": [
+      "60f7c1e2b3a1a2b3c4d5e709",
+      "60f7c1e2b3a1a2b3c4d5e717"
+    ],
     "xp": 100,
     "level": 2,
     "salt": "ec8f38ec3c0f5671e63fb36d9510c0ef6492b20a19d383597940e3f05ef59b8c",
@@ -184,7 +205,11 @@
       "6670a7db78cb40c54e72d0ec",
       "6670a89b78cb40c54e72d12b"
     ],
-    "myPosts": [],
+    "myPosts": [
+      "60f7c1e2b3a1a2b3c4d5e6fe",
+      "60f7c1e2b3a1a2b3c4d5e703",
+      "60f7c1e2b3a1a2b3c4d5e708"
+    ],
     "xp": 190,
     "level": 2,
     "salt": "c20a4a1f0711c90da5d69eca1c95e044760256450eebd3851aa08ec07b2b4e5a",

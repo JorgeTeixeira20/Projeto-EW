@@ -155,7 +155,13 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 - **POST `/users/:id/delete`**: Deleta um usuário específico.
 - **GET `/users`**: Exibe uma lista de todos os utilizadores.
 
+## Interface
+
+### Menu de Login
+
+
 ## Conclusão
 
 A plataforma educativa desenvolvida oferece uma solução abrangente e flexível para a disponibilização, compartilhamento e avaliação de recursos educativos. As funcionalidades implementadas visam criar um ambiente colaborativo, incentivando a participação ativa dos utilizadores e a troca de conhecimento.
-Para aprimorar a plataforma, várias melhorias podem ser implementadas. Primeiramente, o sistema de upload de recursos pode ser modificado para criar uma pasta específica para cada recurso, permitindo assim que vários ficheiros com o mesmo nome possam ser armazenados sem conflitos. Além disso, seria benéfico adicionar a funcionalidade de comentários às avaliações de recursos, promovendo uma discussão mais detalhada sobre os mesmos. Também é importante permitir que os utilizadores possam editar seus perfis e posts após a publicação, proporcionando uma maior flexibilidade e controle sobre o conteúdo compartilhado.
+
+Para aprimorar a plataforma, várias melhorias podem ser implementadas. Primeiramente, o sistema de upload de recursos pode ser modificado para criar uma pasta específica para cada recurso, permitindo assim que vários ficheiros com o mesmo nome possam ser armazenados sem conflitos. Além disso, seria benéfico adicionar a funcionalidade de comentários às avaliações de recursos, promovendo uma discussão mais detalhada sobre os mesmos. Também é importante permitir que os utilizadores possam editar os seus perfis e posts após a publicação ou mesmo adicionar fotos de perfil de modo a proporcionar uma maior flexibilidade e controlo sobre o conteúdo partilhado pelo próprio utilizador.
