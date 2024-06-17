@@ -4,28 +4,32 @@ block content
   .container
     .title-container
       h2 Meus Recursos
-      .filter-container
-        .search-bar-container
-          form(action="/meusrecursos" method="get" class="search-form")
-            input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
-            button(type="submit" class="search-button")
-              i.bi.bi-search.search-icon
-          form(action="/meusrecursos" method="get" class="reset-form")
-            button(type="submit" class="reset-button")
-              i.bi.bi-arrow-counterclockwise.reset-icon
-    .filters-box
-      h3 Filtros
-      form(action="/meusrecursos" method="get" class="filter-form")
-        .form-group
-          label(for="filterYear") Ano
-          input#filterYear(type="text" name="year" placeholder="Digite o ano")
-        .form-group
-          label(for="filterTheme") Tema
-          input#filterTheme(type="text" name="theme" placeholder="Digite o tema")
-        .form-group
-          label(for="filterType") Tipo de Recurso
-          input#filterType(type="text" name="type" placeholder="Digite o tipo de recurso")
-        button(type="submit" class="apply-filters-button") Aplicar Filtros
+      .search-bar-container
+        form(action="/meusrecursos" method="get" class="search-form")
+          input(type="text" name="search" placeholder="Pesquisar..." class="search-bar")
+          button(type="submit" class="search-button")
+            i.bi.bi-search.search-icon
+        form(action="/meusrecursos" method="get" class="reset-form")
+          button(type="submit" class="reset-button")
+            i.bi.bi-arrow-counterclockwise.reset-icon
+        button.filter-button(type="button" onclick="openFilterModal()") Filtros
+          i.bi.bi-funnel
+    // Modal de Filtros
+    .modal#filterModal
+      .modal-content
+        span.close(onclick="closeFilterModal()") &times;
+        h3 Filtros
+        form(action="/listaRecursos" method="get" class="filter-form")
+          .form-group
+            label(for="filterYear") Ano
+            input#filterYear(type="text" name="year" placeholder="Digite o ano")
+          .form-group
+            label(for="filterTheme") Tema
+            input#filterTheme(type="text" name="theme" placeholder="Digite o tema")
+          .form-group
+            label(for="filterType") Tipo de Recurso
+            input#filterType(type="text" name="type" placeholder="Digite o tipo de recurso")
+          button(type="submit" class="apply-filters-button") Aplicar Filtros
     .resource-list
       each resource in resources
         a.resource-link(href=`/resource/${resource._id}`)
@@ -61,14 +65,9 @@ block content
         align-items: center;
         position: relative;
       }
-      .filter-container {
+      .search-bar-container {
         display: flex;
         gap: 10px;
-      }
-      .search-bar-container {
-        position: relative;
-        display: flex;
-        align-items: center;
       }
       .search-form, .reset-form {
         display: flex;
@@ -79,7 +78,7 @@ block content
         border: none;
         border-radius: 5px;
         outline: none;
-        color: #aaa;
+        color: #aaa; /* Cor do texto mais escura */
       }
       .search-button, .reset-button {
         background: none;
@@ -90,35 +89,71 @@ block content
       }
       .search-icon, .reset-icon {
         font-size: 20px;
-        color: #aaa;
+        color: #aaa; /* Cor da lupa */
       }
-      .filters-box {
-        background-color: #333;
-        padding: 20px;
+      .filter-button {
+        background-color: #1fd761;
+        color: white;
+        padding: 10px 20px;
+        border: none;
         border-radius: 5px;
-        color: #fff;
-        position: absolute;
-        right: 50px; /* Move um pouco para a esquerda */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .filter-button:hover {
+        background-color: #1a9f50;
+      }
+      .filter-button i {
+        margin-left: 5px;
+      }
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
         top: 0;
-        width: 300px;
-        margin-top: 5.7%;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        padding-top: 60px;
+      }
+      .modal-content {
+        background-color: #444;
+        margin: 5% auto; /* 5% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        color: white;
+        border-radius: 5px;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
       }
       label {
         text-align: left;
       }
-      .filters-box h3 {
-        margin: 0 0 10px;
-      }
-      .filters-box .form-group {
+      .form-group {
         display: flex;
         flex-direction: column;
         gap: 5px;
         margin-bottom: 10px;
       }
-      .filters-box .form-group label {
+      .form-group label {
         font-weight: bold;
       }
-      .filters-box .form-group input {
+      .form-group input {
         padding: 5px;
         border: none;
         border-radius: 5px;
@@ -160,15 +195,15 @@ block content
         color: #999;
       }
       .resource-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
+        text-decoration: none; /* Remove a decoração do link */
+        color: inherit; /* Mantém a cor do texto herdada */
+        display: block; /* Garante que o link ocupe todo o espaço do item */
         position: relative;
         margin-bottom: 20px;
       }
       .resource-link:visited, .resource-link:active, .resource-link:hover {
-        color: inherit;
-        text-decoration: none;
+        color: inherit; /* Mantém a cor do texto herdada para estados visitado, ativo e hover */
+        text-decoration: none; /* Remove a decoração do link para estados visitado, ativo e hover */
       }
       .resource-item:hover {
         background-color: #555;
@@ -184,3 +219,21 @@ block content
       hr {
         border: 1px solid #555;
       }
+
+    script.
+      function openFilterModal() {
+        document.getElementById('filterModal').style.display = 'block';
+      }
+
+      function closeFilterModal() {
+        document.getElementById('filterModal').style.display = 'none';
+      }
+
+      // Close the modal when clicking outside of it
+      window.onclick = function(event) {
+        const modal = document.getElementById('filterModal');
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+
