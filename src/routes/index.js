@@ -1138,14 +1138,40 @@ router.post('/comunicados', verifyJWT, setUser, async (req, res) => {
 
 router.get('/comunicados/:id', async (req, res) => {
   try {
-    const comunicado = await Comunicado.findById(req.params.id);
+    const comunicado = await Comunicado.findById(req.params.id).lean();
     if (!comunicado) {
       return res.status(404).send('Comunicado não encontrado');
     }
-    res.render('comunicado', { comunicado });
+    res.render('comunicado', { comunicado, user: req.user });
   } catch (err) {
     console.error('Erro ao buscar comunicado:', err);
     res.status(500).send('Erro ao buscar comunicado');
+  }
+});
+
+//Rota para eliminar um comunicado
+router.delete('/comunicado/:id', verifyJWT, setUser, async (req, res) => {
+  try {
+    const comunicadoId = req.params.id;
+
+    // Verifique se o comunicado existe
+    const comunicado = await Comunicado.findById(comunicadoId);
+    if (!comunicado) {
+      return res.status(404).send('Comunicado não encontrado');
+    }
+
+    // Verifique se o usuário é um administrador
+    if (!req.user.admin) {
+      return res.status(403).send('Permissão negada');
+    }
+
+    // Delete o comunicado
+    await Comunicado.findByIdAndDelete(comunicadoId);
+
+    res.status(200).send('Comunicado deletado com sucesso');
+  } catch (err) {
+    console.error('Erro ao deletar comunicado:', err);
+    res.status(500).send('Erro ao deletar comunicado');
   }
 });
 
