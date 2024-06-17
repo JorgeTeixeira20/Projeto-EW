@@ -429,41 +429,6 @@ router.post('/post/:postId/comment/:commentId/reply/:replyId/vote', verifyJWT, a
   }
 });
 
-
-router.get('/resource/:id', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).send('Post não encontrado');
-    }
-
-    const existingVote = post.votes.details.find(vote => vote.userId === userId);
-
-    if (existingVote) {
-      // User is changing their vote
-      if (existingVote.type === type) {
-        // User is removing their vote
-        post.votes.count += (type === 'upvote' ? -1 : 1);
-        post.votes.details = post.votes.details.filter(vote => vote.userId !== userId);
-      } else {
-        // User is switching their vote
-        post.votes.count += (type === 'upvote' ? 2 : -2);
-        existingVote.type = type;
-      }
-    } else {
-      // User is voting for the first time
-      post.votes.count += (type === 'upvote' ? 1 : -1);
-      post.votes.details.push({ userId, type });
-    }
-
-    await post.save();
-    res.json({ success: true, votes: post.votes });
-  } catch (err) {
-    console.error('Erro ao votar no post:', err);
-    res.status(500).send('Erro ao votar no post');
-  }
-});
-
 // Route to handle voting on comments
 router.post('/post/:postId/comment/:commentId/vote', verifyJWT, async (req, res) => {
   const { type } = req.body; // 'upvote' or 'downvote'
@@ -1146,12 +1111,15 @@ router.get('/comunicados/criar', verifyJWT, (req, res) => {
   res.render('criarComunicado');
 });
 
-router.post('/comunicados', verifyJWT, async (req, res) => {
+router.post('/comunicados', verifyJWT, setUser, async (req, res) => {
   try {
     const { title, subtitle, content } = req.body;
-    const author = req.user._id; // ID do autor do comunicado
+    const author = req.user.id; // ID do autor do comunicado
+
+    console.log("Author: " + author)
 
     const comunicado = new Comunicado({
+      _id: new mongoose.Types.ObjectId().toString(),
       title,
       subtitle,
       content,
