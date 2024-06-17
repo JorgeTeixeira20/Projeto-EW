@@ -43,10 +43,10 @@ Este relatório apresenta o desenvolvimento de uma plataforma educativa destinad
 A plataforma oferece uma ampla gama de funcionalidades para garantir uma experiência rica e interativa para os utilizadores:
 
 #### Disponibilização de Recursos Diversificados
-- Os utilizadores podem acessar uma variedade de recursos educativos, categorizados por tipo, ano e temas específicos, utilizando hashtags ou uma taxonomia classificativa.
+- Os utilizadores podem acessar uma variedade de recursos educativos, categorizados por tipo, ano e temas específicos.
 
 #### Adição de Novos Recursos e Tipos de Recursos
-- A plataforma permite a adição de novos recursos educativos e a introdução de novos tipos de recursos, garantindo uma constante atualização e expansão do conteúdo disponível.
+- A plataforma permite a adição de novos recursos educativos, garantindo uma constante atualização e expansão do conteúdo disponível.
 
 #### Sistema de Postagem e Comentários
 - Os utilizadores podem criar posts sobre recursos específicos, proporcionando insights e discussões detalhadas.
@@ -62,7 +62,7 @@ A plataforma oferece uma ampla gama de funcionalidades para garantir uma experi�
 
 #### Funcionalidades Administrativas
 - Administradores têm a capacidade de gerenciar utilizadores, alternando status de administrador e removendo contas quando necessário.
-- Sistema de autenticação seguro com registro, login e logout, utilizando tokens JWT para gerenciamento de sessões.
+- Sistema de autenticação seguro com registro, login e logout.
 
 #### Upload e Download de Arquivos
 - Recursos podem incluir múltiplos arquivos anexados, os quais podem ser baixados individualmente ou em lote, no formato zip.
@@ -157,4 +157,5 @@ A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 
 ## Conclusão
 
-A plataforma educativa desenvolvida oferece uma solução abrangente e flexível para a disponibilização, compartilhamento e avaliação de recursos educativos. As funcionalidades implementadas visam criar um ambiente colaborativo, incentivando a participação ativa dos utilizadores e a troca de conhecimento. A arquitetura modular e o uso de tecnologias modernas garantem a escalabilidade e a facilidade de manutenção da plataforma, permitindo futuras expansões e melhorias.
+A plataforma educativa desenvolvida oferece uma solução abrangente e flexível para a disponibilização, compartilhamento e avaliação de recursos educativos. As funcionalidades implementadas visam criar um ambiente colaborativo, incentivando a participação ativa dos utilizadores e a troca de conhecimento.
+Para aprimorar a plataforma, várias melhorias podem ser implementadas. Primeiramente, o sistema de upload de recursos pode ser modificado para criar uma pasta específica para cada recurso, permitindo assim que vários ficheiros com o mesmo nome possam ser armazenados sem conflitos. Além disso, seria benéfico adicionar a funcionalidade de comentários às avaliações de recursos, promovendo uma discussão mais detalhada sobre os mesmos. Também é importante permitir que os utilizadores possam editar seus perfis e posts após a publicação, proporcionando uma maior flexibilidade e controle sobre o conteúdo compartilhado.
