@@ -24,7 +24,7 @@ block content
       .post-vote
         button.vote-button.upvote-button(onclick=`votePost('${post._id}', 'upvote')`)
           i.bi.bi-arrow-up-circle
-        .vote-count #{post.votes.count || 0}
+        .vote-count #{post.votes && post.votes.count || 0}
         button.vote-button.downvote-button(onclick=`votePost('${post._id}', 'downvote')`)
           i.bi.bi-arrow-down-circle
       
@@ -53,7 +53,7 @@ block content
               .comment-vote
                 button.vote-button.upvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'upvote')`)
                   i.bi.bi-arrow-up-circle
-                .vote-count #{comment.votes.count || 0}
+                .vote-count #{comment.votes && comment.votes.count || 0}
                 button.vote-button.downvote-button(onclick=`voteComment('${post._id}', '${comment._id}', 'downvote')`)
                   i.bi.bi-arrow-down-circle
               .comment-buttons
@@ -76,11 +76,9 @@ block content
                     .reply-vote
                       button.vote-button.upvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'upvote')`)
                         i.bi.bi-arrow-up-circle
-                      .vote-count #{reply.votes.count || 0}
+                      .vote-count #{reply.votes && reply.votes.count || 0}
                       button.vote-button.downvote-button(onclick=`voteReply('${post._id}', '${comment._id}', '${reply._id}', 'downvote')`)
                         i.bi.bi-arrow-down-circle
-                  .reply-buttons
-                    button.reply-button(onclick=`toggleReplyForm('${reply._id}')`) Reply
                     if user && reply.user && (user.id === reply.user.id || user.admin)
                       button.delete-reply(onclick=`deleteReply('${post._id}', '${comment._id}', '${reply._id}')`)
                         i.bi.bi-trash
@@ -453,6 +451,7 @@ block content
         gap: 10px;
         margin-top: 10px;
         align-items: center;
+        justify-content: space-between;
       }
       .reply-vote {
         display: flex;

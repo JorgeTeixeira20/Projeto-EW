@@ -181,7 +181,7 @@ router.get('/post/:id', verifyJWT, setUser, async (req, res) => {
 
     res.render('post', { post, resource, user, isOwner, isAdmin, author });
   } catch (err) {
-    console.error('Erro ao buscar post:', err);
+    console.error('Erro ao buscar post:', err); // Log detalhado do erro
     res.status(500).send('Erro ao buscar post');
   }
 });
