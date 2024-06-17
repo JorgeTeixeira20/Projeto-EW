@@ -1,614 +1,161 @@
 # Grupo
 | Número | Nome             |
-| -------- | ------- |
-| 96434  | Francisca Barros |
-| 93870  | Rafael Correia   |
-| 96361  | Vasco Oliveira   |
+| ------ | ------- |
+| 100749 | José Luís Costa |
+| 100838 | Jorge Teixeira |
+| 100758 | Hugo Dias |
+
+# Sistema de Recursos Educativos
+
+## Índice
+1. [Introdução](#introdução)
+2. [Requisitos](#requisitos)
+   - [Funcionalidades Implementadas](#funcionalidades-implementadas)
+   - [Disponibilização de Recursos Diversificados](#disponibilização-de-recursos-diversificados)
+   - [Adição de Novos Recursos e Tipos de Recursos](#adição-de-novos-recursos-e-tipos-de-recursos)
+   - [Sistema de Postagem e Comentários](#sistema-de-postagem-e-comentários)
+   - [Sistema de Ranking e Avaliação](#sistema-de-ranking-e-avaliação)
+   - [Perfil de Utilizador](#perfil-de-utilizador)
+   - [Funcionalidades Administrativas](#funcionalidades-administrativas)
+   - [Upload e Download de Arquivos](#upload-e-download-de-arquivos)
+3. [Arquitetura da Solução](#arquitetura-da-solução)
+4. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+5. [Detalhes das Rotas](#detalhes-das-rotas)
+   - [Rotas de Recursos](#rotas-de-recursos)
+   - [Rotas de Posts](#rotas-de-posts)
+   - [Rotas de Comentários e Respostas](#rotas-de-comentários-e-respostas)
+   - [Rotas de Votação](#rotas-de-votação)
+   - [Rotas de Perfil](#rotas-de-perfil)
+   - [Rotas de Rankings](#rotas-de-rankings)
+   - [Rotas de Autenticação](#rotas-de-autenticação)
+   - [Rotas de Upload e Download](#rotas-de-upload-e-download)
+   - [Rotas de Administração](#rotas-de-administração)
+6. [Conclusão](#conclusão)
 
-# Índice
+## Introdução
 
-- [Índice](#índice)
-- [Introdução](#introdução)
-	- [Um belo Projeto](#um-belo-projeto)
-- [Análise e Especificação](#análise-e-especificação)
-	- [Descrição informal do problema](#descrição-informal-do-problema)
-	- [Levantamento de Requisitos](#levantamento-de-requisitos)
-		- [Requisitos Mínimos](#requisitos-mínimos)
-		- [Requisitos Extra](#requisitos-extra)
-- [Estrutura/Desenvolvimento](#estruturadesenvolvimento)
-	- [Autenticação](#autenticação)
-	- [API de Dados](#api-de-dados)
-		- [meals.js:](#mealsjs)
-		- [reserves.js:](#reservesjs)
-		- [users.js:](#usersjs)
-	- [Interface](#interface)
-- [Interface](#interface-1)
-	- [Páginas de Autenticação](#páginas-de-autenticação)
-	- [Páginas para Utilizadores](#páginas-para-utilizadores)
-	- [Páginas para Administradores](#páginas-para-administradores)
-- [Datasets](#datasets)
-		- [Dataset Utilizadores](#dataset-utilizadores)
-		- [Dataset Refeições](#dataset-refeições)
-- [Modo de funcionamento](#modo-de-funcionamento)
-- [Conclusão](#conclusão)
+Este relatório apresenta o desenvolvimento de uma plataforma educativa destinada a disponibilizar diversos tipos de recursos educativos, tais como livros, artigos, aplicações, trabalhos de alunos, monografias e relatórios. O objetivo principal é criar um ambiente colaborativo onde os utilizadores possam compartilhar, avaliar e comentar sobre recursos educativos, promovendo assim a troca de conhecimento e a valorização de conteúdos de qualidade.
 
+## Requisitos
 
-  
+### Funcionalidades Implementadas
 
-  
+A plataforma oferece uma ampla gama de funcionalidades para garantir uma experiência rica e interativa para os utilizadores:
 
-# Introdução
+#### Disponibilização de Recursos Diversificados
+- Os utilizadores podem acessar uma variedade de recursos educativos, categorizados por tipo, ano e temas específicos, utilizando hashtags ou uma taxonomia classificativa.
 
-  
+#### Adição de Novos Recursos e Tipos de Recursos
+- A plataforma permite a adição de novos recursos educativos e a introdução de novos tipos de recursos, garantindo uma constante atualização e expansão do conteúdo disponível.
 
-  
+#### Sistema de Postagem e Comentários
+- Os utilizadores podem criar posts sobre recursos específicos, proporcionando insights e discussões detalhadas.
+- Outros utilizadores podem comentar nos posts, permitindo uma interação dinâmica e troca de opiniões.
 
-## Um belo Projeto
+#### Sistema de Ranking e Avaliação
+- Os recursos podem ser avaliados pelos utilizadores através de um sistema de estrelas, ajudando a destacar os recursos mais valiosos e relevantes.
+- Rankings dos recursos e dos utilizadores são gerados com base nas avaliações recebidas, incentivando a contribuição de conteúdo de alta qualidade.
 
-  
+#### Perfil de Utilizador
+- Cada utilizador possui um perfil onde são exibidos seus recursos compartilhados, posts criados, e estatísticas como nível de experiência e classificação média dos seus recursos.
+- Sistema de níveis baseado na experiência acumulada através da participação ativa na plataforma.
 
-  
+#### Funcionalidades Administrativas
+- Administradores têm a capacidade de gerenciar usuários, alternando status de administrador e removendo contas quando necessário.
+- Sistema de autenticação seguro com registro, login e logout, utilizando tokens JWT para gerenciamento de sessões.
 
-O presente relatório descreve o trabalho prático realizado no âmbito da Unidade Curricular de Engenharia Web, inserida no curso de Licenciatura em Engenharia Informática durante o 2º Semestre do ano letivo 2022/2023.
+#### Upload e Download de Arquivos
+- Recursos podem incluir múltiplos arquivos anexados, os quais podem ser baixados individualmente ou em lote, no formato zip.
+- Suporte para upload de dados em formato JSON para facilitar a importação em massa de recursos, usuários, posts e comunicados.
 
-  
+## Arquitetura da Solução
 
-  
+A arquitetura da solução foi desenhada para ser modular e escalável, garantindo que novas funcionalidades possam ser adicionadas facilmente. A plataforma é construída utilizando uma única aplicação conectada ao MongoDB, com as seguintes camadas principais:
 
-Neste projeto, o grupo optou por escolher o seu próprio tema, que consiste na criação de uma plataforma para ver a ementa da cantina, fazer reservas e comprar senhas.
+1. **Camada de Apresentação**: Responsável pela interface com o utilizador. Utiliza HTML, CSS e JavaScript para criar uma experiência de usuário intuitiva e responsiva.
+2. **Camada de Lógica de Negócio**: Implementada com Node.js e Express.js, esta camada trata a lógica de aplicação, como autenticação, autorização, manipulação de dados e lógica de negócios específica.
+3. **Camada de Dados**: Utiliza MongoDB como banco de dados NoSQL para armazenar informações sobre utilizadores, recursos, posts e avaliações de forma eficiente e escalável.
 
-  
+## Tecnologias Utilizadas
 
-  
+A plataforma foi desenvolvida utilizando as seguintes tecnologias:
 
-O objetivo deste trabalho é desenvolver uma plataforma com dois tipos distintos de utilizadores: os alunos e os administradores. Aonde os alunos podem comprar senhas, ver a ementa e reservar refeições e os administradores podem criar, editar e apagar utilizadores e colocar novas refeições na ementa.
+- **Node.js**: Plataforma de desenvolvimento para construir a camada de servidor da aplicação.
+- **Express.js**: Framework para Node.js que facilita a criação de rotas e middleware.
+- **MongoDB**: Banco de dados NoSQL utilizado para armazenar os dados da aplicação.
+- **Mongoose**: Biblioteca de modelagem de dados para MongoDB em Node.js.
+- **Passport.js**: Middleware de autenticação para Node.js, utilizado para autenticação de usuários.
+- **JWT (JSON Web Tokens)**: Utilizado para autenticação e gerenciamento de sessões.
+- **Multer**: Middleware para manipulação de uploads de arquivos.
+- **Handlebars**: Motor de templates para gerar HTML dinâmico.
 
-  
+## Detalhes das Rotas
 
-  
+### Rotas de Recursos
 
-O relatório está dividido em várias secções. Iniciamos com a introdução, que apresenta uma visão geral do trabalho realizado. Em seguida, abordamos a análise e especificação, onde descrevemos informalmente o problema a ser resolvido e estabelecemos os requisitos necessários para a sua resolução. Posteriormente, apresentamos a estrutura/desenvolvimento do projeto, mostrando como o projeto está estruturado a níveis de codificação. Prosseguimos por mostrar várias prints da interface da nossa plataforma e de seguida falamos dos datasets usados. Por fim, mostramos como é que se põe o projeto a correr e concluímos o relatório com uma síntese das principais conclusões obtidas ao longo do projeto.
+- **GET `/`**: Obtém e exibe todos os posts, recursos e comunicados ordenados por data.
+- **GET `/listaRecursos`**: Exibe uma lista de recursos, com opção de pesquisa.
+- **GET `/resource/:id`**: Exibe os detalhes de um recurso específico, incluindo o criador e permissões.
+- **DELETE `/resource/:id`**: Deleta um recurso específico se o usuário for o autor ou um administrador.
+- **GET `/create-post/:resourceId`**: Exibe o formulário de criação de post para um recurso específico.
+- **GET `/meusrecursos`**: Exibe os recursos do usuário logado com opção de pesquisa.
 
-  
+### Rotas de Posts
 
-  
+- **GET `/listaPosts`**: Exibe uma lista de posts, incluindo detalhes do usuário, com opção de pesquisa.
+- **GET `/post/:id`**: Exibe os detalhes de um post específico, incluindo recursos, autor e comentários.
+- **DELETE `/post/:id`**: Deleta um post específico se o usuário for o autor ou um administrador.
+- **POST `/create-post/:resourceId`**: Cria um novo post para um recurso específico e atualiza o XP do usuário.
+- **GET `/meusposts`**: Exibe os posts do usuário logado com opção de pesquisa.
 
-O objetivo final deste trabalho é fornecer uma plataforma que os alunos da Universidade do Minho possam usar no seu dia a dia para que a experiência de ir à cantina seja melhor, também queremos que a nossa plataforma seja facil de usar e entender para os administradores que terão de eventualmente usá-la para introduzir os menus semanais.
+### Rotas de Comentários e Respostas
 
-  
+- **POST `/post/:id/comment`**: Adiciona um comentário a um post específico e atualiza o XP do usuário.
+- **POST `/post/:id/comment/:commentId/reply`**: Adiciona uma resposta a um comentário específico e atualiza o XP do usuário.
+- **DELETE `/post/:postId/comment/:commentId`**: Deleta um comentário específico de um post se o usuário for o autor ou um administrador.
+- **DELETE `/post/:postId/comment/:commentId/reply/:replyId`**: Deleta uma resposta específica de um comentário se o usuário for o autor ou um administrador.
 
-  
+### Rotas de Votação
 
----
+- **POST `/post/:id/vote`**: Permite que um usuário vote (upvote ou downvote) em um post específico.
+- **POST `/post/:postId/comment/:commentId/vote`**: Permite que um usuário vote (upvote ou downvote) em um comentário específico.
+- **POST `/post/:postId/comment/:commentId/reply/:replyId/vote`**: Permite que um usuário vote (upvote ou downvote) em uma resposta específica.
 
-  
+### Rotas de Perfil
 
-  
+- **GET `/perfil`**: Exibe o perfil do usuário logado, incluindo recursos, posts e estatísticas.
+- **GET `/perfil/:id`**: Exibe o perfil de um usuário específico, incluindo recursos, posts e estatísticas.
 
-# Análise e Especificação
+### Rotas de Rankings
 
-  
+- **GET `/rankings`**: Exibe a página principal de rankings.
+- **GET `/rankings/recursos`**: Exibe o ranking dos recursos por classificação média.
+- **GET `/rankings/level`**: Exibe o ranking dos usuários por nível e XP.
+- **GET `/rankings/users`**: Exibe o ranking dos usuários por classificação média dos recursos.
 
-  
+### Rotas de Autenticação
 
-## Descrição informal do problema
+- **GET `/login`**: Exibe a página de login.
+- **POST `/login`**: Autentica um usuário e gera um token JWT para sessões válidas.
+- **GET `/register`**: Exibe a página de registro.
+- **POST `/register`**: Registra um novo usuário, verificando se todos os campos obrigatórios estão preenchidos.
+- **GET `/logout`**: Desconecta o usuário, limpando o token de autenticação.
 
-  
+### Rotas de Upload e Download
 
-  
+- **GET `/download/:fname`**: Baixa um arquivo específico.
+- **GET `/download-all/:resourceId`**: Baixa todos os arquivos de um recurso específico como um arquivo zip.
+- **POST `/adicionarRecurso`**: Adiciona um novo recurso e atualiza o XP do usuário.
+- **GET `/upload-json`**: Exibe o formulário de upload de JSON.
+- **POST `/upload-json`**: Faz o upload de um arquivo JSON e insere os dados no banco de dados.
+- **GET `/download-jsons`**: Baixa todos os dados de usuários, recursos, posts e comunicados como um arquivo zip.
 
-O objetivo deste trabalho é desenvolver uma plataforma com dois tipos distintos de utilizadores: os alunos e os administradores. Os alunos poderão comprar senhas, consultar o menu e fazer reservas para as refeições, enquanto os administradores poderão criar, editar e eliminar utilizadores, bem como adicionar novas refeições ao menu.
+### Rotas de Administração
 
-  
+- **POST `/users/:id/toggle-admin`**: Alterna o status de administrador de um usuário específico.
+- **POST `/users/:id/delete`**: Deleta um usuário específico.
+- **GET `/users`**: Exibe uma lista de todos os usuários.
 
-  
+## Conclusão
 
-## Levantamento de Requisitos
-
-  
-
-  
-
-### Requisitos Mínimos
-
-  
-
-  
-
-- [x] O sistema deverá estar protegido com autenticação: username+password, (chaveAPI, google, facebook...)
-
-  
-
-- [x] Deverá ser possível criar uma nova conta, através do registo, onde será preciso fornecer um username, um email e uma password para criar a conta.
-
-  
-
-- [x] Deverão existir pelo menos 2 níveis de acesso:
-
-  
-
-	- Administrador - pode adicionar e alterar refeições e utilizadores;
-
-  
-
-	- Utilizador - pode comprar senhas, reservar refeições e alterar alguns atributos do seu perfil;
-
-  
-
-- [x] O utilizador poderá comprar senhas e usá-las para reservar refeições. Cada refeição só poderá ser reservada uma vez, podendo reservar múltiplas senhas ao mesmo tempo.
-
-  
-
-- [x] Antes de reservar, o utilizador poderá especificar se a refeição é normal ou vegetariana, e deverá conseguir ver todos os detalhes de cada refeição.
-
-  
-
-- [x] As senhas podem ser compradas separadamente ou num pack de 10 senhas, sendo que uma senha separada custa 2.70€ mas um pack de 10 senhas custa 25€.
-
-  
-
-- [x] O utilizador deve conseguir aceder ao seu próprio perfil onde poderá consultar as reservas e os seus atributos.
-
-  
-
-- [x] O administrador poderá adicionar refeições diretamente pela plataforma em si para todos os utilizadores de seguida poderem reservar, só podendo adicionar uma refeição normal e uma vegetariana por cada dia.
-
-  
-
-- [x] O administrador terá acesso a um form onde é disponibilizada uma tabela com todos os utilizadores da plataforma, podendo editá-los ou apagá-los e poderá criar utilizadores novos com os atributos que quiser.
-
-  
-
-  
-
-### Requisitos Extra
-
-  
-
-  
-
-- [x] Se o utilizador tiver sido registado através da página de registo este será considerado "Not Student"
-  
-
-
-
-- [x] Ter preços diferentes para os tipos de utilizador diferentes.
-
-
-
-- [ ] Caso o utilizador ou administrador se esqueça da password da sua conta poderá recuperá-la através de uma funcionalidade onde é mandado um email para o email associado à sua conta, podendo, assim, alterar a password através do email mandado.
-
-  
-
-- [x] O website deverá ter uma barra de navegação para o utilizador poder navegar facilmente entre as diferentes funcionalidades
-
-  
-
-- [x] O website deverá ter um footer com todas as informações e meios possíveis de um utilizador conseguir contactar a equipa de desenvolvimento, para problemas técnicos que possam ter com a plataforma, e a cantina, para questões relacionadas com a cantina em si.
-
-  
-
-- [ ] O utilizador no seu perfil deverá poder atualizar a sua imagem de perfil.
-
-  
-
-- [x] O utilizador no seu perfil poderá cancelar reservas em qualquer altura que preceda o dia da reserva.
-
-  
-
-- [ ] O utilizador poderá mudar o website para darkmode, onde o website reduz a luz emitida pela tela do respetivo dispositivo.
-
-  
-
-- [x] O administrador poderá editar as refeições previamente adicionadas, mostrando um aviso caso a refeição que esteja a ser editada esteja a ser disponibilizada para todos os utilizadores.
-
-  
-
-- [x] O administrador poderá adicionar múltiplos utilizadores e refeições através do upload de um ficheiro JSON
-
-  
-
-- [x] Quando é registado um novo utilizador este recebe um email de confirmação para validar a sua conta, só após a validação é que este pode fazer login
-
-  
-
-- [x] Possibilidade de selecionar semanas futuras ou passadas
-
-  
-
-- [x] O utilizador não pode reservar dias que já passaram, nem pode fazer várias reservas para o mesmo dia e mesma refeição (almoço ou jantar)
-- [x]  Com o auxílio do Docker, possibilidade de esconder operações sobre a base de dados aos utilizadores.
-- [ ] Com ajuda de uma API externa ter um sistema real de pagamento para a compra de senhas 
-
-
-
-  
-
-  
-
-É de notar, tal como já foi dito, que estes requisitos foram feitos para nos conseguirmos orientar e, como tal, é possível que alguns dos requisitos podem não ter sido feitos, ou por questões de tempo ou porque não achamos que seriam necessários para fornecer uma melhor experiência ao utilizador.
-
-  
-
-  
-
----
-
-  
-
-  
-
-# Estrutura/Desenvolvimento
-
-  
-
-  
-
-Neste Capítulo iremos falar de como o projeto foi estruturado e mostrar o seu desenvolvimento em termos de codificação. Este projeto foi estruturado entre três sub-aplicações:
-
-  
-
-  
-
-1. Autenticação: Nessa parte, foi implementado um sistema de autenticação para garantir a segurança da plataforma. A autenticação é necessária para garantir que apenas utilizadores autorizados possam acessar a plataforma e realizar ações específicas, de acordo com os seus níveis de acesso. Para gerir os utilizadores e as respetivas sessões são utilizados os módulos *passport-local* e *jsonwebtoken*. O módulo *jsonwebtoken* é apenas utilizado para a geração de um token que irá identificar a sessão do utilizador. Este token será utilizado pela interface como uma cookie.
-
-  
-
-2. API de Dados: A API de Dados foi desenvolvida para lidar com o armazenamento e gerenciamento dos dados da plataforma. Foi utilizado uma base de dados, através do software MongoDB, para armazenar informações dos utilizadores, refeições e reservas. A API fornece endpoints para a criação, leitura, atualização e exclusão de dados, permitindo que a plataforma interaja com a base de dados de forma segura e eficiente.
-
-  
-
-3. Interface: Foi projetada uma interface amigável e intuitiva, com layouts e componentes adequados para facilitar a interação dos utilizadores com a plataforma. Foram utilizadas tecnologias web, como Pug, CSS e JavaScript. A interface permite que os utilizadores possam interagir com a plataforma, podendo realizar o login e o registo, visualizar a ementa da cantina, comprar senhas, reservar refeições e ver o seu perfil, e os que forem administradores, criar novos utilizadores e refeições.
-
-  
-
-  
-
-Cada uma dessas partes desempenha um papel fundamental no funcionamento da plataforma, trabalhando em conjunto para poder funcionar na totalidade. A estruturação em três partes distintas permite que o projeto seja dividido em módulos independentes, facilitando o desenvolvimento, manutenção e escalabilidade da plataforma.
-
-  
-
-  
-
-## Autenticação
-
-  
-
-  
-
-A Autenticação possui várias rotas e funcionalidades relacionadas à autenticação e manipulação de utilizadores. A seguir, apresento uma breve descrição de cada rota e funcionalidade:
-
-  
-
-  
-
-- A função de middleware `auth.verificaAcesso` verifica se o utilizador tem acesso autorizado e guarda o *username* do mesmo, sendo usada por várias rotas.
-
-  
-
-- A rota GET `/` retorna a informação de que a autorização é bem-sucedida, juntamente com o ID do utilizador, verificando se a pessoa está logged in. Usa o middleware `auth.verificaAcesso` para verificar a autorização do utilizador.
-
-  
-
-- A rota GET `/token` retorna informações do utilizador com base no token correspondente à sua sessão. Usa o middleware `auth.verificaAcesso` para verificar a autorização do utilizador e para extrair o *username* do utilizador (para depois procurar na base de dados).
-
- 
-
-  
-
-- A rota POST `/register` cria um novo utilizador utilizando o modelo do utilizador (`userModel`) e a senha fornecida.
-
-  
-
-- A rota POST `/login` realiza o login do utilizador usando o método de autenticação `passport.authenticate('local')`. Gera um token JWT contendo o nome de utilizador (`req.user.username`) e com duração de 1 hora (3600 segundos).
-
-  
-
-
-  
-
-  
-
-## API de Dados
-
-  
-
-  
-
-A API de dados esta dividida em 3 arquivos que mexem com a sua respetiva collection, estando as suas rotas representadas a seguir.
-
-  
-
-  
-
-### meals.js:
-
-  
-
-  
-
-- A rota GET `meals/` retorna uma lista de refeições. Chama a função `Meal.list()` do controlador meal para obter os dados das refeições.
-
-  
-
-- A rota GET `meals/:id` retorna uma refeição com o ID fornecido. Chama a função `Meal.getMeal(id)` do controlador `meal.js` para obter os dados da refeição.
-
-  
-
-- A rota GET `meals/date/:date` retorna uma refeição com base na data fornecida. Chama a função `Meal.getMealDate(date)` do controlador `meal.js` para obter os dados da refeição.
-
-  
-
-- A rota POST `meals/` adiciona uma nova refeição com base nas informações fornecidas. Chama a função `Meal.addMeal(meal)` do controlador `meal.js` para adicionar a refeição.
-
-  
-
-- A rota PUT `meals/:tipo/:data` atualiza uma refeição com base no tipo e data fornecidos. Chama a função `Meal.editMealDate(date, tipo, meal)` do controlador `meal.js` para atualizar a refeição.
-
-  
-
-- A rota DELETE `meals/:id` remove a refeição com o ID fornecido. Chama a função `Meal.deleteMeal(id)` do controlador `meal.js` para remover a refeição.
-
-  
-
-  
-
-### reserves.js:
-
-  
-
-  
-
-- A rota GET `reserves/` retorna uma lista de reservas. Chama a função `Reserve.list()` do controlador `reserve.js` para obter os dados das reservas.
-
-  
-
-- A rota GET `reserves/:id` retorna uma reserva com o ID fornecido. Chama a função `Reserve.getReserve(id)` do controlador `reserve.js` para obter os dados da reserva.
-
-  
-
-- A rota GET `reserves/user/:idUser` retorna as reservas de um determinado utilizador com base no ID do utilizador fornecido. Chama a função `Reserve.getUserReserves(idUser)` do controlador `reserve.js` para obter as reservas do utilizador.
-
-  
-
-- A rota POST `reserves/` adiciona uma nova reserva com base nas informações fornecidas. Chama a função `Reserve.addReserve(reserve)` do controlador `reserve.js` para adicionar a reserva.
-
-  
-
-- A rota PUT `reserves/:id` atualiza uma reserva com o ID fornecido. Chama a função `Reserve.editReserve(id, reserve)` do controlador `reserve.js` para atualizar a reserva.
-
-  
-
-- A rota DELETE `reserves/:id` remove a reserva com o ID fornecido. Chama a função `Reserve.deleteReserve(id)` do controlador `reserve.js` para remover a reserva.
-
-  
-
-  
-
-### users.js:
-
-  
-
-  
-
-- A rota GET `users/` retorna uma lista de utilizadores. Chama a função `User.list()` do controlador `user.js` para obter os dados dos utilizadores.
-
-  
-
-- A rota GET `users/:id` retorna um utilizador com o ID fornecido. Chama a função `User.getUser(id)` do controlador `user.js` para obter os dados do utilizador.
-
-  
-
-- A rota POST `users/` adiciona um novo utilizador com base nas informações fornecidas. Chama a função `User.addUser(user)` do controlador `user.js` para adicionar o utilizador.
-
-  
-
-- A rota PUT `users/:id` atualiza um utilizador com o ID fornecido. Chama a função `User.editUser(id, user)` do controlador `user.js` para atualizar o utilizador.
-
-  
-
-- A rota DELETE `users/:id` remove o utilizador com o ID fornecido. Chama a função `User.deleteUser(id)` do controlador `user.js` para remover o utilizador.
-
-  
-
-  
-
-## Interface
-
-  
-
-  
-
-O arquivo `index.js` começa importando as dependências necessárias, incluindo o Express, o Axios para fazer requisições HTTP, o Moment.js para manipulação de datas e horários, o middleware de autenticação, o UUID para gerar identificadores únicos, o Multer para upload de arquivos e o fs para operações no sistema de arquivos.
-
-  
-
-  
-
-O código define várias rotas usando o objeto `router` fornecido pelo Express:
-
-  
-
-  
-
-- A rota GET `/` renderiza a página de login.
-
-  
-
-- A rota GET `/signup` renderiza a página de registo.
-
-- A rota GET `/confirm/:id` é a rota seguida para validar uma conta e redireciona para a página do login.
-
-
-- A rota GET `/logout` limpa o cookie do token e redireciona para `/?info=logout`.
-
-  
-
-- A função de middleware `getListMeals` recupera uma lista de refeições para uma determinada semana e armazena-as no objeto `req.listMeals`, sendo usada por várias rotas.
-
-  
-
-- A função de middleware `getListMealsandReserves` combina a funcionalidade de `getListMeals` e também recupera as reservas para o utilizador autenticado. Ela é usada pela rota da página inicial (`home`).
-
-  
-
-- A rota GET `/home` renderiza a página inicial. Ela requer autenticação e usa o middleware `getListMealsandReserves` para buscar os dados necessários para renderização.
-
-- A rota GET `/home/senhas/:n` é utilizada quando são feitas reservas de refeições e serve para diminuir o número de senhas do utilizador consoante as reservas feitas, redirecionando de seguida para a página inicial. Requer autenticação.
-
-  
-
-- A rota GET `/buy` renderiza a página de compra. Ela requer autenticação.
-- 
-- A rota GET `/buy/:n` é utilizada quando é feita uma compra de senhas e serve para atualizar o número de senhas do utilizador, de seguida redireciona para página de compra. Ela requer autenticação.
-
-  
-
-- A rota GET `/adminhome` renderiza a página inicial do administrador. Ela requer autenticação de administrador e usa o middleware `getListMeals` para buscar os dados necessários.
-
-  
-
-- A rota GET `/profile` renderiza a página de perfil. Ela requer autenticação e recupera as informações do utilizador e as reservas do utilizador autenticado.
-- A rota GET `/profile/reserve/:id`  é utilizada quando o utilizador remove uma reserva, no seu perfil, remove a reserva e incrementa o número de senhas do utilizador. Redireciona para a página do perfil e necessita de autenticação.
-
-  
-
-- A rota GET `/form` renderiza a página de formulário do utilizador. Ela requer autenticação de administrador e recupera uma lista de utilizadores.
-
-  
-
-- A rota GET `/form/edit/:id` renderiza a página de edição de formulário do utilizador. Ela requer autenticação de administrador e recupera as informações de um utilizador específico e a lista de todos os utilizadores.
-
-- A rota GET `/form/delete/:id` requer autenticação de administrador e apaga o utilizador correspondente ao id passado em parâmetro. Redireciona para a página de formulário do utilizador.
-
-
-- A rota POST `/` trata do login de um. utilizador. Ela opera o middleware `auth.login` para iniciar sessão do utilizador, colocando um cookie com o respetivo token de sessão.  
-
-- A rota POST `/signup` trata do registro de utilizador. Ela opera o middleware `auth.signup` para criar um novo utilizador.
-
- - A rota POST `/home/reserve` serve para adicionar uma reserva à base de dados.
-
-- A rota POST `/form` trata da criação de utilizador a partir do formulário de administrador. Ela opera o middleware `auth.signup` para criar um novo utilizador.
-
-  
-
-- A rota POST `/form/file` trata do upload de arquivos a partir do formulário de administrador. Ela lê o arquivo JSON e cria utilizadores com base nos dados do arquivo.
-
-  
-
-- A rota POST `/form/edit/:id` trata da edição de utilizador a partir do formulário de administrador. Ela exclui o utilizador com o ID fornecido e opera o middleware `auth.signup` para criar um novo utilizador.
-
-  
-
-- A rota POST `/add/:tipo/:data` trata da adição de uma refeição. Ela requer autenticação de administrador e cria uma nova refeição com os detalhes fornecidos.
-
-  
-
-- A rota POST `/edit/:tipo/:data` trata da edição de uma refeição. Ela requer autenticação de administrador e atualiza a refeição com os detalhes fornecidos.
-
-  
-
-- A rota POST `/adminhome/file` trata do upload de arquivos de refeições a partir da página inicial do administrador. Ela lê o arquivo JSON enviado e cria refeições com base nos dados do arquivo.
-
-  
-
-  
-
-# Interface
-
-  
-
-  
-
-Neste capítulo vamos mostrar alguns prints da interface da nossa plataforma. A nossa plataforma tem oito páginas distintas ao todo, onde duas servem para fazer a autenticação (páginas de login e registo), outras três são para os utilizadores (páginas de home, perfil e buy) e outras três são para os administradores (páginas de adminhome, form, edit form).
-
-  
-
-  
-
-## Páginas de Autenticação
-
-  
-  
-
-![login](imagens/login.png  "Página de Login")
-
-  
-
-  
-
-![registo](imagens/registo.png  "Página de Registo")
-
-  
-
-  
-
-## Páginas para Utilizadores
-
-  
-
-  
-
-![home](imagens/home.png  "Página Inicial de um Utilizador")
-
-  
-
-  
-
-![buy](imagens/buy.png  "Página para Comprar Senhas")
-
-  
-
-  
-
-![perfil](imagens/perfil.png  "Página de perfil do Utilizador")
-
-  
-
-  
-
-## Páginas para Administradores
-
-  
-
-  
-
-![adminhome](imagens/adminhome.png  "Página Inicial de um Administrador")
-
-  
-
-  
-
-![form](imagens/form.png  "Página de Criação de Utilizadores")
-
-  
-
-  
-
-![editForm](imagens/editForm.png  "Página de Edição de Utilizadores")
-
-
-# Datasets
-
-Como foi referido anteriormente, a nossa aplicação permite a adição de utilizadores e refeições através de um ficheiro JSON, assim foram criados 2 datasets usando o site https://datagen.di.uminho.pt/.
-
-### Dataset Utilizadores
-![users](imagens/users.png  "Dataset utilizadores")
-
-### Dataset Refeições
-![meals](imagens/meals.png  "Dataset refeições")
-
-# Modo de funcionamento
-
-O nosso projeto está preparado para correr no docker, sendo composto por 4 containers distintos. Apenas o container da interface, chamado AppCantina está exposto para o exterior (porta 7777) de  forma a proteger a aplicação. Assim, para correr a  nossa aplicação é apenas necessárrio correr o comando:  `docker-compose up -d --build`.
-Além disso, é necessário ter algumas veriáveis de ambiente definidas num ficheiro `.env`. Estas variáveis servem para utilizar a API MailJet e correspondem à API KEY e à API SECRET, que são as chaves que permitem identificar a conta de quem está a usar a API. Por razões de segurança estes dados não são expostos.
-
-# Conclusão
-
-Concluíndo, acabamos este projeto com uma plataforma funcional, onde alunos poderão comprar refeições na cantina de forma mais rápida e eficiente e a universidade poderá ter uma ideia de quantas pessoas irão comer na cantina num dia em específico.
-
-Ao longo do desenvolvimento, foram atendidos os requisitos mínimos que definimos, como autenticação, diferentes níveis de acesso, compra de senhas, reserva de refeições e gerenciamento de usuários e refeições. Além disso, alguns requisitos extras foram implementados, tal como envio de e-mail de confirmação, upload de dados via arquivo JSON e possibilidade de seleção de semanas futuras ou passadas.
-
-Para trabalho futuro, há várias oportunidades de aprimoramento e expansão dessa plataforma. Uma possível melhoria seria a implementação de um sistema de pagamento online para a compra de senhas, oferecendo aos usuários uma opção mais conveniente e segura. Além disso, poderiam ser adicionados recursos adicionais, como notificações por e-mail ou SMS para lembretes de reservas e atualizações do menu.
-
-No geral, o projeto foi uma oportunidade valiosa para aplicar conhecimentos de engenharia web e desenvolver habilidades práticas no desenvolvimento de uma plataforma completa.
+A plataforma educativa desenvolvida oferece uma solução abrangente e flexível para a disponibilização, compartilhamento e avaliação de recursos educativos. As funcionalidades implementadas visam criar um ambiente colaborativo, incentivando a participação ativa dos utilizadores e a troca de conhecimento. A arquitetura modular e o uso de tecnologias modernas garantem a escalabilidade e a facilidade de manutenção da plataforma, permitindo futuras expansões e melhorias.
